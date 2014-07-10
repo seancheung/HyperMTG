@@ -66,6 +66,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ViewModel\FilterViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -149,7 +150,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Model\" />
-    <Folder Include="ViewModel\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HyperBase\HyperBase.csproj">

@@ -55,7 +55,7 @@ namespace HyperKore.Utilities
 				yield return card.Name;
 			else
 			{
-				foreach (var name in card.Name.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries))
+				foreach (var name in card.Name.Split('|'))
 					yield return name;
 			}
 		}

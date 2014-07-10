@@ -8,6 +8,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:vm="clr-namespace:HyperMTG.ViewModel"
              d:DesignHeight="320" d:DesignWidth="480"
              mc:Ignorable="d">
     <UserControl.Resources>
@@ -42,6 +43,9 @@
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
     </UserControl.Resources>
+    <UserControl.DataContext>
+        <vm:FilterViewModel />
+    </UserControl.DataContext>
     <Grid Style="{StaticResource ContentRoot}">
         <ScrollViewer>
             <Grid>
@@ -77,30 +81,18 @@
                                Margin="2" Text="Cost" />
                     <TextBlock Grid.Row="1" Grid.Column="0"
                                Margin="2" Text="Rating" />
-                    <StackPanel Grid.Row="0" Grid.Column="1"
-                                Margin="2">
-                        <Slider Name="min" Margin="0,0,0,-1"
-                                AutoToolTipPlacement="TopLeft" Cursor="Hand"
-                                IsSnapToTickEnabled="True" SmallChange="1"
-                                TickPlacement="BottomRight">
-                            <Slider.Value>
-                                <MultiBinding Converter="{StaticResource slidercv}">
-                                    <Binding ElementName="min" Path="Value" />
-                                    <Binding ElementName="max" Path="Value" />
-                                </MultiBinding>
-                            </Slider.Value>
-                        </Slider>
-                        <Slider Name="max" Margin="0,-1,0,0"
-                                AutoToolTipPlacement="TopLeft" Cursor="Hand"
-                                IsSnapToTickEnabled="True" SmallChange="1"
-                                TickPlacement="TopLeft" Value="10" />
-                    </StackPanel>
+                    <Slider Grid.Row="0" Grid.Column="1"
+                            Margin="2" AutoToolTipPlacement="TopLeft"
+                            Cursor="Hand" IsSnapToTickEnabled="True"
+                            SmallChange="1" TickPlacement="BottomRight"
+                            Value="{Binding Cost}" />
                     <Slider Grid.Row="1" Grid.Column="1"
                             Margin="2" AutoToolTipPlacement="TopLeft"
                             AutoToolTipPrecision="1" Cursor="Hand"
                             IsSnapToTickEnabled="True" Maximum="5"
                             SmallChange="0.5" TickFrequency="0.5"
-                            TickPlacement="TopLeft" />
+                            TickPlacement="TopLeft"
+                            Value="{Binding Rating}" />
                     <Grid Grid.Row="2" Grid.ColumnSpan="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto" />
@@ -115,11 +107,13 @@
                         <Slider Grid.Column="1" Margin="2"
                                 AutoToolTipPlacement="TopLeft" Cursor="Hand"
                                 IsSnapToTickEnabled="True" SmallChange="1"
-                                TickPlacement="TopLeft" />
+                                TickPlacement="TopLeft"
+                                Value="{Binding Power}" />
                         <Slider Grid.Column="3" Margin="2"
                                 AutoToolTipPlacement="TopLeft" Cursor="Hand"
                                 IsSnapToTickEnabled="True" SmallChange="1"
-                                TickPlacement="TopLeft" />
+                                TickPlacement="TopLeft"
+                                Value="{Binding Toughness}" />
                     </Grid>
                     <ListBox Grid.Row="3" Grid.ColumnSpan="2"
                              Margin="2"

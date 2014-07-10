@@ -24,11 +24,11 @@ namespace HyperMTG
 		public MainWindow()
 		{
 			InitializeComponent();
-			var plugins = HyperKore.IO.IOHandler.Instance.GetPlugins<HyperKore.IO.ICompressor>();
-			foreach (var plugin in plugins)
-			{
-				MessageBox.Show(plugin.Name + plugin.Description);
-			}
+			//var plugins = HyperKore.IO.IOHandler.Instance.GetPlugins<HyperKore.IO.ICompressor>();
+			//foreach (var plugin in plugins)
+			//{
+			//	MessageBox.Show(plugin.Name + plugin.Description);
+			//}
 		}
 	}
 }
