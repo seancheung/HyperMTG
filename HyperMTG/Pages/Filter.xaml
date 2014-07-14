@@ -13,15 +13,10 @@
              mc:Ignorable="d">
     <UserControl.Resources>
         <hp:SliderConverter x:Key="slidercv" />
-        <ContextMenu x:Key="contextmenu">
-            <MenuItem Header="Include All" />
-            <MenuItem Header="Match All" />
-            <MenuItem Header="Exclude All" />
-            <MenuItem Header="Include Inverse" />
-        </ContextMenu>
         <DataTemplate x:Key="checkboxtemplate">
-            <CheckBox Content="{Binding}"
-                      IsChecked="{x:Null}"
+            <CheckBox Content="{Binding Content}"
+                      IsChecked="{Binding IsChecked,
+                                          Mode=TwoWay}"
                       IsThreeState="True" />
         </DataTemplate>
         <ObjectDataProvider x:Key="colors" MethodName="GetNames"
@@ -56,15 +51,25 @@
                     <ColumnDefinition Width="*" MinWidth="100" />
                 </Grid.ColumnDefinitions>
                 <ListBox Grid.Column="0"
-                         ContextMenu="{StaticResource contextmenu}"
-                         ItemTemplate="{StaticResource checkboxtemplate}" />
-                <ListBox Grid.Column="1"
-                         ContextMenu="{StaticResource contextmenu}"
-                         ItemTemplate="{StaticResource checkboxtemplate}" />
-                <ListBox Grid.Column="2"
-                         ContextMenu="{StaticResource contextmenu}"
                          ItemTemplate="{StaticResource checkboxtemplate}"
-                         ItemsSource="{Binding Source={StaticResource types}}" />
+                         ItemsSource="{Binding Sets}" />
+                <ListBox Grid.Column="1"
+                         ItemTemplate="{StaticResource checkboxtemplate}"
+                         ItemsSource="{Binding Formats}" />
+                <ListBox Grid.Column="2"
+                         ItemTemplate="{StaticResource checkboxtemplate}"
+                         ItemsSource="{Binding Types}">
+                    <ListBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding CheckType}"
+                                      CommandParameter="0" Header="Include All" />
+                            <MenuItem Command="{Binding CheckType}"
+                                      CommandParameter="1" Header="Match All" />
+                            <MenuItem Command="{Binding CheckType}"
+                                      CommandParameter="2" Header="Exclude All" />
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+                </ListBox>
                 <Grid Grid.Column="3">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
@@ -84,7 +89,7 @@
                     <Slider Grid.Row="0" Grid.Column="1"
                             Margin="2" AutoToolTipPlacement="TopLeft"
                             Cursor="Hand" IsSnapToTickEnabled="True"
-                            SmallChange="1" TickPlacement="BottomRight"
+                            SmallChange="1" TickPlacement="TopLeft"
                             Value="{Binding Cost}" />
                     <Slider Grid.Row="1" Grid.Column="1"
                             Margin="2" AutoToolTipPlacement="TopLeft"
@@ -117,14 +122,34 @@
                     </Grid>
                     <ListBox Grid.Row="3" Grid.ColumnSpan="2"
                              Margin="2"
-                             ContextMenu="{StaticResource contextmenu}"
                              ItemTemplate="{StaticResource checkboxtemplate}"
-                             ItemsSource="{Binding Source={StaticResource colors}}" />
+                             ItemsSource="{Binding Colors}">
+                        <ListBox.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding CheckColor}"
+                                          CommandParameter="0" Header="Include All" />
+                                <MenuItem Command="{Binding CheckColor}"
+                                          CommandParameter="1" Header="Match All" />
+                                <MenuItem Command="{Binding CheckColor}"
+                                          CommandParameter="2" Header="Exclude All" />
+                            </ContextMenu>
+                        </ListBox.ContextMenu>
+                    </ListBox>
                     <ListBox Grid.Row="4" Grid.ColumnSpan="2"
                              Margin="2"
-                             ContextMenu="{StaticResource contextmenu}"
                              ItemTemplate="{StaticResource checkboxtemplate}"
-                             ItemsSource="{Binding Source={StaticResource rarities}}" />
+                             ItemsSource="{Binding Rarities}">
+                        <ListBox.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding CheckRarity}"
+                                          CommandParameter="0" Header="Include All" />
+                                <MenuItem Command="{Binding CheckRarity}"
+                                          CommandParameter="1" Header="Match All" />
+                                <MenuItem Command="{Binding CheckRarity}"
+                                          CommandParameter="2" Header="Exclude All" />
+                            </ContextMenu>
+                        </ListBox.ContextMenu>
+                    </ListBox>
                 </Grid>
             </Grid>
         </ScrollViewer>

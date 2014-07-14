@@ -1,11 +1,13 @@
 ﻿namespace HyperMTG.ViewModel
 {
 	using HyperKore.Common;
+	using HyperMTG.Helper;
 	using System;
 	using System.Collections;
 	using System.Collections.Generic;
+	using System.Windows.Input;
 
-	public class FilterViewModel
+	internal class FilterViewModel
 	{
 		/// <summary>
 		/// Initializes a new instance of the FilterViewModel class.
@@ -16,8 +18,9 @@
 			Power = 0;
 			Rating = 0f;
 			Toughness = 0;
-			Types = new Dictionary<TYPE, bool>();
-			GetFromEnum<TYPE>(Types);
+			Types = GetFromEnum<TYPE>();
+			Colors = GetFromEnum<COLOR>();
+			Rarities = GetFromEnum<RARITY>();
 		}
 
 		public int Cost { get; set; }
@@ -28,16 +31,140 @@
 
 		public int Toughness { get; set; }
 
-		public Dictionary<TYPE, bool> Types { get; set; }
+		public IEnumerable Rarities { get; set; }
 
-		public void GetFromEnum<T>(IDictionary dict)
+		public IEnumerable Colors { get; set; }
+
+		public IEnumerable Types { get; set; }
+
+		public IEnumerable Formats { get { return null; } }
+
+		public IEnumerable Sets { get { return null; } }
+
+		public ICommand CheckType
 		{
-			if (dict == null) return;
+			get
+			{
+				return new RelayCommand<string>(CheckTypeExecute);
+			}
+		}
+
+		public ICommand CheckColor
+		{
+			get
+			{
+				return new RelayCommand<string>(CheckColorExecute);
+			}
+		}
+
+		public ICommand CheckRarity
+		{
+			get
+			{
+				return new RelayCommand<string>(CheckRarityExecute);
+			}
+		}
+
+		private IEnumerable GetFromEnum<T>()
+		{
+			var list = new List<CheckItem>();
 
 			foreach (var item in Enum.GetNames(typeof(T)))
 			{
-				dict.Add(Enum.Parse(typeof(T), item), true);
+				list.Add(new CheckItem(item, false));
+			}
+
+			return list;
+		}
+
+		private void CheckTypeExecute(object parameter)
+		{
+			foreach (CheckItem type in Types)
+			{
+				switch (parameter.ToString())
+				{
+					case "0":
+						type.IsChecked = false;
+						break;
+
+					case "1":
+						type.IsChecked = true; ;
+						break;
+
+					case "2":
+						type.IsChecked = null;
+						break;
+
+					default:
+						break;
+				}
 			}
 		}
+
+		private void CheckColorExecute(object parameter)
+		{
+			foreach (CheckItem color in Colors)
+			{
+				switch (parameter.ToString())
+				{
+					case "0":
+						color.IsChecked = false;
+						break;
+
+					case "1":
+						color.IsChecked = true; ;
+						break;
+
+					case "2":
+						color.IsChecked = null;
+						break;
+
+					default:
+						break;
+				}
+			}
+		}
+
+		private void CheckRarityExecute(object parameter)
+		{
+			foreach (CheckItem rarity in Rarities)
+			{
+				switch (parameter.ToString())
+				{
+					case "0":
+						rarity.IsChecked = false;
+						break;
+
+					case "1":
+						rarity.IsChecked = true; ;
+						break;
+
+					case "2":
+						rarity.IsChecked = null;
+						break;
+
+					default:
+						break;
+				}
+			}
+		}
+	}
+
+	internal class CheckItem : ObservableObject
+	{
+		private bool? isChecked;
+
+		/// <summary>
+		/// Initializes a new instance of the CheckItem class.
+		/// </summary>
+		public CheckItem(string content, bool? isChecked)
+		{
+			Content = content;
+			IsChecked = isChecked;
+		}
+
+		public string Content { get; set; }
+
+		public bool? IsChecked { get { return isChecked; } set { isChecked = value; RaisePropertyChanged("IsChecked"); } }
 	}
 }

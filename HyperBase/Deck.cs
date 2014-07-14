@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using System.Collections.ObjectModel;
 
 namespace HyperKore.Common
 {
@@ -13,8 +14,8 @@ namespace HyperKore.Common
 		public Deck()
 		{
 			Name = String.Empty;
-			MainBoard = new List<Card>();
-			SideBoard = new List<Card>();
+			MainBoard = new ObservableCollection<Card>();
+			SideBoard = new ObservableCollection<Card>();
 			Comment = String.Empty;
 			Format = FORMAT.Default;
 			Mode = MODE.Default;
