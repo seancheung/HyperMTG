@@ -1,21 +1,21 @@
-﻿namespace HyperMTG.ViewModel
-{
-	using HyperKore.Common;
-	using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
+using HyperKore.Common;
 
+namespace HyperMTG.ViewModel
+{
 	internal class DeckBuiderViewModel
 	{
-		public Deck Deck { get; set; }
-
-		public IEnumerable<Card> Cards { get; private set; }
-
 		/// <summary>
-		/// Initializes a new instance of the DeckBuiderViewModel class.
+		///     Initializes a new instance of the DeckBuiderViewModel class.
 		/// </summary>
 		public DeckBuiderViewModel()
 		{
 			Deck = new Deck();
-			Cards = null;
+			Cards = new ObservableCollection<Card>();
 		}
+
+		public Deck Deck { get; set; }
+
+		public ObservableCollection<Card> Cards { get; private set; }
 	}
 }

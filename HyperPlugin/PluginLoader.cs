@@ -25,11 +25,9 @@ namespace HyperKore.Plugin
 	{
 		public static ICollection<T> Load(string path)
 		{
-			string[] dllFileNames = null;
-
 			if (Directory.Exists(path))
 			{
-				dllFileNames = Directory.GetFiles(path, "*.dll");
+				string[] dllFileNames = Directory.GetFiles(path, "*.dll");
 
 				ICollection<Assembly> assemblies = new List<Assembly>(dllFileNames.Length);
 				foreach (string dllFile in dllFileNames)
@@ -53,12 +51,9 @@ namespace HyperKore.Plugin
 							{
 								continue;
 							}
-							else
+							if (type.GetInterface(pluginType.FullName) != null)
 							{
-								if (type.GetInterface(pluginType.FullName) != null)
-								{
-									pluginTypes.Add(type);
-								}
+								pluginTypes.Add(type);
 							}
 						}
 					}

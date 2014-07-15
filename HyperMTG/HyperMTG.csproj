@@ -66,8 +66,16 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Content\DatabaseOfficial.xaml.cs">
+      <DependentUpon>DatabaseOfficial.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\DatabaseViewModel.cs" />
     <Compile Include="ViewModel\DeckBuiderViewModel.cs" />
     <Compile Include="ViewModel\FilterViewModel.cs" />
+    <Page Include="Content\DatabaseOfficial.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
