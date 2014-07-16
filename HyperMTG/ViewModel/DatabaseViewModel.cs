@@ -1,17 +1,16 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
+using System.Windows.Input;
 using HyperKore.Common;
 using HyperKore.IO;
+using HyperMTG.Helper;
 
 namespace HyperMTG.ViewModel
 {
 	internal class DatabaseViewModel
 	{
-		public ObservableCollection<Card> Cards { get; set; }
-
-		public ObservableCollection<Set> Sets { get; set; }
-
 		private IDBReader dbReader;
 		private IDBWriter dbWriter;
 
@@ -26,6 +25,20 @@ namespace HyperMTG.ViewModel
 			dbWriter = IOHandler.Instance.GetPlugins<IDBWriter>().FirstOrDefault();
 		}
 
+		public ObservableCollection<Card> Cards { get; set; }
+
+		public ObservableCollection<Set> Sets { get; set; }
+
+		public ICommand UpdateSets
+		{
+			get { return new RelayCommand(UpdateSetsExecute); }
+		}
+
+		public ICommand UpdateCards
+		{
+			get { return new RelayCommand<IEnumerable<Set>>(UpdateCardsExecute); }
+		}
+
 		private void LoadDB()
 		{
 			if (dbReader != null)
@@ -35,9 +48,14 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
-		private void UpdateSets()
+		private void UpdateSetsExecute()
 		{
+			throw new NotImplementedException();
+		}
 
+		private void UpdateCardsExecute(IEnumerable<Set> sets)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

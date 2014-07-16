@@ -1,16 +1,16 @@
-﻿namespace HyperMTG.ViewModel
-{
-	using HyperKore.Common;
-	using HyperMTG.Helper;
-	using System;
-	using System.Collections;
-	using System.Collections.Generic;
-	using System.Windows.Input;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Windows.Input;
+using HyperKore.Common;
+using HyperMTG.Helper;
 
+namespace HyperMTG.ViewModel
+{
 	internal class FilterViewModel
 	{
 		/// <summary>
-		/// Initializes a new instance of the FilterViewModel class.
+		///     Initializes a new instance of the FilterViewModel class.
 		/// </summary>
 		public FilterViewModel()
 		{
@@ -37,39 +37,36 @@
 
 		public IEnumerable Types { get; set; }
 
-		public IEnumerable Formats { get { return null; } }
+		public IEnumerable Formats
+		{
+			get { return null; }
+		}
 
-		public IEnumerable Sets { get { return null; } }
+		public IEnumerable Sets
+		{
+			get { return null; }
+		}
 
 		public ICommand CheckType
 		{
-			get
-			{
-				return new RelayCommand<string>(CheckTypeExecute);
-			}
+			get { return new RelayCommand<string>(CheckTypeExecute); }
 		}
 
 		public ICommand CheckColor
 		{
-			get
-			{
-				return new RelayCommand<string>(CheckColorExecute);
-			}
+			get { return new RelayCommand<string>(CheckColorExecute); }
 		}
 
 		public ICommand CheckRarity
 		{
-			get
-			{
-				return new RelayCommand<string>(CheckRarityExecute);
-			}
+			get { return new RelayCommand<string>(CheckRarityExecute); }
 		}
 
 		private IEnumerable GetFromEnum<T>()
 		{
 			var list = new List<CheckItem>();
 
-			foreach (var item in Enum.GetNames(typeof(T)))
+			foreach (string item in Enum.GetNames(typeof (T)))
 			{
 				list.Add(new CheckItem(item, false));
 			}
@@ -88,14 +85,12 @@
 						break;
 
 					case "1":
-						type.IsChecked = true; ;
+						type.IsChecked = true;
+						;
 						break;
 
 					case "2":
 						type.IsChecked = null;
-						break;
-
-					default:
 						break;
 				}
 			}
@@ -112,14 +107,12 @@
 						break;
 
 					case "1":
-						color.IsChecked = true; ;
+						color.IsChecked = true;
+						;
 						break;
 
 					case "2":
 						color.IsChecked = null;
-						break;
-
-					default:
 						break;
 				}
 			}
@@ -136,14 +129,12 @@
 						break;
 
 					case "1":
-						rarity.IsChecked = true; ;
+						rarity.IsChecked = true;
+						;
 						break;
 
 					case "2":
 						rarity.IsChecked = null;
-						break;
-
-					default:
 						break;
 				}
 			}
@@ -155,7 +146,7 @@
 		private bool? isChecked;
 
 		/// <summary>
-		/// Initializes a new instance of the CheckItem class.
+		///     Initializes a new instance of the CheckItem class.
 		/// </summary>
 		public CheckItem(string content, bool? isChecked)
 		{
@@ -165,6 +156,14 @@
 
 		public string Content { get; set; }
 
-		public bool? IsChecked { get { return isChecked; } set { isChecked = value; RaisePropertyChanged("IsChecked"); } }
+		public bool? IsChecked
+		{
+			get { return isChecked; }
+			set
+			{
+				isChecked = value;
+				RaisePropertyChanged("IsChecked");
+			}
+		}
 	}
 }
