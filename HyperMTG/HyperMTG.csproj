@@ -69,6 +69,7 @@
     <Compile Include="Content\DatabaseOfficial.xaml.cs">
       <DependentUpon>DatabaseOfficial.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helper\MutiColorConverter.cs" />
     <Compile Include="ViewModel\DatabaseViewModel.cs" />
     <Compile Include="ViewModel\DeckBuiderViewModel.cs" />
     <Compile Include="ViewModel\FilterViewModel.cs" />

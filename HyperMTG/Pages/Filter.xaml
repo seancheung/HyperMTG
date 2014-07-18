@@ -1,42 +1,19 @@
 ﻿<UserControl x:Class="HyperMTG.Pages.Filter"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:core="clr-namespace:HyperKore.Common;assembly=HyperBase"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:hp="clr-namespace:HyperMTG.Helper"
-             xmlns:local="clr-namespace:HyperMTG"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
-             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:vm="clr-namespace:HyperMTG.ViewModel"
              d:DesignHeight="320" d:DesignWidth="480"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <hp:SliderConverter x:Key="slidercv" />
-        <DataTemplate x:Key="checkboxtemplate">
+        <DataTemplate x:Key="CheckBoxTemplate">
             <CheckBox Content="{Binding Content}"
                       IsChecked="{Binding IsChecked,
                                           Mode=TwoWay}"
                       IsThreeState="True" />
         </DataTemplate>
-        <ObjectDataProvider x:Key="colors" MethodName="GetNames"
-                            ObjectType="{x:Type sys:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="core:COLOR" />
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
-        <ObjectDataProvider x:Key="types" MethodName="GetNames"
-                            ObjectType="{x:Type sys:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="core:TYPE" />
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
-        <ObjectDataProvider x:Key="rarities" MethodName="GetNames"
-                            ObjectType="{x:Type sys:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="core:RARITY" />
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
     </UserControl.Resources>
     <UserControl.DataContext>
         <vm:FilterViewModel />
@@ -51,13 +28,13 @@
                     <ColumnDefinition Width="*" MinWidth="100" />
                 </Grid.ColumnDefinitions>
                 <ListBox Grid.Column="0"
-                         ItemTemplate="{StaticResource checkboxtemplate}"
+                         ItemTemplate="{StaticResource CheckBoxTemplate}"
                          ItemsSource="{Binding Sets}" />
                 <ListBox Grid.Column="1"
-                         ItemTemplate="{StaticResource checkboxtemplate}"
+                         ItemTemplate="{StaticResource CheckBoxTemplate}"
                          ItemsSource="{Binding Formats}" />
                 <ListBox Grid.Column="2"
-                         ItemTemplate="{StaticResource checkboxtemplate}"
+                         ItemTemplate="{StaticResource CheckBoxTemplate}"
                          ItemsSource="{Binding Types}">
                     <ListBox.ContextMenu>
                         <ContextMenu>
@@ -122,7 +99,7 @@
                     </Grid>
                     <ListBox Grid.Row="3" Grid.ColumnSpan="2"
                              Margin="2"
-                             ItemTemplate="{StaticResource checkboxtemplate}"
+                             ItemTemplate="{StaticResource CheckBoxTemplate}"
                              ItemsSource="{Binding Colors}">
                         <ListBox.ContextMenu>
                             <ContextMenu>
@@ -137,7 +114,7 @@
                     </ListBox>
                     <ListBox Grid.Row="4" Grid.ColumnSpan="2"
                              Margin="2"
-                             ItemTemplate="{StaticResource checkboxtemplate}"
+                             ItemTemplate="{StaticResource CheckBoxTemplate}"
                              ItemsSource="{Binding Rarities}">
                         <ListBox.ContextMenu>
                             <ContextMenu>

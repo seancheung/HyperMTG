@@ -64,7 +64,7 @@ namespace HyperMTG.ViewModel
 
 		private IEnumerable GetFromEnum<T>()
 		{
-			var list = new List<CheckItem>();
+			List<CheckItem> list = new List<CheckItem>();
 
 			foreach (string item in Enum.GetNames(typeof (T)))
 			{

@@ -11,15 +11,28 @@ namespace HyperMTG.ViewModel
 {
 	internal class DatabaseViewModel
 	{
+		/// <summary>
+		/// InfoBar message
+		/// </summary>
+		public volatile string Info;
+
+		/// <summary>
+		/// ProgressBar value
+		/// </summary>
+		public volatile int Progress;
+
 		private IDBReader dbReader;
 		private IDBWriter dbWriter;
 
+		/// <summary>
+		/// Single background method
+		/// </summary>
 		private volatile bool isProcessing;
 
 		public DatabaseViewModel()
 		{
 			Cards = new ObservableCollection<Card>();
-			Sets = new ObservableCollection<Set>();
+			Sets = new ObservableCollection<CheckSetItem>();
 
 			dbReader = IOHandler.Instance.GetPlugins<IDBReader>().FirstOrDefault();
 			dbWriter = IOHandler.Instance.GetPlugins<IDBWriter>().FirstOrDefault();
@@ -27,7 +40,7 @@ namespace HyperMTG.ViewModel
 
 		public ObservableCollection<Card> Cards { get; set; }
 
-		public ObservableCollection<Set> Sets { get; set; }
+		public ObservableCollection<CheckSetItem> Sets { get; set; }
 
 		public ICommand UpdateSets
 		{
@@ -39,12 +52,25 @@ namespace HyperMTG.ViewModel
 			get { return new RelayCommand<IEnumerable<Set>>(UpdateCardsExecute); }
 		}
 
+		public ICommand ExportImages
+		{
+			get { return new RelayCommand<IEnumerable<Card>>(ExprotImagesExecute); }
+		}
+
 		private void LoadDB()
 		{
 			if (dbReader != null)
 			{
 				Cards = new ObservableCollection<Card>(dbReader.LoadCards());
-				Sets = new ObservableCollection<Set>(dbReader.LoadSets());
+				ObservableCollection<Set> sets = new ObservableCollection<Set>(dbReader.LoadSets());
+				foreach (Set set in sets)
+				{
+					Sets.Add(new CheckSetItem(false, set));
+				}
+			}
+			else
+			{
+				Info = "Assembly missing";
 			}
 		}
 
@@ -56,6 +82,44 @@ namespace HyperMTG.ViewModel
 		private void UpdateCardsExecute(IEnumerable<Set> sets)
 		{
 			throw new NotImplementedException();
+		}
+
+		private void ExprotImagesExecute(IEnumerable<Card> cards)
+		{
+			throw new NotImplementedException();
+		}
+	}
+
+	internal class CheckSetItem : ObservableObject
+	{
+		private bool isChecked;
+
+		public CheckSetItem(bool isChecked, Set content)
+		{
+			IsChecked = isChecked;
+			Content = content;
+		}
+
+		public Set Content { get; set; }
+
+		public bool IsLocal
+		{
+			get { return Content.Local; }
+			set
+			{
+				Content.Local = value;
+				RaisePropertyChanged("IsLocal");
+			}
+		}
+
+		public bool IsChecked
+		{
+			get { return isChecked; }
+			set
+			{
+				isChecked = value;
+				RaisePropertyChanged("IsChecked");
+			}
 		}
 	}
 }
