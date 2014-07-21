@@ -1,8 +1,8 @@
-﻿using HyperKore.Common;
+﻿using System;
+using System.Collections.Generic;
+using HyperKore.Common;
 using HyperKore.Net;
 using HyperKore.Xception;
-using System;
-using System.Collections.Generic;
 
 namespace HyperKore.Web
 {
@@ -35,12 +35,21 @@ namespace HyperKore.Web
 		}
 
 		/// <summary>
-		/// Get set list
+		/// Get set list in string format
 		/// </summary>
 		/// <returns></returns>
 		public IEnumerable<string> ParseSet()
 		{
 			return new ParseOther().ParseSet();
+		}
+
+		/// <summary>
+		/// Get set list
+		/// </summary>
+		/// <returns></returns>
+		public IEnumerable<Set> ParSetWithCode()
+		{
+			return new ParseOther().ParseSetWithCode();
 		}
 
 		/// <summary>
@@ -59,15 +68,7 @@ namespace HyperKore.Web
 		/// <returns></returns>
 		public IEnumerable<Card> Prepare(Set set)
 		{
-			string webdata;
-			try
-			{
-				webdata = Request.Instance.GetWebData(BuildURL(set.SetName));
-			}
-			catch
-			{
-				throw;
-			}
+			string webdata = Request.Instance.GetWebData(BuildURL(set.SetName));
 
 			if (webdata.Contains("Your search returned zero results"))
 			{
@@ -79,28 +80,28 @@ namespace HyperKore.Web
 				Card card = new Card();
 				try
 				{
-					var numa = webdata.IndexOf("\"number\"") + 9;
-					var numb = webdata.IndexOf("<", numa);
+					int numa = webdata.IndexOf("\"number\"") + 9;
+					int numb = webdata.IndexOf("<", numa);
 					card.Number = webdata.Substring(numa, numb - numa);
 
-					var ida = webdata.IndexOf("multiverseid=") + 13;
-					var idb = webdata.IndexOf("\"", ida);
+					int ida = webdata.IndexOf("multiverseid=") + 13;
+					int idb = webdata.IndexOf("\"", ida);
 					card.ID = webdata.Substring(ida, idb - ida);
 
-					var namea = webdata.IndexOf(">", idb) + 1;
-					var nameb = webdata.IndexOf("<", namea);
+					int namea = webdata.IndexOf(">", idb) + 1;
+					int nameb = webdata.IndexOf("<", namea);
 					card.Name = webdata.Substring(namea, nameb - namea);
 
-					var arta = webdata.IndexOf("\"artist\"") + 9;
-					var artb = webdata.IndexOf("<", arta);
+					int arta = webdata.IndexOf("\"artist\"") + 9;
+					int artb = webdata.IndexOf("<", arta);
 					card.Artist = webdata.Substring(arta, artb - arta);
 
-					var coa = webdata.IndexOf("\"color\"") + 8;
-					var cob = webdata.IndexOf("<", coa);
+					int coa = webdata.IndexOf("\"color\"") + 8;
+					int cob = webdata.IndexOf("<", coa);
 					card.Color = webdata.Substring(coa, cob - coa).Replace("/", " ");
 
-					var rca = webdata.IndexOf("\"rarity\"") + 9;
-					var rcb = webdata.IndexOf("<", rca);
+					int rca = webdata.IndexOf("\"rarity\"") + 9;
+					int rcb = webdata.IndexOf("<", rca);
 					card.RarityCode = webdata.Substring(rca, rcb - rca).Replace("/", " ");
 
 					card.Set = set.SetName;
@@ -125,11 +126,11 @@ namespace HyperKore.Web
 		/// <returns></returns>
 		public IEnumerable<Card> PrepareAndProcess(Set set, LANGUAGE lang)
 		{
-			var cards = Prepare(set);
+			IEnumerable<Card> cards = Prepare(set);
 
-			foreach (var card in cards)
+			foreach (Card card in cards)
 			{
-				var state = Process(card, lang);
+				bool state = Process(card, lang);
 				if (state)
 				{
 					yield return card;
@@ -145,7 +146,7 @@ namespace HyperKore.Web
 		/// <returns>If card is not found, false will be returned</returns>
 		public bool Process(Card card, LANGUAGE lang = LANGUAGE.English)
 		{
-			foreach (var p in parse)
+			foreach (ICardParse p in parse)
 			{
 				p.Parse(card, lang);
 				if (card == null) return false;
@@ -161,7 +162,8 @@ namespace HyperKore.Web
 		/// <returns>the url for webrequesting</returns>
 		private string BuildURL(string setname)
 		{
-			return string.Format("http://gatherer.wizards.com/Pages/Search/Default.aspx?output=checklist&set=%5b%22{0}%22%5d", setname.Replace(" ", "+"));
+			return string.Format("http://gatherer.wizards.com/Pages/Search/Default.aspx?output=checklist&set=%5b%22{0}%22%5d",
+				setname.Replace(" ", "+"));
 		}
 	}
 }

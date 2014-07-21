@@ -14,23 +14,51 @@
     <Grid Style="{StaticResource ContentRoot}">
         <ScrollViewer>
             <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" MinHeight="20" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" MinHeight="20" />
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto" MinWidth="100" />
+                    <ColumnDefinition Width="Auto" MinWidth="100" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <ListBox Grid.Column="0" ItemsSource="{Binding Sets}">
+                <StackPanel Grid.Row="0" Grid.ColumnSpan="3"
+                            Orientation="Horizontal">
+                    <mui:ModernButton Command="{Binding LoadDB}" Content="Load" />
+                    <mui:ModernButton Command="{Binding UpdateSets}" Content="Update" />
+                </StackPanel>
+                <ListBox Grid.Row="1" Grid.Column="0"
+                         ItemsSource="{Binding Sets}">
                     <ListBox.Resources>
                         <hp:MutiColorConverter x:Key="ColorConverter" />
                     </ListBox.Resources>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <CheckBox Content="{Binding Content.SetName}"
-                                      Foreground="{Binding Path=Local,
-                                                           Converter={StaticResource ColorConverter}}"
-                                      IsChecked="{Binding IsChecked}" />
+                            <Grid Background="{Binding Path=IsLocal, Converter={StaticResource ColorConverter}}" ToolTip="{Binding Content.LastUpdate}">
+                                <ProgressBar Foreground="Tomato"
+                                             Maximum="{Binding Max}"
+                                             Value="{Binding Prog}" />
+                                <CheckBox Content="{Binding Content.SetName}" IsChecked="{Binding IsChecked}" />
+                            </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
+                <GridSplitter Grid.Row="1" Grid.Column="1"
+                              Width="1" Margin="1"
+                              Background="#FF60A1BF" />
+                <DataGrid Grid.Row="1" Grid.Column="2"
+                          ItemsSource="{Binding Cards}" />
+                <StackPanel Grid.Row="2" Grid.Column="0"
+                            Grid.ColumnSpan="3">
+                    <Label Background="Transparent" Content="{Binding Info}" />
+                </StackPanel>
             </Grid>
         </ScrollViewer>
     </Grid>
