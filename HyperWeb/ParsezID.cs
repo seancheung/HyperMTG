@@ -1,7 +1,8 @@
-﻿using HyperKore.Common;
+﻿using System;
+using HyperKore.Common;
 using HyperKore.Net;
+using HyperKore.Utilities;
 using HyperKore.Xception;
-using System;
 
 namespace HyperKore.Web
 {
@@ -30,17 +31,10 @@ namespace HyperKore.Web
 
 		private void GetzID(Card card, LANGUAGE lang)
 		{
-			string webdata;
-			try
-			{
-				webdata = Request.Instance.GetWebData(BuildURL(card.ID));
-			}
-			catch
-			{
-				throw;
-			}
+			string webdata = Request.Instance.GetWebData(BuildURL(card.ID));
 
-			if (lang == LANGUAGE.English || !webdata.Contains("This card is available in the following languages:") || !webdata.Contains(lang.ToString().Replace("_", " ")))
+			if (lang == LANGUAGE.English || !webdata.Contains("This card is available in the following languages:") ||
+			    !webdata.Contains(lang.GetLangName()))
 			{
 				card.zID = string.Empty;
 			}
@@ -48,14 +42,14 @@ namespace HyperKore.Web
 			{
 				try
 				{
-					webdata = webdata.Remove(webdata.IndexOf(lang.ToString().Replace("_", " ")));
+					webdata = webdata.Remove(webdata.IndexOf(lang.GetLangName()));
 					int num = webdata.LastIndexOf("multiverseid=") + 13;
 					int num2 = webdata.IndexOf("\"", num);
 					card.zID = webdata.Substring(num, num2 - num);
 				}
 				catch (Exception ex)
 				{
-					throw new ParsingXception("Parsing Error happended when parsing card zID:" + lang.ToString(), ex);
+					throw new ParsingXception("Parsing Error happended when parsing card zID:" + lang, ex);
 				}
 			}
 		}

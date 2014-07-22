@@ -25,9 +25,9 @@
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Row="0" Grid.ColumnSpan="3"
                         Orientation="Horizontal">
-                <mui:ModernButton Command="{Binding LoadDatabase}" Content="Load" />
-                <mui:ModernButton Command="{Binding UpdateSets}" Content="Update" />
-                <mui:ModernButton Command="{Binding UpdateCards}" Content="Update Cards" />
+                <mui:ModernButton Command="{Binding LoadSetsCommand}" Content="Load Sets" />
+                <mui:ModernButton Command="{Binding UpdateSetsCommand}" Content="Update Sets" />
+                <mui:ModernButton Command="{Binding UpdateCardsCommand}" Content="Update Checked Cards" />
             </StackPanel>
             <ListBox Grid.Row="1" Grid.Column="0"
                      ItemsSource="{Binding Sets}">
@@ -38,19 +38,54 @@
                 </ListBox.Resources>
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="Margin" Value="1,2,1,1" />
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                    <Grid>
+                                        <Border Background="{TemplateBinding Background}" />
+                                        <Border Margin="3,1" Background="Transparent">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+                                                <Border Grid.Row="0" Margin="2,1,2,0"
+                                                        Background="Transparent" />
+                                            </Grid>
+                                        </Border>
+                                        <ContentPresenter Margin="8,5" />
+                                    </Grid>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
                     </Style>
                 </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid ToolTip="{Binding Content.LastUpdate, Converter={StaticResource TooltipConverter}}">
+                            <Grid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="{Binding LoadCardsCommand}"
+                                              CommandParameter="{Binding Content}"
+                                              Header="Load" />
+                                </ContextMenu>
+                            </Grid.ContextMenu>
                             <CheckBox HorizontalAlignment="Stretch"
                                       Content="{Binding Content.FullName}"
                                       Foreground="{Binding Path=IsLocal,
-                                                           Converter={StaticResource ColorConverter}}"
+                                                           Converter={StaticResource ColorConverter},
+                                                           ConverterParameter=0}"
                                       IsChecked="{Binding IsChecked}" />
-                            <ProgressBar Margin="1" HorizontalAlignment="Stretch"
-                                         Foreground="Tomato"
+                            <ProgressBar HorizontalAlignment="Stretch"
+                                         Background="{Binding Path=IsLocal,
+                                                              Converter={StaticResource ColorConverter},
+                                                              ConverterParameter=0}"
+                                         Foreground="{Binding Path=IsLocal,
+                                                              Converter={StaticResource ColorConverter},
+                                                              ConverterParameter=1}"
                                          Maximum="{Binding Max}"
                                          Opacity="0.5"
                                          Visibility="{Binding IsProcessing,
@@ -64,7 +99,14 @@
                           Width="1" Margin="1"
                           Background="#FF60A1BF" />
             <DataGrid Grid.Row="1" Grid.Column="2"
-                      ItemsSource="{Binding Cards}" />
+                      IsReadOnly="True"
+                      ItemsSource="{Binding Cards}">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Clear Table" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+            </DataGrid>
             <StackPanel Grid.Row="2" Grid.Column="0"
                         Grid.ColumnSpan="3">
                 <Label HorizontalAlignment="Right"

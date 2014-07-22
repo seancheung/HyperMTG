@@ -34,27 +34,27 @@ namespace HyperKore.Web
 			}
 			if (card.Cost.Contains("W"))
 			{
-				card.Color += "White ";
+				//card.Color += "White ";
 				card.ColorCode += "W";
 			}
 			if (card.Cost.Contains("U"))
 			{
-				card.Color += "Blue ";
+				//card.Color += "Blue ";
 				card.ColorCode += "U";
 			}
 			if (card.Cost.Contains("B"))
 			{
-				card.Color += "Black ";
+				//card.Color += "Black ";
 				card.ColorCode += "B";
 			}
 			if (card.Cost.Contains("R"))
 			{
-				card.Color += "Red ";
+				//card.Color += "Red ";
 				card.ColorCode += "R";
 			}
 			if (card.Cost.Contains("G"))
 			{
-				card.Color += "Green ";
+				//card.Color += "Green ";
 				card.ColorCode += "G";
 			}
 

@@ -5,64 +5,60 @@ namespace HyperKore.Utilities
 	public static class LanguageTool
 	{
 		/// <summary>
-		/// Get language code
+		///     Get language code
 		/// </summary>
 		/// <param name="lang"></param>
 		/// <returns></returns>
 		public static string GetLangCode(this LANGUAGE lang)
 		{
-			string result = "en";
-
 			switch (lang)
 			{
 				case LANGUAGE.ChineseSimplified:
-					result = "cn";
-					break;
+					return "cn";
 
 				case LANGUAGE.ChineseTraditional:
-					result = "tw";
-					break;
+					return "tw";
 
 				case LANGUAGE.German:
-					result = "ge";
-					break;
+					return "ge";
 
 				case LANGUAGE.French:
-					result = "fr";
-					break;
+					return "fr";
 
 				case LANGUAGE.Italian:
-					result = "it";
-					break;
+					return "it";
 
 				case LANGUAGE.Japanese:
-					result = "jp";
-					break;
+					return "jp";
 
 				case LANGUAGE.Korean:
-					result = "ko";
-					break;
+					return "ko";
 
 				case LANGUAGE.Portuguese:
-					result = "pt";
-					break;
+					return "pt";
 
 				case LANGUAGE.Russian:
-					result = "ru";
-					break;
+					return "ru";
 
 				case LANGUAGE.Spanish:
-					result = "sp";
-					break;
-
-				case LANGUAGE.English:
-					break;
+					return "sp";
 
 				default:
-					break;
+					return "en";
 			}
+		}
 
-			return result;
+		public static string GetLangName(this LANGUAGE lang)
+		{
+			switch (lang)
+			{
+				case LANGUAGE.ChineseSimplified:
+					return "Chinese Simplified";
+				case LANGUAGE.ChineseTraditional:
+					return "Chinese Traditional";
+				default:
+					return lang.ToString();
+			}
 		}
 	}
 }

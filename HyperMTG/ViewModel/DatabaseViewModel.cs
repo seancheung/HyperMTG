@@ -15,109 +15,128 @@ namespace HyperMTG.ViewModel
 {
 	internal class DatabaseViewModel : ObservableObject
 	{
-		private const int maxThread = 10;
-		private static readonly object _lock = new object();
-		private readonly IDBReader dbReader;
-		private readonly IDBWriter dbWriter;
-
-		private readonly Dispatcher dispatcher;
-		private string info;
-
 		//Max thread amount for downloading
+		private const int MaxThread = 10;
+		private static readonly object Lock = new object();
+		private readonly IDBReader _dbReader;
+		private readonly IDBWriter _dbWriter;
 
-		//private volatile bool isProcessing;
-		private volatile int processCount;
+		private readonly Dispatcher _dispatcher;
+		private string _info;
+
+		private volatile int _processCount;
+		private ObservableCollection<Card> _cards;
 
 		public DatabaseViewModel()
 		{
 			Cards = new ObservableCollection<Card>();
 			Sets = new ObservableCollection<CheckSetItem>();
 
-			dbReader = IOHandler.Instance.GetPlugins<IDBReader>().FirstOrDefault();
-			dbWriter = IOHandler.Instance.GetPlugins<IDBWriter>().FirstOrDefault();
+			_dbReader = IOHandler.Instance.GetPlugins<IDBReader>().FirstOrDefault();
+			_dbWriter = IOHandler.Instance.GetPlugins<IDBWriter>().FirstOrDefault();
 
-			dispatcher = Application.Current.Dispatcher;
+			_dispatcher = Application.Current.Dispatcher;
 		}
 
 		/// <summary>
-		/// InfoBar message
+		///     InfoBar message
 		/// </summary>
 		public string Info
 		{
-			get { return info; }
+			get { return _info; }
 			set
 			{
-				info = value;
+				_info = value;
 				RaisePropertyChanged("Info");
 			}
 		}
 
-		public ObservableCollection<Card> Cards { get; set; }
+		public ObservableCollection<Card> Cards
+		{
+			get { return _cards; }
+			set
+			{
+				_cards = value;
+				RaisePropertyChanged("Cards");
+			}
+		}
 
 		public ObservableCollection<CheckSetItem> Sets { get; set; }
 
-		public ICommand UpdateSets
+		public ICommand UpdateSetsCommand
 		{
-			get { return new RelayCommand(UpdateSetsExecute, CanWriteExecute); }
+			get { return new RelayCommand(UpdateSetsExecute, CanExecuteWrite); }
 		}
 
-		public ICommand UpdateCards
+		public ICommand UpdateCardsCommand
 		{
-			get { return new RelayCommand(UpdateCardsExecute, CanWriteExecute); }
+			get { return new RelayCommand(UpdateCardsExecute, CanExecuteWrite); }
 		}
 
-		public ICommand ExportImages
+		public ICommand ExportImagesCommand
 		{
-			get { return new RelayCommand(ExprotImagesExecute, CanWriteExecute); }
+			get { return new RelayCommand(ExprotImagesExecute, CanExecuteWrite); }
 		}
 
-		public ICommand LoadDatabase
+		public ICommand LoadSetsCommand
 		{
-			get { return new RelayCommand(LoadDatabaseExecute, CanReadExecute); }
+			get { return new RelayCommand(LoadSetsExecute, CanExecuteRead); }
 		}
 
-		private void LoadDatabaseExecute()
+		public ICommand LoadCardsCommand
 		{
-			if (dbReader != null)
+			get { return new RelayCommand<Set>(LoadCardsExecute, CanExecuteLoadCards); }
+		}
+
+		private void LoadSetsExecute()
+		{
+			_processCount++;
+			var sets = new ObservableCollection<Set>(_dbReader.LoadSets());
+			_dispatcher.BeginInvoke(new Action(() =>
 			{
-				processCount++;
-				Cards = new ObservableCollection<Card>(dbReader.LoadCards());
-				ObservableCollection<Set> sets = new ObservableCollection<Set>(dbReader.LoadSets());
-				dispatcher.BeginInvoke(new Action(() =>
+				Sets.Clear();
+				foreach (Set set in sets)
 				{
-					Sets.Clear();
-					foreach (Set set in sets)
-					{
-						Sets.Add(new CheckSetItem(false, set));
-					}
-				}));
-				processCount--;
-			}
-			else
-			{
-				Info = "Assembly missing";
-			}
+					Sets.Add(new CheckSetItem(false, set));
+				}
+			}));
+			_processCount--;
 		}
 
-		private bool CanWriteExecute()
+		private void LoadCardsExecute(Set set)
 		{
-			if (dbWriter != null)
+			_processCount++;
+			new Thread(() =>
 			{
-				if (processCount == 0) return true;
-				Info = "Busy: " + processCount;
-				return false;
+				Info = "Loading" + set.FullName;
+				IEnumerable<Card> cards = _dbReader.LoadCards();
+				_dispatcher.BeginInvoke(
+					new Action(() => { Cards = new ObservableCollection<Card>(cards.Where(c => c.SetCode == set.SetCode)); }));
+
+				Info = "Done!";
+			}).Start();
+		}
+
+		private bool CanExecuteLoadCards(Set set)
+		{
+			return _processCount == 0 && set.Local && _dbReader != null;
+		}
+
+		private bool CanExecuteWrite()
+		{
+			if (_dbWriter != null)
+			{
+				return _processCount == 0;
 			}
 			Info = "Assembly missing";
 			return false;
 		}
 
-		private bool CanReadExecute()
+		private bool CanExecuteRead()
 		{
-			if (dbReader != null)
+			if (_dbReader != null)
 			{
-				if (processCount == 0) return true;
-				Info = "Busy: " + processCount;
-				return false;
+				return _processCount == 0;
 			}
 			Info = "Assembly missing";
 			return false;
@@ -125,14 +144,14 @@ namespace HyperMTG.ViewModel
 
 		private void UpdateSetsExecute()
 		{
-			processCount++;
+			_processCount++;
 			Info = "Waiting...Grabbing Source";
 			new Thread(() =>
 			{
 				IEnumerable<Set> sets = DataParse.Instance.ParSetWithCode();
 				IList<Set> enumerable = sets as IList<Set> ?? sets.ToList();
-				dbWriter.Insert(enumerable);
-				dispatcher.BeginInvoke(new Action(() =>
+				_dbWriter.Insert(enumerable);
+				_dispatcher.BeginInvoke(new Action(() =>
 				{
 					Sets.Clear();
 					foreach (Set set in enumerable)
@@ -141,7 +160,7 @@ namespace HyperMTG.ViewModel
 					}
 				}));
 
-				processCount--;
+				_processCount--;
 
 				Info = "Done!";
 			}).Start();
@@ -149,14 +168,13 @@ namespace HyperMTG.ViewModel
 
 		private void UpdateCardsExecute()
 		{
-			//isProcessing = true;
 			foreach (CheckSetItem checkSetItem in Sets)
 			{
 				if (checkSetItem.IsChecked)
 				{
 					new Thread(() =>
 					{
-						processCount++;
+						_processCount++;
 						checkSetItem.IsProcessing = true;
 						Info = "Preparing for " + checkSetItem.Content.FullName;
 						IEnumerable<Card> cards = DataParse.Instance.Prepare(checkSetItem.Content);
@@ -165,41 +183,44 @@ namespace HyperMTG.ViewModel
 						checkSetItem.Prog = 0;
 
 						//Split the full card list into several parts
-						List<List<Card>> cardsThread = new List<List<Card>>();
-						for (int i = 0; i < maxThread - 1; i++)
+						var cardsThread = new List<List<Card>>();
+						for (int i = 0; i < MaxThread - 1; i++)
 						{
-							cardsThread.Add(enumerable.GetRange(enumerable.Count / maxThread * i, enumerable.Count / maxThread));
+							cardsThread.Add(enumerable.GetRange(enumerable.Count/MaxThread*i, enumerable.Count/MaxThread));
 						}
-						cardsThread.Add(enumerable.GetRange(enumerable.Count / maxThread * (maxThread - 1),
-							enumerable.Count / maxThread + enumerable.Count % maxThread));
+						cardsThread.Add(enumerable.GetRange(enumerable.Count/MaxThread*(MaxThread - 1),
+							enumerable.Count/MaxThread + enumerable.Count%MaxThread));
 
 						#region WaitCallback
 
 						WaitCallback waitCallback = delegate(object param)
 						{
-							object[] parameres = param as object[];
+							var parameres = param as object[];
 							if (parameres == null || parameres.Length != 2)
 								return;
-							IList<Card> tmpCards = parameres[0] as IList<Card>;
+							var tmpCards = parameres[0] as IList<Card>;
 							if (tmpCards == null)
 								return;
-							AutoResetEvent waitHandle = parameres[1] as AutoResetEvent;
+							var waitHandle = parameres[1] as AutoResetEvent;
 							if (waitHandle == null)
 								return;
 
 							for (int i = 0; i < tmpCards.Count; i++)
 							{
 								Info = enumerable.Count + ": " + tmpCards[i].ID;
-								if (DataParse.Instance.Process(tmpCards[i], LANGUAGE.ChineseSimplified))
+								bool result = DataParse.Instance.Process(tmpCards[i], LANGUAGE.ChineseSimplified);
+								if (!result)
 									tmpCards.RemoveAt(i);
+								else
+									_dispatcher.Invoke(new Action(() => { Cards.Add(tmpCards[i]); }));
 
 								checkSetItem.Prog++;
 							}
 
-							lock (_lock)
+							lock (Lock)
 							{
 								//Save Data
-								dbWriter.Insert(tmpCards);
+								_dbWriter.Insert(tmpCards);
 							}
 
 							//Set the current thread state as finished
@@ -208,13 +229,13 @@ namespace HyperMTG.ViewModel
 
 						#endregion
 
-						WaitHandle[] waitHandles = new WaitHandle[maxThread];
+						var waitHandles = new WaitHandle[MaxThread];
 
 						//Start a thread pool for updating
-						for (int i = 0; i < maxThread; i++)
+						for (int i = 0; i < MaxThread; i++)
 						{
 							waitHandles[i] = new AutoResetEvent(false);
-							ThreadPool.QueueUserWorkItem(waitCallback, new object[] { cardsThread[i], waitHandles[i] });
+							ThreadPool.QueueUserWorkItem(waitCallback, new object[] {cardsThread[i], waitHandles[i]});
 						}
 
 						//Wait for all downloading threads to finish
@@ -222,7 +243,9 @@ namespace HyperMTG.ViewModel
 
 						checkSetItem.IsLocal = true;
 						checkSetItem.IsProcessing = false;
-						processCount--;
+						checkSetItem.IsChecked = false;
+						_dbWriter.Update(checkSetItem.Content);
+						_processCount--;
 					}).Start();
 				}
 			}
@@ -236,10 +259,10 @@ namespace HyperMTG.ViewModel
 
 	internal class CheckSetItem : ObservableObject
 	{
-		private bool isChecked;
-		private int max;
-		private int prog;
-		private bool isProcessing;
+		private bool _isChecked;
+		private bool _isProcessing;
+		private int _max;
+		private int _prog;
 
 		public CheckSetItem(bool isChecked, Set content)
 		{
@@ -249,30 +272,30 @@ namespace HyperMTG.ViewModel
 
 		public bool IsProcessing
 		{
-			get { return isProcessing; }
+			get { return _isProcessing; }
 			set
 			{
-				isProcessing = value;
+				_isProcessing = value;
 				RaisePropertyChanged("IsProcessing");
 			}
 		}
 
 		public int Prog
 		{
-			get { return prog; }
+			get { return _prog; }
 			set
 			{
-				prog = value;
+				_prog = value;
 				RaisePropertyChanged("Prog");
 			}
 		}
 
 		public int Max
 		{
-			get { return max; }
+			get { return _max; }
 			set
 			{
-				max = value;
+				_max = value;
 				RaisePropertyChanged("Max");
 			}
 		}
@@ -285,16 +308,17 @@ namespace HyperMTG.ViewModel
 			set
 			{
 				Content.Local = value;
+				Content.LastUpdate = DateTime.Now;
 				RaisePropertyChanged("IsLocal");
 			}
 		}
 
 		public bool IsChecked
 		{
-			get { return isChecked; }
+			get { return _isChecked; }
 			set
 			{
-				isChecked = value;
+				_isChecked = value;
 				RaisePropertyChanged("IsChecked");
 			}
 		}

@@ -20,15 +20,7 @@ namespace HyperKore.Web
 
 		public void Parse(Card card, LANGUAGE lang)
 		{
-			string webdata;
-			try
-			{
-				webdata = Request.Instance.GetWebData(BuildURL(card.ID));
-			}
-			catch
-			{
-				throw;
-			}
+			string webdata = Request.Instance.GetWebData(BuildURL(card.ID));
 
 			if (!webdata.Contains("Card Name:"))
 			{
@@ -366,12 +358,12 @@ namespace HyperKore.Web
 
 			#region Card Rulings
 
-			if (webdata.IndexOf("Hide Rulings") > 0)
+			if (webdata.IndexOf(">Rulings<") > 0)
 			{
 				try
 				{
-					int num23 = webdata.IndexOf("</a>", webdata.IndexOf("Hide Rulings"));
-					int num24 = webdata.IndexOf("<b class=\"aa\"><b></b></b>", num23);
+					int num23 = webdata.IndexOf("<table", webdata.IndexOf(">Rulings<"));
+					int num24 = webdata.IndexOf("</table>", num23);
 					card.Rulings = webdata.Substring(num23, num24 - num23).Trim();
 					while (card.Rulings.Contains("<"))
 					{
