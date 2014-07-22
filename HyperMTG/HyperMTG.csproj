@@ -70,6 +70,8 @@
       <DependentUpon>DatabaseOfficial.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helper\MutiColorConverter.cs" />
+    <Compile Include="Helper\TooltipConverter.cs" />
+    <Compile Include="Helper\VisibaleConverter.cs" />
     <Compile Include="ViewModel\DatabaseViewModel.cs" />
     <Compile Include="ViewModel\DeckBuiderViewModel.cs" />
     <Compile Include="ViewModel\FilterViewModel.cs" />
@@ -84,7 +86,6 @@
     <Compile Include="Helper\ObservableObject.cs" />
     <Compile Include="Helper\PropertySupport.cs" />
     <Compile Include="Helper\RelayCommand.cs" />
-    <Compile Include="Helper\SliderConverter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using System.Windows.Media;
 
 namespace HyperMTG.Helper
 {
-	public class MutiColorConverter : IValueConverter
+	public class TooltipConverter : IValueConverter
 	{
 		#region Implementation of IValueConverter
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			return (bool) value
-				? Color.FromRgb(237, 106, 62)
-				: Color.FromRgb(93, 93, 93);
+			return ((DateTime) value).Year == 1 ? "Last Update Time: Never" : string.Format("Last Update Time: {0}", value);
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

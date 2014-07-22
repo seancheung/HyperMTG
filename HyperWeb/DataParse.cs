@@ -92,15 +92,15 @@ namespace HyperKore.Web
 					int nameb = webdata.IndexOf("<", namea);
 					card.Name = webdata.Substring(namea, nameb - namea);
 
-					int arta = webdata.IndexOf("\"artist\"") + 9;
+					int arta = webdata.IndexOf("\"artist\"", nameb) + 9;
 					int artb = webdata.IndexOf("<", arta);
 					card.Artist = webdata.Substring(arta, artb - arta);
 
-					int coa = webdata.IndexOf("\"color\"") + 8;
+					int coa = webdata.IndexOf("\"color\"", artb) + 8;
 					int cob = webdata.IndexOf("<", coa);
 					card.Color = webdata.Substring(coa, cob - coa).Replace("/", " ");
 
-					int rca = webdata.IndexOf("\"rarity\"") + 9;
+					int rca = webdata.IndexOf("\"rarity\"", cob) + 9;
 					int rcb = webdata.IndexOf("<", rca);
 					card.RarityCode = webdata.Substring(rca, rcb - rca).Replace("/", " ");
 

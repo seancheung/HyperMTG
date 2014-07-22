@@ -27,7 +27,7 @@ namespace HyperKore.Web
 
 		private void ParseColor(Card card)
 		{
-			if (card.Color == null)
+			if (string.IsNullOrWhiteSpace(card.Color))
 			{
 				card.Color = "Colorless ";
 				card.ColorCode = "C";

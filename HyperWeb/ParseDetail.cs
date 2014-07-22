@@ -102,7 +102,7 @@ namespace HyperKore.Web
 
 			try
 			{
-				int num3 = webdata.IndexOf("<div class=\"name\">", webdata.IndexOf("Card Name:")) + 20;
+				int num3 = webdata.IndexOf("<div class=\"value\">", webdata.IndexOf("Card Name:")) + 20;
 				int num4 = webdata.IndexOf("</div>", num3);
 				card.Name = webdata.Substring(num3, num4 - num3).Trim();
 			}
@@ -119,9 +119,9 @@ namespace HyperKore.Web
 			{
 				try
 				{
-					int num27 = webdata.IndexOf("<div class=\"name\">", webdata.LastIndexOf("Card Name:")) + 20;
+					int num27 = webdata.IndexOf("<div class=\"value\">", webdata.LastIndexOf("Card Name:")) + 20;
 					int num28 = webdata.IndexOf("</div>", num27);
-					int num45 = webdata.IndexOf("<div class=\"name\">", num28) + 20;
+					int num45 = webdata.IndexOf("<div class=\"value\">", num28) + 20;
 					int num46 = webdata.IndexOf("</div>", num45);
 					string text6 = webdata.Substring(num45, num46 - num45).Trim();
 					int num34;
@@ -165,7 +165,7 @@ namespace HyperKore.Web
 			{
 				try
 				{
-					int num5 = webdata.IndexOf("<div class=\"name\">", webdata.IndexOf("Converted Mana Cost:")) + 20;
+					int num5 = webdata.IndexOf("<div class=\"value\">", webdata.IndexOf("Converted Mana Cost:")) + 20;
 					int num6 = webdata.IndexOf("<br />", num5);
 					card.CMC = webdata.Substring(num5, num6 - num5).Trim();
 				}
@@ -185,7 +185,7 @@ namespace HyperKore.Web
 
 			try
 			{
-				int num7 = webdata.IndexOf("<div class=\"name\">", webdata.IndexOf("Types:")) + 20;
+				int num7 = webdata.IndexOf("<div class=\"value\">", webdata.IndexOf("Types:")) + 20;
 				int num8 = webdata.IndexOf("</div>", num7);
 				card.Type = webdata.Substring(num7, num8 - num7).Trim();
 			}
@@ -266,7 +266,7 @@ namespace HyperKore.Web
 			{
 				try
 				{
-					int num13 = webdata.IndexOf("<div class=\"name\">", webdata.IndexOf("P/T:")) + 20;
+					int num13 = webdata.IndexOf("<div class=\"value\">", webdata.IndexOf("P/T:")) + 20;
 					int num14 = webdata.IndexOf("</div>", num13);
 					string text3 = webdata.Substring(num13, num14 - num13);
 					card.Pow = text3.Substring(0, text3.IndexOf("/")).Trim();
@@ -291,7 +291,7 @@ namespace HyperKore.Web
 			{
 				try
 				{
-					int num15 = webdata.IndexOf("<div class=\"name\">", webdata.IndexOf("Loyalty:")) + 20;
+					int num15 = webdata.IndexOf("<div class=\"value\">", webdata.IndexOf("Loyalty:")) + 20;
 					int num16 = webdata.IndexOf("</div>", num15);
 					card.Loyalty = webdata.Substring(num15, num16 - num15).Trim();
 				}
@@ -311,7 +311,7 @@ namespace HyperKore.Web
 
 			try
 			{
-				int num17 = webdata.IndexOf("<div class=\"name\">", webdata.IndexOf("Rarity:")) + 20;
+				int num17 = webdata.IndexOf("<div class=\"value\">", webdata.IndexOf("Rarity:")) + 20;
 				int num18 = webdata.IndexOf("</div>", num17);
 				card.Rarity = webdata.Substring(num17, num18 - num17).Trim();
 				while (card.Rarity.Contains("<"))
@@ -332,7 +332,7 @@ namespace HyperKore.Web
 
 			try
 			{
-				int num19 = webdata.IndexOf("<div class=\"name\">", webdata.IndexOf("Card Number:")) + 20;
+				int num19 = webdata.IndexOf("<div class=\"value\">", webdata.IndexOf("Card Number:")) + 20;
 				int num20 = webdata.IndexOf("</div>", num19);
 				card.Number = webdata.Substring(num19, num20 - num19).Trim();
 			}
@@ -439,7 +439,7 @@ namespace HyperKore.Web
 
 				try
 				{
-					int num27 = webdata.IndexOf("<div class=\"name\">", webdata.LastIndexOf("Card Name:")) + 20;
+					int num27 = webdata.IndexOf("<div class=\"value\">", webdata.LastIndexOf("Card Name:")) + 20;
 					int num28 = webdata.IndexOf("</div>", num27);
 					card.Name = String.Format("{0}|{1}", card.Name, webdata.Substring(num27, num28 - num27).Trim());
 				}
@@ -454,7 +454,7 @@ namespace HyperKore.Web
 
 				try
 				{
-					int num29 = webdata.IndexOf("<div class=\"name\">", webdata.LastIndexOf("Types:")) + 20;
+					int num29 = webdata.IndexOf("<div class=\"value\">", webdata.LastIndexOf("Types:")) + 20;
 					int num30 = webdata.IndexOf("</div>", num29);
 					card.Type = String.Format("{0}|{1}", card.Type, webdata.Substring(num29, num30 - num29).Trim());
 				}
@@ -535,7 +535,7 @@ namespace HyperKore.Web
 				{
 					try
 					{
-						int num37 = webdata.IndexOf("<div class=\"name\">", webdata.LastIndexOf("P/T:")) + 20;
+						int num37 = webdata.IndexOf("<div class=\"value\">", webdata.LastIndexOf("P/T:")) + 20;
 						int num38 = webdata.IndexOf("</div>", num37);
 						string text5 = webdata.Substring(num37, num38 - num37);
 						card.Pow = String.Format("{0}|{1}", card.Pow, text5.Substring(0, text5.IndexOf("/")).Trim());
@@ -558,7 +558,7 @@ namespace HyperKore.Web
 
 				try
 				{
-					int num39 = webdata.IndexOf("<div class=\"name\">", webdata.LastIndexOf("Rarity:")) + 20;
+					int num39 = webdata.IndexOf("<div class=\"value\">", webdata.LastIndexOf("Rarity:")) + 20;
 					int num40 = webdata.IndexOf("</div>", num39);
 					card.Rarity = String.Format("{0}|{1}", card.Rarity, webdata.Substring(num39, num40 - num39).Trim());
 					while (card.Rarity.Contains("<") && card.Rarity.Contains(">"))
@@ -581,7 +581,7 @@ namespace HyperKore.Web
 				{
 					try
 					{
-						int num41 = webdata.IndexOf("<div class=\"name\">", webdata.LastIndexOf("Card Number:")) + 20;
+						int num41 = webdata.IndexOf("<div class=\"value\">", webdata.LastIndexOf("Card Number:")) + 20;
 						int num42 = webdata.IndexOf("</div>", num41);
 						card.Number = String.Format("{0}|{1}", card.Number, webdata.Substring(num41, num42 - num41).Trim());
 					}
@@ -603,7 +603,7 @@ namespace HyperKore.Web
 				{
 					try
 					{
-						int num43 = webdata.IndexOf("<div class=\"name\">", webdata.IndexOf("Color Indicator:")) + 20;
+						int num43 = webdata.IndexOf("<div class=\"value\">", webdata.IndexOf("Color Indicator:")) + 20;
 						int num44 = webdata.IndexOf("</div>", num43);
 						card.ColorBside = webdata.Substring(num43, num44 - num43).Trim();
 					}
@@ -625,9 +625,9 @@ namespace HyperKore.Web
 
 				try
 				{
-					int num27 = webdata.IndexOf("<div class=\"name\">", webdata.LastIndexOf("Card Name:")) + 20;
+					int num27 = webdata.IndexOf("<div class=\"value\">", webdata.LastIndexOf("Card Name:")) + 20;
 					int num28 = webdata.IndexOf("</div>", num27);
-					int num29 = webdata.IndexOf("<div class=\"name\">", webdata.LastIndexOf("Types:")) + 20;
+					int num29 = webdata.IndexOf("<div class=\"value\">", webdata.LastIndexOf("Types:")) + 20;
 					int num30 = webdata.IndexOf("</div>", num29);
 					card.Type = String.Format("{0}|{1}", card.Type, webdata.Substring(num29, num30 - num29).Trim());
 				}
@@ -644,7 +644,7 @@ namespace HyperKore.Web
 				{
 					try
 					{
-						int num5 = webdata.IndexOf("<div class=\"name\">", webdata.LastIndexOf("Converted Mana Cost:")) + 20;
+						int num5 = webdata.IndexOf("<div class=\"value\">", webdata.LastIndexOf("Converted Mana Cost:")) + 20;
 						int num6 = webdata.IndexOf("<br />", num5);
 						card.CMC = String.Format("{0}|{1}", card.CMC, webdata.Substring(num5, num6 - num5).Trim());
 					}
@@ -666,9 +666,9 @@ namespace HyperKore.Web
 				{
 					try
 					{
-						int num27 = webdata.IndexOf("<div class=\"name\">", webdata.LastIndexOf("Card Name:")) + 20;
+						int num27 = webdata.IndexOf("<div class=\"value\">", webdata.LastIndexOf("Card Name:")) + 20;
 						int num28 = webdata.IndexOf("</div>", num27);
-						int num45 = webdata.IndexOf("<div class=\"name\">", num28) + 20;
+						int num45 = webdata.IndexOf("<div class=\"value\">", num28) + 20;
 						int num46 = webdata.IndexOf("</div>", num45);
 						string text6 = webdata.Substring(num45, num46 - num45).Trim();
 						int num34;
@@ -710,7 +710,7 @@ namespace HyperKore.Web
 
 				try
 				{
-					int num39 = webdata.IndexOf("<div class=\"name\">", webdata.LastIndexOf("Rarity:")) + 20;
+					int num39 = webdata.IndexOf("<div class=\"value\">", webdata.LastIndexOf("Rarity:")) + 20;
 					int num40 = webdata.IndexOf("</div>", num39);
 					card.Rarity = String.Format("{0}|{1}", card.Rarity, webdata.Substring(num39, num40 - num39).Trim());
 					while (card.Rarity.Contains("<") && card.Rarity.Contains(">"))
@@ -733,7 +733,7 @@ namespace HyperKore.Web
 				{
 					try
 					{
-						int num41 = webdata.IndexOf("<div class=\"name\">", webdata.LastIndexOf("Card Number:")) + 20;
+						int num41 = webdata.IndexOf("<div class=\"value\">", webdata.LastIndexOf("Card Number:")) + 20;
 						int num42 = webdata.IndexOf("</div>", num41);
 						card.Number = String.Format("{0}|{1}", card.Number, webdata.Substring(num41, num42 - num41).Trim());
 					}
@@ -751,7 +751,7 @@ namespace HyperKore.Web
 
 				if (webdata.LastIndexOf("Color Indicator:") > 0)
 				{
-					int num43 = webdata.IndexOf("<div class=\"name\">", webdata.IndexOf("Color Indicator:")) + 20;
+					int num43 = webdata.IndexOf("<div class=\"value\">", webdata.IndexOf("Color Indicator:")) + 20;
 					int num44 = webdata.IndexOf("</div>", num43);
 					card.ColorBside = webdata.Substring(num43, num44 - num43).Trim();
 				}
