@@ -108,18 +108,19 @@ namespace HyperMTG.ViewModel
 			_processCount++;
 			new Thread(() =>
 			{
-				Info = "Loading" + set.FullName;
+				Info = "Loading " + set.FullName;
 				IEnumerable<Card> cards = _dbReader.LoadCards();
 				_dispatcher.BeginInvoke(
 					new Action(() => { Cards = new ObservableCollection<Card>(cards.Where(c => c.SetCode == set.SetCode)); }));
 
 				Info = "Done!";
+				_processCount--;
 			}).Start();
 		}
 
 		private bool CanExecuteLoadCards(Set set)
 		{
-			return _processCount == 0 && set.Local && _dbReader != null;
+			return _processCount == 0 && set != null && set.Local && _dbReader != null;
 		}
 
 		private bool CanExecuteWrite()
@@ -186,10 +187,10 @@ namespace HyperMTG.ViewModel
 						var cardsThread = new List<List<Card>>();
 						for (int i = 0; i < MaxThread - 1; i++)
 						{
-							cardsThread.Add(enumerable.GetRange(enumerable.Count/MaxThread*i, enumerable.Count/MaxThread));
+							cardsThread.Add(enumerable.GetRange(enumerable.Count / MaxThread * i, enumerable.Count / MaxThread));
 						}
-						cardsThread.Add(enumerable.GetRange(enumerable.Count/MaxThread*(MaxThread - 1),
-							enumerable.Count/MaxThread + enumerable.Count%MaxThread));
+						cardsThread.Add(enumerable.GetRange(enumerable.Count / MaxThread * (MaxThread - 1),
+							enumerable.Count / MaxThread + enumerable.Count % MaxThread));
 
 						#region WaitCallback
 
@@ -235,7 +236,7 @@ namespace HyperMTG.ViewModel
 						for (int i = 0; i < MaxThread; i++)
 						{
 							waitHandles[i] = new AutoResetEvent(false);
-							ThreadPool.QueueUserWorkItem(waitCallback, new object[] {cardsThread[i], waitHandles[i]});
+							ThreadPool.QueueUserWorkItem(waitCallback, new object[] { cardsThread[i], waitHandles[i] });
 						}
 
 						//Wait for all downloading threads to finish

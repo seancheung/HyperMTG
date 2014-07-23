@@ -8,6 +8,16 @@
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
              d:DesignHeight="300" d:DesignWidth="300"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <hp:TriggerConverter x:Key="TriggerConverter" />
+        <hp:CommandReference x:Key="CommandReferenceLoadCardsCommand">
+            <hp:CommandReference.Command>
+                <MultiBinding Converter="{StaticResource TriggerConverter}">
+                    <Binding Path="LoadCardsCommand" />
+                </MultiBinding>
+            </hp:CommandReference.Command>
+        </hp:CommandReference>
+    </UserControl.Resources>
     <UserControl.DataContext>
         <local:DatabaseViewModel />
     </UserControl.DataContext>
@@ -68,7 +78,7 @@
                         <Grid ToolTip="{Binding Content.LastUpdate, Converter={StaticResource TooltipConverter}}">
                             <Grid.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Command="{Binding LoadCardsCommand}"
+                                    <MenuItem Command="{DynamicResource CommandReferenceLoadCardsCommand}"
                                               CommandParameter="{Binding Content}"
                                               Header="Load" />
                                 </ContextMenu>
