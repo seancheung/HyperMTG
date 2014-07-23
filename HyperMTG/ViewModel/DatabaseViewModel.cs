@@ -15,17 +15,32 @@ namespace HyperMTG.ViewModel
 {
 	internal class DatabaseViewModel : ObservableObject
 	{
-		//Max thread amount for downloading
+		/// <summary>
+		///     Max thread amount for downloading
+		/// </summary>
 		private const int MaxThread = 10;
+
+		/// <summary>
+		///     Thread Lock
+		/// </summary>
 		private static readonly object Lock = new object();
+
 		private readonly IDBReader _dbReader;
 		private readonly IDBWriter _dbWriter;
 
+		/// <summary>
+		///     UI dispatcher(to handle ObservableCollection)
+		/// </summary>
 		private readonly Dispatcher _dispatcher;
+
+		private ObservableCollection<Card> _cards;
+		private int _currentPage;
+
 		private string _info;
+		private int _pageSize;
 
 		private volatile int _processCount;
-		private ObservableCollection<Card> _cards;
+		private int _recordSize;
 
 		public DatabaseViewModel()
 		{
@@ -36,7 +51,43 @@ namespace HyperMTG.ViewModel
 			_dbWriter = IOHandler.Instance.GetPlugins<IDBWriter>().FirstOrDefault();
 
 			_dispatcher = Application.Current.Dispatcher;
+
+			RecordSize = 20;
 		}
+
+		/// <summary>
+		///     Number of records to display each page
+		/// </summary>
+		public int RecordSize
+		{
+			get { return _recordSize; }
+			set
+			{
+				_recordSize = value;
+				RaisePropertyChanged("RecordSize");
+			}
+		}
+
+		public int CurrentPage
+		{
+			get { return _currentPage; }
+			private set
+			{
+				_currentPage = value;
+				RaisePropertyChanged("CurrentPage");
+			}
+		}
+
+		public int PageSize
+		{
+			get { return _pageSize; }
+			set
+			{
+				_pageSize = value;
+				RaisePropertyChanged("PageSize");
+			}
+		}
+
 
 		/// <summary>
 		///     InfoBar message
@@ -63,6 +114,13 @@ namespace HyperMTG.ViewModel
 
 		public ObservableCollection<CheckSetItem> Sets { get; set; }
 
+		#region Command
+
+		public ICommand PageCommand
+		{
+			get { return new RelayCommand<object>(PageExecute, CanExecutePage); }
+		}
+
 		public ICommand UpdateSetsCommand
 		{
 			get { return new RelayCommand(UpdateSetsExecute, CanExecuteWrite); }
@@ -85,14 +143,40 @@ namespace HyperMTG.ViewModel
 
 		public ICommand LoadCardsCommand
 		{
-			get { return new RelayCommand<Set>(LoadCardsExecute, CanExecuteLoadCards); }
+			get { return new RelayCommand(LoadCardsExecute, CanExecuteLoadCards); }
+		}
+
+		#endregion
+
+		#region Execute
+
+		private void PageExecute(object next)
+		{
+			_processCount++;
+			new Thread(() =>
+			{
+				Info = "Loading";
+				IEnumerable<Card> cards = _dbReader.LoadCards();
+				int count = cards.Count();
+				PageSize = count/RecordSize + (count%RecordSize == 0 ? 0 : 1);
+				if (Convert.ToBoolean(next))
+					CurrentPage++;
+				else
+					CurrentPage--;
+
+				var result = cards.Take(RecordSize*CurrentPage).Skip(RecordSize*(CurrentPage - 1));
+				_dispatcher.Invoke(
+					new Action(() => { Cards = new ObservableCollection<Card>(result); }));
+				Info = "Done!";
+				_processCount--;
+			}).Start();
 		}
 
 		private void LoadSetsExecute()
 		{
 			_processCount++;
 			var sets = new ObservableCollection<Set>(_dbReader.LoadSets());
-			_dispatcher.BeginInvoke(new Action(() =>
+			_dispatcher.Invoke(new Action(() =>
 			{
 				Sets.Clear();
 				foreach (Set set in sets)
@@ -103,44 +187,26 @@ namespace HyperMTG.ViewModel
 			_processCount--;
 		}
 
-		private void LoadCardsExecute(Set set)
+		private void LoadCardsExecute()
 		{
 			_processCount++;
 			new Thread(() =>
 			{
-				Info = "Loading " + set.FullName;
+				Info = "Loading";
 				IEnumerable<Card> cards = _dbReader.LoadCards();
-				_dispatcher.BeginInvoke(
-					new Action(() => { Cards = new ObservableCollection<Card>(cards.Where(c => c.SetCode == set.SetCode)); }));
+				int count = cards.Count();
+				PageSize = count / RecordSize + (count % RecordSize == 0 ? 0 : 1);
+				CurrentPage = 1;
+
+				var result = cards.Take(RecordSize * CurrentPage).Skip(RecordSize * (CurrentPage - 1));
+				_dispatcher.Invoke(
+					new Action(() => { Cards = new ObservableCollection<Card>(result); }));
 
 				Info = "Done!";
+
 				_processCount--;
+				
 			}).Start();
-		}
-
-		private bool CanExecuteLoadCards(Set set)
-		{
-			return _processCount == 0 && set != null && set.Local && _dbReader != null;
-		}
-
-		private bool CanExecuteWrite()
-		{
-			if (_dbWriter != null)
-			{
-				return _processCount == 0;
-			}
-			Info = "Assembly missing";
-			return false;
-		}
-
-		private bool CanExecuteRead()
-		{
-			if (_dbReader != null)
-			{
-				return _processCount == 0;
-			}
-			Info = "Assembly missing";
-			return false;
 		}
 
 		private void UpdateSetsExecute()
@@ -152,7 +218,7 @@ namespace HyperMTG.ViewModel
 				IEnumerable<Set> sets = DataParse.Instance.ParSetWithCode();
 				IList<Set> enumerable = sets as IList<Set> ?? sets.ToList();
 				_dbWriter.Insert(enumerable);
-				_dispatcher.BeginInvoke(new Action(() =>
+				_dispatcher.Invoke(new Action(() =>
 				{
 					Sets.Clear();
 					foreach (Set set in enumerable)
@@ -187,10 +253,10 @@ namespace HyperMTG.ViewModel
 						var cardsThread = new List<List<Card>>();
 						for (int i = 0; i < MaxThread - 1; i++)
 						{
-							cardsThread.Add(enumerable.GetRange(enumerable.Count / MaxThread * i, enumerable.Count / MaxThread));
+							cardsThread.Add(enumerable.GetRange(enumerable.Count/MaxThread*i, enumerable.Count/MaxThread));
 						}
-						cardsThread.Add(enumerable.GetRange(enumerable.Count / MaxThread * (MaxThread - 1),
-							enumerable.Count / MaxThread + enumerable.Count % MaxThread));
+						cardsThread.Add(enumerable.GetRange(enumerable.Count/MaxThread*(MaxThread - 1),
+							enumerable.Count/MaxThread + enumerable.Count%MaxThread));
 
 						#region WaitCallback
 
@@ -236,7 +302,7 @@ namespace HyperMTG.ViewModel
 						for (int i = 0; i < MaxThread; i++)
 						{
 							waitHandles[i] = new AutoResetEvent(false);
-							ThreadPool.QueueUserWorkItem(waitCallback, new object[] { cardsThread[i], waitHandles[i] });
+							ThreadPool.QueueUserWorkItem(waitCallback, new object[] {cardsThread[i], waitHandles[i]});
 						}
 
 						//Wait for all downloading threads to finish
@@ -256,6 +322,42 @@ namespace HyperMTG.ViewModel
 		{
 			throw new NotImplementedException();
 		}
+
+		#endregion
+
+		#region CanExecute
+
+		private bool CanExecutePage(object next)
+		{
+			return _processCount == 0 && (Convert.ToBoolean(next) ? PageSize - CurrentPage >= 1 : CurrentPage >= 2);
+		}
+
+		private bool CanExecuteLoadCards()
+		{
+			return _processCount == 0 && Sets.Any(s => s.IsLocal) && _dbReader != null;
+		}
+
+		private bool CanExecuteWrite()
+		{
+			if (_dbWriter != null)
+			{
+				return _processCount == 0;
+			}
+			Info = "Assembly missing";
+			return false;
+		}
+
+		private bool CanExecuteRead()
+		{
+			if (_dbReader != null)
+			{
+				return _processCount == 0;
+			}
+			Info = "Assembly missing";
+			return false;
+		}
+
+		#endregion
 	}
 
 	internal class CheckSetItem : ObservableObject

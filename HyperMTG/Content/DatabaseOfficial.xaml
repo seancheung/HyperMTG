@@ -8,16 +8,6 @@
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
              d:DesignHeight="300" d:DesignWidth="300"
              mc:Ignorable="d">
-    <UserControl.Resources>
-        <hp:TriggerConverter x:Key="TriggerConverter" />
-        <hp:CommandReference x:Key="CommandReferenceLoadCardsCommand">
-            <hp:CommandReference.Command>
-                <MultiBinding Converter="{StaticResource TriggerConverter}">
-                    <Binding Path="LoadCardsCommand" />
-                </MultiBinding>
-            </hp:CommandReference.Command>
-        </hp:CommandReference>
-    </UserControl.Resources>
     <UserControl.DataContext>
         <local:DatabaseViewModel />
     </UserControl.DataContext>
@@ -38,6 +28,7 @@
                 <mui:ModernButton Command="{Binding LoadSetsCommand}" Content="Load Sets" />
                 <mui:ModernButton Command="{Binding UpdateSetsCommand}" Content="Update Sets" />
                 <mui:ModernButton Command="{Binding UpdateCardsCommand}" Content="Update Checked Cards" />
+                <mui:ModernButton Command="{Binding LoadCardsCommand}" Content="Load Checked Cards" />
             </StackPanel>
             <ListBox Grid.Row="1" Grid.Column="0"
                      ItemsSource="{Binding Sets}">
@@ -76,13 +67,6 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid ToolTip="{Binding Content.LastUpdate, Converter={StaticResource TooltipConverter}}">
-                            <Grid.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Command="{DynamicResource CommandReferenceLoadCardsCommand}"
-                                              CommandParameter="{Binding Content}"
-                                              Header="Load" />
-                                </ContextMenu>
-                            </Grid.ContextMenu>
                             <CheckBox HorizontalAlignment="Stretch"
                                       Content="{Binding Content.FullName}"
                                       Foreground="{Binding Path=IsLocal,
@@ -108,15 +92,25 @@
             <GridSplitter Grid.Row="1" Grid.Column="1"
                           Width="1" Margin="1"
                           Background="#FF60A1BF" />
-            <DataGrid Grid.Row="1" Grid.Column="2"
-                      IsReadOnly="True"
-                      ItemsSource="{Binding Cards}">
-                <DataGrid.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Clear Table" />
-                    </ContextMenu>
-                </DataGrid.ContextMenu>
-            </DataGrid>
+            <Grid Grid.Row="1" Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" MinHeight="20" />
+                </Grid.RowDefinitions>
+                <DataGrid IsReadOnly="True" ItemsSource="{Binding Cards}" />
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <Button Margin="5"
+                            Command="{Binding PageCommand}"
+                            CommandParameter="false" Content="Prev Page" />
+                    <mui:BBCodeBlock VerticalAlignment="Center" Text="{Binding CurrentPage}" />
+                    <mui:BBCodeBlock VerticalAlignment="Center" Text="/" />
+                    <mui:BBCodeBlock VerticalAlignment="Center" Text="{Binding PageSize}" />
+                    <Button Margin="5"
+                            Command="{Binding PageCommand}"
+                            CommandParameter="true" Content="Next Page" />
+                </StackPanel>
+            </Grid>
+
             <StackPanel Grid.Row="2" Grid.Column="0"
                         Grid.ColumnSpan="3">
                 <Label HorizontalAlignment="Right"
