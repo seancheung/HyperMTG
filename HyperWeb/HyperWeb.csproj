@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="DataParse.cs" />
     <Compile Include="ICardParse.cs" />
+    <Compile Include="ImageParse.cs" />
     <Compile Include="ParseDetail.cs" />
     <Compile Include="ParseEx.cs" />
     <Compile Include="ParseLegality.cs" />

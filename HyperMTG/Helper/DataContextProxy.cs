@@ -1,5 +1,7 @@
 ﻿using System.Windows;
 
+//http://blog.csdn.net/heredes/article/details/6277009
+
 namespace HyperMTG.Helper
 {
 	public class DataContextProxy : DependencyObject

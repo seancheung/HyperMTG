@@ -2,6 +2,8 @@
 using System.Globalization;
 using System.Windows.Data;
 
+//http://stackoverflow.com/questions/335849/wpf-commandparameter-is-null-first-time-canexecute-is-called
+
 namespace HyperMTG.Helper
 {
 	public class TriggerConverter : IMultiValueConverter

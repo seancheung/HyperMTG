@@ -1,10 +1,35 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
+using System.Windows.Threading;
 using HyperKore.Common;
+using HyperKore.IO;
+using HyperMTG.Helper;
 
 namespace HyperMTG.ViewModel
 {
-	internal class DeckBuiderViewModel
+	internal class DeckBuiderViewModel : ObservableObject
 	{
+		/// <summary>
+		///     Thread Lock
+		/// </summary>
+		private static readonly object Lock = new object();
+
+		private readonly ICompressor _compressor;
+
+		private readonly IDBReader _dbReader;
+		private readonly IDBWriter _dbWriter;
+
+		/// <summary>
+		///     UI dispatcher(to handle ObservableCollection)
+		/// </summary>
+		private readonly Dispatcher _dispatcher;
+
+		private ExCard _card;
+
+		private ObservableCollection<Card> _cards;
+		private Deck _deck;
+
 		/// <summary>
 		///     Initializes a new instance of the DeckBuiderViewModel class.
 		/// </summary>
@@ -12,10 +37,125 @@ namespace HyperMTG.ViewModel
 		{
 			Deck = new Deck();
 			Cards = new ObservableCollection<Card>();
+
+			_dbReader = IOHandler.Instance.GetPlugins<IDBReader>().FirstOrDefault();
+			_dbWriter = IOHandler.Instance.GetPlugins<IDBWriter>().FirstOrDefault();
+			_compressor = IOHandler.Instance.GetPlugins<ICompressor>().FirstOrDefault();
+
+			_dispatcher = Application.Current.Dispatcher;
+
+			if (_dbReader != null) Cards = new ObservableCollection<Card>(_dbReader.LoadCards());
+			Card = new ExCard(_dbReader, _compressor);
 		}
 
-		public Deck Deck { get; set; }
+		public ExCard Card
+		{
+			get { return _card; }
+			set
+			{
+				_card = value;
+				RaisePropertyChanged("Card");
+			}
+		}
 
-		public ObservableCollection<Card> Cards { get; private set; }
+		public Deck Deck
+		{
+			get { return _deck; }
+			set
+			{
+				_deck = value;
+				RaisePropertyChanged("Deck");
+			}
+		}
+
+		public ObservableCollection<Card> Cards
+		{
+			get { return _cards; }
+			private set
+			{
+				_cards = value;
+				RaisePropertyChanged("Cards");
+			}
+		}
+	}
+
+	internal class ExCard : ObservableObject
+	{
+		private readonly ICompressor _compressor;
+		private readonly IDBReader _dbReader;
+		private Card _card;
+
+		public ExCard(IDBReader dbReader, ICompressor compressor)
+		{
+			_dbReader = dbReader;
+			_compressor = compressor;
+		}
+
+		public ExCard()
+		{
+		}
+
+		public Card Card
+		{
+			get { return _card; }
+			set
+			{
+				_card = value;
+				RaisePropertyChanged("ImageA");
+				RaisePropertyChanged("ImageB");
+			}
+		}
+
+		public byte[] ImageA
+		{
+			get
+			{
+				return Card != null && _dbReader != null && _compressor != null ? _dbReader.LoadFile(IDA, _compressor) : null;
+			}
+		}
+
+		public byte[] ImageB
+		{
+			get
+			{
+				return Card != null && _dbReader != null && _compressor != null ? _dbReader.LoadFile(IDB, _compressor) : null;
+			}
+		}
+
+		public byte[] zImageA
+		{
+			get
+			{
+				return Card != null && _dbReader != null && _compressor != null ? _dbReader.LoadFile(zIDA, _compressor) : null;
+			}
+		}
+
+		public byte[] zImageB
+		{
+			get
+			{
+				return Card != null && _dbReader != null && _compressor != null ? _dbReader.LoadFile(zIDB, _compressor) : null;
+			}
+		}
+
+		public string IDA
+		{
+			get { return Card != null ? Card.ID.Contains("|") ? Card.ID.Split('|')[0] : Card.ID : null; }
+		}
+
+		public string IDB
+		{
+			get { return Card != null ? Card.ID.Contains("|") ? Card.ID.Split('|')[1] : null : null; }
+		}
+
+		public string zIDA
+		{
+			get { return Card != null && Card.zID != null ? Card.zID.Contains("|") ? Card.zID.Split('|')[0] : Card.zID : null; }
+		}
+
+		public string zIDB
+		{
+			get { return Card != null && Card.zID != null ? Card.zID.Contains("|") ? Card.zID.Split('|')[1] : null : null; }
+		}
 	}
 }

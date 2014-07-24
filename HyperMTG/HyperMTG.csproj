@@ -69,9 +69,11 @@
     <Compile Include="Content\DatabaseOfficial.xaml.cs">
       <DependentUpon>DatabaseOfficial.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helper\ColumnObject.cs" />
     <Compile Include="Helper\CommandReference.cs" />
     <Compile Include="Helper\DataContextProxy.cs" />
     <Compile Include="Helper\DelegateCommand.cs" />
+    <Compile Include="Helper\ImageHelper.cs" />
     <Compile Include="Helper\MutiColorConverter.cs" />
     <Compile Include="Helper\TooltipConverter.cs" />
     <Compile Include="Helper\TriggerConverter.cs" />

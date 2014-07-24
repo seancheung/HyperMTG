@@ -28,6 +28,7 @@ namespace HyperMTG.ViewModel
 
 		private readonly IDBReader _dbReader;
 		private readonly IDBWriter _dbWriter;
+		private readonly ICompressor _compressor;
 
 		/// <summary>
 		///     UI dispatcher(to handle ObservableCollection)
@@ -43,8 +44,6 @@ namespace HyperMTG.ViewModel
 		private volatile int _processCount;
 		private int _recordSize;
 
-		private Queue<Thread> tdQueue;
-
 		/// <summary>
 		/// Thread Canceling
 		/// </summary>
@@ -57,12 +56,12 @@ namespace HyperMTG.ViewModel
 
 			_dbReader = IOHandler.Instance.GetPlugins<IDBReader>().FirstOrDefault();
 			_dbWriter = IOHandler.Instance.GetPlugins<IDBWriter>().FirstOrDefault();
+			_compressor = IOHandler.Instance.GetPlugins<ICompressor>().FirstOrDefault();
+
 
 			_dispatcher = Application.Current.Dispatcher;
 
 			RecordSize = 20;
-
-			tdQueue = new Queue<Thread>();
 		}
 
 		/// <summary>
@@ -308,10 +307,21 @@ namespace HyperMTG.ViewModel
 								if (!result)
 									tmpCards.RemoveAt(i);
 								else
+								{
+									foreach (var id in tmpCards[i].ID.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries))
+									{
+										var data = ImageParse.Instance.Download(id);
+										if (data != null && _compressor != null)
+											lock (Lock)
+											{
+												_dbWriter.Insert(id, data, _compressor);
+											}
+									}
 									_dispatcher.Invoke(new Action(() => { Cards.Add(tmpCards[i]); }));
+								}
 
 								checkSetItem.Prog++;
-								
+
 							}
 
 							if (!cts.Token.IsCancellationRequested)
@@ -344,9 +354,10 @@ namespace HyperMTG.ViewModel
 						{
 							checkSetItem.IsLocal = true;
 							checkSetItem.IsChecked = false;
+							_dbWriter.Update(checkSetItem.Content);
 						}
-						_dbWriter.Update(checkSetItem.Content);
 						checkSetItem.IsProcessing = false;
+						Info = "Done!";
 						_processCount--;
 					});
 					td.Start();
