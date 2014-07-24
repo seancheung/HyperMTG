@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -42,6 +43,13 @@ namespace HyperMTG.ViewModel
 		private volatile int _processCount;
 		private int _recordSize;
 
+		private Queue<Thread> tdQueue;
+
+		/// <summary>
+		/// Thread Canceling
+		/// </summary>
+		private CancellationTokenSource cts = new CancellationTokenSource();
+
 		public DatabaseViewModel()
 		{
 			Cards = new ObservableCollection<Card>();
@@ -53,6 +61,8 @@ namespace HyperMTG.ViewModel
 			_dispatcher = Application.Current.Dispatcher;
 
 			RecordSize = 20;
+
+			tdQueue = new Queue<Thread>();
 		}
 
 		/// <summary>
@@ -116,6 +126,11 @@ namespace HyperMTG.ViewModel
 
 		#region Command
 
+		public ICommand CancelCommand
+		{
+			get { return new RelayCommand(CancelExecute, CanExecuteCancel); }
+		}
+
 		public ICommand PageCommand
 		{
 			get { return new RelayCommand<object>(PageExecute, CanExecutePage); }
@@ -150,47 +165,57 @@ namespace HyperMTG.ViewModel
 
 		#region Execute
 
+		private void CancelExecute()
+		{
+			cts.Cancel();
+		}
+
 		private void PageExecute(object next)
 		{
 			_processCount++;
-			new Thread(() =>
+			var td = new Thread(() =>
 			{
 				Info = "Loading";
 				IEnumerable<Card> cards = _dbReader.LoadCards();
 				int count = cards.Count();
-				PageSize = count/RecordSize + (count%RecordSize == 0 ? 0 : 1);
+				PageSize = count / RecordSize + (count % RecordSize == 0 ? 0 : 1);
 				if (Convert.ToBoolean(next))
 					CurrentPage++;
 				else
 					CurrentPage--;
 
-				var result = cards.Take(RecordSize*CurrentPage).Skip(RecordSize*(CurrentPage - 1));
+				var result = cards.Take(RecordSize * CurrentPage).Skip(RecordSize * (CurrentPage - 1));
 				_dispatcher.Invoke(
 					new Action(() => { Cards = new ObservableCollection<Card>(result); }));
 				Info = "Done!";
 				_processCount--;
-			}).Start();
+			});
+			td.Start();
 		}
 
 		private void LoadSetsExecute()
 		{
 			_processCount++;
-			var sets = new ObservableCollection<Set>(_dbReader.LoadSets());
-			_dispatcher.Invoke(new Action(() =>
+			var td = new Thread(() =>
 			{
-				Sets.Clear();
-				foreach (Set set in sets)
+				var sets = new ObservableCollection<Set>(_dbReader.LoadSets());
+				_dispatcher.Invoke(new Action(() =>
 				{
-					Sets.Add(new CheckSetItem(false, set));
-				}
-			}));
-			_processCount--;
+					Sets.Clear();
+					foreach (Set set in sets)
+					{
+						Sets.Add(new CheckSetItem(false, set));
+					}
+				}));
+				_processCount--;
+			});
+			td.Start();
 		}
 
 		private void LoadCardsExecute()
 		{
 			_processCount++;
-			new Thread(() =>
+			var td = new Thread(() =>
 			{
 				Info = "Loading";
 				IEnumerable<Card> cards = _dbReader.LoadCards();
@@ -205,15 +230,16 @@ namespace HyperMTG.ViewModel
 				Info = "Done!";
 
 				_processCount--;
-				
-			}).Start();
+
+			});
+			td.Start();
 		}
 
 		private void UpdateSetsExecute()
 		{
 			_processCount++;
 			Info = "Waiting...Grabbing Source";
-			new Thread(() =>
+			var td = new Thread(() =>
 			{
 				IEnumerable<Set> sets = DataParse.Instance.ParSetWithCode();
 				IList<Set> enumerable = sets as IList<Set> ?? sets.ToList();
@@ -230,7 +256,8 @@ namespace HyperMTG.ViewModel
 				_processCount--;
 
 				Info = "Done!";
-			}).Start();
+			});
+			td.Start();
 		}
 
 		private void UpdateCardsExecute()
@@ -239,7 +266,7 @@ namespace HyperMTG.ViewModel
 			{
 				if (checkSetItem.IsChecked)
 				{
-					new Thread(() =>
+					var td = new Thread(() =>
 					{
 						_processCount++;
 						checkSetItem.IsProcessing = true;
@@ -253,14 +280,14 @@ namespace HyperMTG.ViewModel
 						var cardsThread = new List<List<Card>>();
 						for (int i = 0; i < MaxThread - 1; i++)
 						{
-							cardsThread.Add(enumerable.GetRange(enumerable.Count/MaxThread*i, enumerable.Count/MaxThread));
+							cardsThread.Add(enumerable.GetRange(enumerable.Count / MaxThread * i, enumerable.Count / MaxThread));
 						}
-						cardsThread.Add(enumerable.GetRange(enumerable.Count/MaxThread*(MaxThread - 1),
-							enumerable.Count/MaxThread + enumerable.Count%MaxThread));
+						cardsThread.Add(enumerable.GetRange(enumerable.Count / MaxThread * (MaxThread - 1),
+							enumerable.Count / MaxThread + enumerable.Count % MaxThread));
 
 						#region WaitCallback
 
-						WaitCallback waitCallback = delegate(object param)
+						WaitCallback waitCallback = param =>
 						{
 							var parameres = param as object[];
 							if (parameres == null || parameres.Length != 2)
@@ -272,8 +299,10 @@ namespace HyperMTG.ViewModel
 							if (waitHandle == null)
 								return;
 
-							for (int i = 0; i < tmpCards.Count; i++)
+							//If action is cancelled, break
+							for (int i = 0; i < tmpCards.Count && !cts.Token.IsCancellationRequested; i++)
 							{
+
 								Info = enumerable.Count + ": " + tmpCards[i].ID;
 								bool result = DataParse.Instance.Process(tmpCards[i], LANGUAGE.ChineseSimplified);
 								if (!result)
@@ -282,12 +311,16 @@ namespace HyperMTG.ViewModel
 									_dispatcher.Invoke(new Action(() => { Cards.Add(tmpCards[i]); }));
 
 								checkSetItem.Prog++;
+								
 							}
 
-							lock (Lock)
+							if (!cts.Token.IsCancellationRequested)
 							{
-								//Save Data
-								_dbWriter.Insert(tmpCards);
+								lock (Lock)
+								{
+									//Save Data
+									_dbWriter.Insert(tmpCards);
+								}
 							}
 
 							//Set the current thread state as finished
@@ -297,23 +330,26 @@ namespace HyperMTG.ViewModel
 						#endregion
 
 						var waitHandles = new WaitHandle[MaxThread];
-
 						//Start a thread pool for updating
 						for (int i = 0; i < MaxThread; i++)
 						{
 							waitHandles[i] = new AutoResetEvent(false);
-							ThreadPool.QueueUserWorkItem(waitCallback, new object[] {cardsThread[i], waitHandles[i]});
+							ThreadPool.QueueUserWorkItem(waitCallback, new object[] { cardsThread[i], waitHandles[i] });
 						}
 
 						//Wait for all downloading threads to finish
 						WaitHandle.WaitAll(waitHandles);
 
-						checkSetItem.IsLocal = true;
-						checkSetItem.IsProcessing = false;
-						checkSetItem.IsChecked = false;
+						if (!cts.IsCancellationRequested)
+						{
+							checkSetItem.IsLocal = true;
+							checkSetItem.IsChecked = false;
+						}
 						_dbWriter.Update(checkSetItem.Content);
+						checkSetItem.IsProcessing = false;
 						_processCount--;
-					}).Start();
+					});
+					td.Start();
 				}
 			}
 		}
@@ -326,6 +362,11 @@ namespace HyperMTG.ViewModel
 		#endregion
 
 		#region CanExecute
+
+		private bool CanExecuteCancel()
+		{
+			return _processCount > 0;
+		}
 
 		private bool CanExecutePage(object next)
 		{

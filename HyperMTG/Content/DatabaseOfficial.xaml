@@ -29,6 +29,7 @@
                 <mui:ModernButton Command="{Binding UpdateSetsCommand}" Content="Update Sets" />
                 <mui:ModernButton Command="{Binding UpdateCardsCommand}" Content="Update Checked Cards" />
                 <mui:ModernButton Command="{Binding LoadCardsCommand}" Content="Load Checked Cards" />
+                <mui:ModernButton Command="{Binding CancelCommand}" Content="Cancel" />
             </StackPanel>
             <ListBox Grid.Row="1" Grid.Column="0"
                      ItemsSource="{Binding Sets}">
@@ -97,7 +98,19 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" MinHeight="20" />
                 </Grid.RowDefinitions>
-                <DataGrid IsReadOnly="True" ItemsSource="{Binding Cards}" />
+                <DataGrid IsReadOnly="True" ItemsSource="{Binding Cards}">
+                    <DataGrid.Resources>
+                        <Style BasedOn="{StaticResource {x:Type DataGridCell}}" TargetType="{x:Type DataGridCell}">
+                            <Setter Property="MaxHeight" Value="30" />
+                            <Setter Property="MaxWidth" Value="100" />
+                            <Setter Property="ToolTip">
+                                <Setter.Value>
+                                    <ToolTip Content="{Binding}" />
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </DataGrid.Resources>
+                </DataGrid>
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
                     <Button Margin="5"
                             Command="{Binding PageCommand}"
