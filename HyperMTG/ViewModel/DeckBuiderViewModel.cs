@@ -29,6 +29,7 @@ namespace HyperMTG.ViewModel
 
 		private ObservableCollection<Card> _cards;
 		private Deck _deck;
+		private string info;
 
 		/// <summary>
 		///     Initializes a new instance of the DeckBuiderViewModel class.
@@ -45,16 +46,16 @@ namespace HyperMTG.ViewModel
 			_dispatcher = Application.Current.Dispatcher;
 
 			if (_dbReader != null) Cards = new ObservableCollection<Card>(_dbReader.LoadCards());
-			Card = new ExCard(_dbReader, _compressor);
+			SelectedCard = new ExCard(_dbReader, _compressor);
 		}
 
-		public ExCard Card
+		public ExCard SelectedCard
 		{
 			get { return _card; }
 			set
 			{
 				_card = value;
-				RaisePropertyChanged("Card");
+				RaisePropertyChanged("SelectedCard");
 			}
 		}
 
@@ -77,6 +78,17 @@ namespace HyperMTG.ViewModel
 				RaisePropertyChanged("Cards");
 			}
 		}
+
+		public string Info
+		{
+			get { return info; }
+			set
+			{
+				info = value;
+				RaisePropertyChanged("Info");
+			}
+		}
+
 	}
 
 	internal class ExCard : ObservableObject

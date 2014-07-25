@@ -3,24 +3,28 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:hp="clr-namespace:HyperMTG.Helper"
-             xmlns:local="clr-namespace:HyperMTG.ViewModel"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             xmlns:vm="clr-namespace:HyperMTG.ViewModel"
              d:DesignHeight="320" d:DesignWidth="480"
              mc:Ignorable="d">
     <UserControl.DataContext>
-        <local:DeckBuiderViewModel />
+        <vm:DeckBuiderViewModel />
     </UserControl.DataContext>
     <Grid Style="{StaticResource ContentRoot}">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" MinWidth="100" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" MinWidth="100" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" MinWidth="100" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" MinWidth="100" />
             </Grid.ColumnDefinitions>
             <Expander Grid.Row="0" Grid.Column="0"
@@ -44,7 +48,65 @@
             <ListView x:Name="ListView" Grid.Row="1"
                       Grid.Column="0"
                       ItemsSource="{Binding Cards}"
-                      SelectedValue="{Binding Card.Card,
+                      SelectedValue="{Binding SelectedCard.Card,
+                                              IsAsync=True,
+                                              Mode=OneWayToSource}">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <EventSetter Event="MouseMove" Handler="OnDrag" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
+                        <GridViewColumn DisplayMemberBinding="{Binding zName}" Header="zName" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Type}" Header="Type" />
+                        <GridViewColumn DisplayMemberBinding="{Binding zType}" Header="zType" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Cost}" Header="Cost" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Set}" Header="Set" />
+                        <GridViewColumn DisplayMemberBinding="{Binding SetCode}" Header="SetCode" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Number}" Header="Number" />
+                        <GridViewColumn DisplayMemberBinding="{Binding RarityCode}" Header="RarityCode" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Rating}" Header="Rating" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <GridSplitter Grid.Row="0" Grid.RowSpan="2"
+                          Grid.Column="1" Width="1"
+                          Margin="1" Background="#FF60A1BF" />
+            <ScrollViewer Grid.Row="0" Grid.RowSpan="2"
+                          Grid.Column="2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Image Grid.Row="0" Source="{Binding SelectedCard.ImageA}" />
+                    <Image Grid.Row="1" Source="{Binding SelectedCard.ImageB}" />
+                    <mui:BBCodeBlock Grid.Row="2" />
+                </Grid>
+            </ScrollViewer>
+            <GridSplitter Grid.Row="0" Grid.RowSpan="2"
+                          Grid.Column="3" Width="1"
+                          Margin="1" Background="#FF60A1BF" />
+            <mui:BBCodeBlock Grid.Row="0" Grid.Column="4"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             BBCode="{Binding Items.Count,
+                                              ElementName=Lbmain,
+                                              StringFormat='[i]Mainboard:[/i] [b]{0}[/b]'}" />
+            <mui:BBCodeBlock Grid.Row="0" Grid.Column="6"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             BBCode="{Binding Items.Count,
+                                              ElementName=Lbside,
+                                              StringFormat='[i]Sideboard:[/i] [b]{0}[/b]'}" />
+            <ListView x:Name="Lbmain" Grid.Row="1"
+                      Grid.Column="4" AllowDrop="True"
+                      Drop="Lbmain_OnDrop"
+                      ItemsSource="{Binding Deck.MainBoard}"
+                      SelectedValue="{Binding SelectedCard.Card,
                                               IsAsync=True,
                                               Mode=OneWayToSource}">
                 <ListView.View>
@@ -62,37 +124,35 @@
                     </GridView>
                 </ListView.View>
             </ListView>
-            <ScrollViewer Grid.Row="0" Grid.RowSpan="2"
-                          Grid.Column="1">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Image Grid.Row="0" Source="{Binding Card.ImageA}" />
-                    <Image Grid.Row="1" Source="{Binding Card.ImageB}" />
-                    <mui:BBCodeBlock Grid.Row="2" />
-                </Grid>
-            </ScrollViewer>
-            <StackPanel Grid.Row="0" Grid.Column="2"
-                        HorizontalAlignment="Center"
-                        Orientation="Horizontal">
-                <mui:BBCodeBlock Margin="0,0,4,0" BBCode="[i]Mainboard:[/i]" />
-                <mui:BBCodeBlock Margin="4,0,0,0" BBCode="{Binding Items.Count, ElementName=Lbmain}" />
-            </StackPanel>
-            <StackPanel Grid.Row="0" Grid.Column="3"
-                        HorizontalAlignment="Center"
-                        Orientation="Horizontal">
-                <mui:BBCodeBlock Margin="0,0,4,0" BBCode="[i]Sideboard:[/i]" />
-                <mui:BBCodeBlock Margin="4,0,0,0" BBCode="{Binding Items.Count, ElementName=Lbside}" />
-            </StackPanel>
-            <ListView x:Name="Lbmain" Grid.Row="1"
-                      Grid.Column="2"
-                      ItemsSource="{Binding Deck.MainBoard}" />
+            <GridSplitter Grid.Row="0" Grid.RowSpan="2"
+                          Grid.Column="5" Width="1"
+                          Margin="1" Background="#FF60A1BF" />
             <ListView x:Name="Lbside" Grid.Row="1"
-                      Grid.Column="3"
-                      ItemsSource="{Binding Deck.SideBoard}" />
+                      Grid.Column="6" AllowDrop="True"
+                      Drop="Lbside_OnDrop"
+                      ItemsSource="{Binding Deck.SideBoard}"
+                      SelectedValue="{Binding SelectedCard.Card,
+                                              IsAsync=True,
+                                              Mode=OneWayToSource}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
+                        <GridViewColumn DisplayMemberBinding="{Binding zName}" Header="zName" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Type}" Header="Type" />
+                        <GridViewColumn DisplayMemberBinding="{Binding zType}" Header="zType" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Cost}" Header="Cost" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Set}" Header="Set" />
+                        <GridViewColumn DisplayMemberBinding="{Binding SetCode}" Header="SetCode" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Number}" Header="Number" />
+                        <GridViewColumn DisplayMemberBinding="{Binding RarityCode}" Header="RarityCode" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Rating}" Header="Rating" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <StackPanel Grid.Row="2" Grid.Column="0"
+                        Grid.ColumnSpan="7" Height="20">
+                <mui:BBCodeBlock Text="{Binding Info}" />
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

@@ -317,6 +317,17 @@ namespace HyperMTG.ViewModel
 												_dbWriter.Insert(id, data, _compressor);
 											}
 									}
+									if (tmpCards[i].zID != null)
+										foreach (var id in tmpCards[i].zID.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries))
+										{
+											var data = ImageParse.Instance.Download(id);
+											if (data != null && _compressor != null)
+												lock (Lock)
+												{
+													_dbWriter.Insert(id, data, _compressor);
+												}
+										}
+
 									_dispatcher.Invoke(new Action(() => { Cards.Add(tmpCards[i]); }));
 								}
 
