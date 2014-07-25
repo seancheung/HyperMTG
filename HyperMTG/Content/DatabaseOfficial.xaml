@@ -37,9 +37,10 @@
                     <hp:MutiColorConverter x:Key="ColorConverter" />
                     <hp:VisibaleConverter x:Key="VisibaleConverter" />
                     <hp:TooltipConverter x:Key="TooltipConverter" />
+                    <hp:FontConverter x:Key="FontConverter" />
                 </ListBox.Resources>
                 <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
+                    <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="ListBoxItem">
                         <Setter Property="Margin" Value="1,2,1,1" />
                         <Setter Property="HorizontalAlignment" Value="Stretch" />
                         <Setter Property="Focusable" Value="False" />
@@ -50,17 +51,10 @@
                         <Grid ToolTip="{Binding Content.LastUpdate, Converter={StaticResource TooltipConverter}}">
                             <CheckBox HorizontalAlignment="Stretch"
                                       Content="{Binding Content.FullName}"
-                                      Foreground="{Binding Path=IsLocal,
-                                                           Converter={StaticResource ColorConverter},
-                                                           ConverterParameter=0}"
+                                      FontWeight="{Binding IsLocal,
+                                                           Converter={StaticResource FontConverter}}"
                                       IsChecked="{Binding IsChecked}" />
                             <ProgressBar HorizontalAlignment="Stretch"
-                                         Background="{Binding Path=IsLocal,
-                                                              Converter={StaticResource ColorConverter},
-                                                              ConverterParameter=0}"
-                                         Foreground="{Binding Path=IsLocal,
-                                                              Converter={StaticResource ColorConverter},
-                                                              ConverterParameter=1}"
                                          Maximum="{Binding Max}"
                                          Opacity="0.5"
                                          Visibility="{Binding IsProcessing,
@@ -78,21 +72,29 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" MinHeight="20" />
                 </Grid.RowDefinitions>
+
                 <DataGrid Name="DataGrid" Grid.Row="0"
                           IsReadOnly="True"
                           ItemsSource="{Binding Cards}">
-                    <DataGrid.Resources>
+
+
+                    <!--
+                        <DataGrid.Resources>
                         <Style BasedOn="{StaticResource {x:Type DataGridCell}}" TargetType="{x:Type DataGridCell}">
-                            <Setter Property="MaxHeight" Value="30" />
-                            <Setter Property="MaxWidth" Value="100" />
-                            <Setter Property="ToolTip">
-                                <Setter.Value>
-                                    <ToolTip Content="{Binding}" />
-                                </Setter.Value>
-                            </Setter>
+                        <Setter Property="MaxHeight" Value="30" />
+                        <Setter Property="MaxWidth" Value="100" />
+                        <Setter Property="ToolTip">
+                        <Setter.Value>
+                        <ToolTip Content="{Binding Path=Content}" />
+                        </Setter.Value>
+                        </Setter>
                         </Style>
-                    </DataGrid.Resources>
+                        </DataGrid.Resources>
+                    -->
+
+
                 </DataGrid>
+
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
                     <Button Margin="5"
                             Command="{Binding PageCommand}"

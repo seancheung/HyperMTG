@@ -1,5 +1,6 @@
 ﻿using HyperKore.Common;
 using HyperKore.Net;
+using HyperKore.Utilities;
 using HyperKore.Xception;
 using System;
 using System.Text.RegularExpressions;
@@ -188,7 +189,7 @@ namespace HyperKore.Web
 
 			#endregion Card Type
 
-			#region Text
+			#region Card Text
 
 			if (webdata.IndexOf("Card Text:") > 0)
 			{
@@ -205,12 +206,7 @@ namespace HyperKore.Web
 						string str = card.Text.Substring(num33, num34 - num33).Replace("\"", string.Empty).Trim();
 						card.Text = card.Text.Insert(k, String.Format("{{{0}}}", str));
 					}
-					while (card.Text.Contains("<") && card.Text.Contains(">"))
-					{
-						int num11 = card.Text.IndexOf("<");
-						int num12 = card.Text.IndexOf(">");
-						card.Text = card.Text.Remove(num11, num12 - num11 + 1).Trim();
-					}
+					card.Text = card.Text.RemoveHtmlTag();
 				}
 				catch (Exception ex)
 				{
@@ -233,12 +229,7 @@ namespace HyperKore.Web
 					int num9 = webdata.IndexOf("</div>", webdata.IndexOf("Flavor Text:")) + 6;
 					int num10 = webdata.IndexOf("</div></div>", num9);
 					card.Flavor = webdata.Substring(num9, num10 - num9).Trim();
-					while (card.Flavor.Contains("<"))
-					{
-						int num11 = card.Flavor.IndexOf("<");
-						int num12 = card.Flavor.IndexOf(">");
-						card.Flavor = card.Flavor.Remove(num11, num12 - num11 + 1).Trim();
-					}
+					card.Flavor = card.Flavor.RemoveHtmlTag();
 				}
 				catch (Exception ex)
 				{
@@ -365,15 +356,7 @@ namespace HyperKore.Web
 					int num23 = webdata.IndexOf("<table", webdata.IndexOf(">Rulings<"));
 					int num24 = webdata.IndexOf("</table>", num23);
 					card.Rulings = webdata.Substring(num23, num24 - num23).Trim();
-					while (card.Rulings.Contains("<"))
-					{
-						int num11 = card.Rulings.IndexOf("<");
-						int num12 = card.Rulings.IndexOf(">");
-						card.Rulings = card.Rulings.Remove(num11, num12 - num11 + 1).Trim();
-					}
-					RegexOptions options = RegexOptions.None;
-					Regex regex = new Regex("[\\s]{2,}", options);
-					card.Rulings = regex.Replace(card.Rulings, "\n").Trim();
+					card.Rulings = card.Rulings.RemoveHtmlTag();
 				}
 				catch (Exception ex)
 				{
@@ -474,12 +457,8 @@ namespace HyperKore.Web
 							string str = card.Text.Substring(num33, num34 - num33).Replace("\"", string.Empty).Trim();
 							card.Text = card.Text.Insert(k, String.Format("{{{0}}}", str));
 						}
-						while (card.Text.Contains("<") && card.Text.Contains(">"))
-						{
-							int num11 = card.Text.IndexOf("<");
-							int num12 = card.Text.IndexOf(">");
-							card.Text = card.Text.Remove(num11, num12 - num11 + 1).Trim();
-						}
+
+						card.Text = card.Text.RemoveHtmlTag();
 					}
 					catch (Exception ex)
 					{
@@ -502,12 +481,8 @@ namespace HyperKore.Web
 						int num35 = webdata.IndexOf("</div>", webdata.LastIndexOf("Flavor Text:")) + 6;
 						int num36 = webdata.IndexOf("</div></div>", num35);
 						card.Flavor = String.Format("{0}|{1}", card.Flavor, webdata.Substring(num35, num36 - num35).Trim());
-						while (card.Flavor.Contains("<") && card.Flavor.Contains(">"))
-						{
-							int num11 = card.Flavor.IndexOf("<");
-							int num12 = card.Flavor.IndexOf(">");
-							card.Flavor = card.Flavor.Remove(num11, num12 - num11 + 1).Trim();
-						}
+
+						card.Flavor = card.Flavor.RemoveHtmlTag();
 					}
 					catch (Exception ex)
 					{

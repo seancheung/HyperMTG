@@ -115,12 +115,7 @@ namespace HyperKore.Web
 					int num7 = webdata.IndexOf("</div>", webdata.IndexOf("Flavor Text:")) + 6;
 					int num8 = webdata.IndexOf("</div></div>", num7);
 					card.zFlavor = webdata.Substring(num7, num8 - num7);
-					while (card.zFlavor.Contains("<"))
-					{
-						int num9 = card.zFlavor.IndexOf("<");
-						int num10 = card.zFlavor.IndexOf(">");
-						card.zFlavor = card.zFlavor.Remove(num9, num10 - num9 + 1).Trim();
-					}
+					card.zFlavor = card.zFlavor.RemoveHtmlTag();
 				}
 				catch (Exception ex)
 				{
@@ -151,15 +146,7 @@ namespace HyperKore.Web
 						string str = card.zText.Substring(num13, num14 - num13).Replace("\"", string.Empty).Trim();
 						card.zText = card.zText.Insert(j, String.Format("{{{0}}}", str));
 					}
-					while (card.zText.Contains("<"))
-					{
-						int num9 = card.zText.IndexOf("<");
-						int num10 = card.zText.IndexOf(">");
-						if (num10 < num9)
-							card.zText = card.zText.Remove(num9, 1);
-						else
-							card.zText = card.zText.Remove(num9, num10 - num9 + 1).Trim();
-					}
+					card.zText = card.zText.RemoveHtmlTag();
 				}
 				catch (Exception ex)
 				{
@@ -214,12 +201,7 @@ namespace HyperKore.Web
 						int num19 = webdata.IndexOf("</div>", webdata.LastIndexOf("Flavor Text:")) + 6;
 						int num20 = webdata.IndexOf("</div></div>", num19);
 						card.zFlavor = String.Format("{0}|{1}", card.zFlavor, webdata.Substring(num19, num20 - num19));
-						while (card.zFlavor.Contains("<"))
-						{
-							int num9 = card.zFlavor.IndexOf("<");
-							int num10 = card.zFlavor.IndexOf(">");
-							card.zFlavor = card.zFlavor.Remove(num9, num10 - num9 + 1).Trim();
-						}
+						card.zFlavor = card.zFlavor.RemoveHtmlTag();
 					}
 					catch (Exception ex)
 					{
@@ -253,12 +235,8 @@ namespace HyperKore.Web
 							string str = card.zText.Substring(num13, num14 - num13).Replace("\"", string.Empty).Trim();
 							card.zText = card.zText.Insert(j, String.Format("{{{0}}}", str));
 						}
-						while (card.zText.Contains("<"))
-						{
-							int num9 = card.zText.IndexOf("<");
-							int num10 = card.zText.IndexOf(">");
-							card.zText = card.zText.Remove(num9, num10 - num9 + 1).Trim();
-						}
+
+						card.zText = card.zText.RemoveHtmlTag();
 					}
 					catch (Exception ex)
 					{

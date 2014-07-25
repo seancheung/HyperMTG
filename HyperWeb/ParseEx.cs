@@ -115,11 +115,11 @@ namespace HyperKore.Web
 
 			if (card.zText.Contains('{'))
 			{
-				card.zText = card.zText.ReplaceCost();
+				card.zText = card.zText.ReplaceMana();
 			}
 			if (card.Text.Contains('{'))
 			{
-				card.Text = card.Text.ReplaceCost();
+				card.Text = card.Text.ReplaceMana();
 			}
 		}
 

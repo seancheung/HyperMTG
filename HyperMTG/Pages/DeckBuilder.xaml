@@ -32,7 +32,7 @@
                       Header="Property Filter">
                 <ListBox hp:ColumnObject.ItemsSourceFromColumns="{Binding ElementName=ListView}">
                     <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
+                        <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="ListBoxItem">
                             <Setter Property="Focusable" Value="False" />
                         </Style>
                     </ListBox.ItemContainerStyle>
@@ -49,11 +49,15 @@
                       Grid.Column="0"
                       ItemsSource="{Binding Cards}"
                       SelectedValue="{Binding SelectedCard.Card,
-                                              IsAsync=True,
                                               Mode=OneWayToSource}">
                 <ListView.ItemContainerStyle>
-                    <Style TargetType="{x:Type ListViewItem}">
+                    <Style BasedOn="{StaticResource {x:Type ListViewItem}}" TargetType="{x:Type ListViewItem}">
                         <EventSetter Event="MouseMove" Handler="OnDrag" />
+                        <Setter Property="ToolTip">
+                            <Setter.Value>
+                                <ToolTip Content="{Binding Path=Name}" />
+                            </Setter.Value>
+                        </Setter>
                     </Style>
                 </ListView.ItemContainerStyle>
                 <ListView.View>
@@ -82,9 +86,13 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Image Grid.Row="0" Source="{Binding SelectedCard.ImageA}" />
-                    <Image Grid.Row="1" Source="{Binding SelectedCard.ImageB}" />
-                    <mui:BBCodeBlock Grid.Row="2" />
+                    <Image Grid.Row="0" MaxWidth="223"
+                           MaxHeight="310"
+                           Source="{Binding SelectedCard.ImageA}" />
+                    <Image Grid.Row="1" MaxWidth="223"
+                           MaxHeight="310"
+                           Source="{Binding SelectedCard.ImageB}" />
+                    <mui:BBCodeBlock Grid.Row="2" Text="{Binding SelectedCard.Card.Text}" />
                 </Grid>
             </ScrollViewer>
             <GridSplitter Grid.Row="0" Grid.RowSpan="2"
@@ -107,7 +115,6 @@
                       Drop="Lbmain_OnDrop"
                       ItemsSource="{Binding Deck.MainBoard}"
                       SelectedValue="{Binding SelectedCard.Card,
-                                              IsAsync=True,
                                               Mode=OneWayToSource}">
                 <ListView.View>
                     <GridView>
@@ -132,7 +139,6 @@
                       Drop="Lbside_OnDrop"
                       ItemsSource="{Binding Deck.SideBoard}"
                       SelectedValue="{Binding SelectedCard.Card,
-                                              IsAsync=True,
                                               Mode=OneWayToSource}">
                 <ListView.View>
                     <GridView>
@@ -151,7 +157,7 @@
             </ListView>
             <StackPanel Grid.Row="2" Grid.Column="0"
                         Grid.ColumnSpan="7" Height="20">
-                <mui:BBCodeBlock Text="{Binding Info}" />
+                <mui:BBCodeBlock HorizontalAlignment="Right" Text="{Binding Info}" />
             </StackPanel>
         </Grid>
     </Grid>
