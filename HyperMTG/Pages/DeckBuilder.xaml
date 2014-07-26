@@ -77,7 +77,8 @@
             </ListView>
             <GridSplitter Grid.Row="0" Grid.RowSpan="2"
                           Grid.Column="1" Width="1"
-                          Margin="1" Background="#FF60A1BF" />
+                          Margin="1"
+                          Background="{StaticResource ItemBorder}" />
             <ScrollViewer Grid.Row="0" Grid.RowSpan="2"
                           Grid.Column="2">
                 <Grid>
@@ -97,7 +98,8 @@
             </ScrollViewer>
             <GridSplitter Grid.Row="0" Grid.RowSpan="2"
                           Grid.Column="3" Width="1"
-                          Margin="1" Background="#FF60A1BF" />
+                          Margin="1"
+                          Background="{StaticResource ItemBorder}" />
             <mui:BBCodeBlock Grid.Row="0" Grid.Column="4"
                              HorizontalAlignment="Center"
                              VerticalAlignment="Center"
@@ -133,7 +135,8 @@
             </ListView>
             <GridSplitter Grid.Row="0" Grid.RowSpan="2"
                           Grid.Column="5" Width="1"
-                          Margin="1" Background="#FF60A1BF" />
+                          Margin="1"
+                          Background="{StaticResource ItemBorder}" />
             <ListView x:Name="Lbside" Grid.Row="1"
                       Grid.Column="6" AllowDrop="True"
                       Drop="Lbside_OnDrop"

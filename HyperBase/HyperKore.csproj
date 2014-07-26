@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BF270F15-DF51-4FDB-AC49-C14180ECE490}</ProjectGuid>
+    <ProjectGuid>{74F65D7F-C999-4A0B-8316-9C093660DCF7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HyperPlugin.IO.MagicWorkstation</RootNamespace>
-    <AssemblyName>HyperPlugin.IO.MagicWorkstation</AssemblyName>
+    <RootNamespace>HyperKore</RootNamespace>
+    <AssemblyName>HyperKore</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\HyperMTG\bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -24,7 +24,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\HyperMTG\bin\Release\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -39,19 +40,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MWS.cs" />
+    <Compile Include="Common\Bin.cs" />
+    <Compile Include="Common\Card.cs" />
+    <Compile Include="Common\Deck.cs" />
+    <Compile Include="Common\GlobalEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Common\Set.cs" />
+    <Compile Include="Utilities\CardTool.cs" />
+    <Compile Include="Utilities\LanguageTool.cs" />
+    <Compile Include="Utilities\StringTool.cs" />
+    <Compile Include="Exception\AssamlyMissingException.cs" />
+    <Compile Include="Exception\CardMissingException.cs" />
+    <Compile Include="Exception\DownloadingException.cs" />
+    <Compile Include="Exception\HyperException.cs" />
+    <Compile Include="Exception\IOException.cs" />
+    <Compile Include="Exception\ParsingException.cs" />
+    <Compile Include="Exception\RequestException.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\HyperBase\HyperKore.csproj">
-      <Project>{74f65d7f-c999-4a0b-8316-9c093660dcf7}</Project>
-      <Name>HyperKore</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\HyperPlugin\HyperPlugin.csproj">
-      <Project>{bef59a5b-5faf-405e-9e47-862da747ab4e}</Project>
-      <Name>HyperPlugin</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -11,8 +11,8 @@
         <mui:ModernTab Layout="Tab">
             <mui:ModernTab.Links>
                 <!--  TODO: set @Source  -->
-                <mui:Link DisplayName="official" Source="../Content/DatabaseOfficial.xaml" />
                 <mui:Link DisplayName="custom" />
+                <mui:Link DisplayName="official" Source="../Content/DatabaseOfficial.xaml" />
             </mui:ModernTab.Links>
         </mui:ModernTab>
     </Grid>

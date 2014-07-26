@@ -1,16 +1,18 @@
-﻿using HyperKore.Common;
-using HyperKore.IO;
-using HyperKore.Utilities;
-using HyperKore.Xception;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using HyperKore.Common;
+using HyperKore.Exception;
+using HyperKore.Utilities;
+using IOException = HyperKore.Exception.IOException;
 
-namespace Mage
+namespace HyperPlugin.IO.Mage
 {
 	public sealed class MAGE : IDeckReader, IDeckWriter
 	{
+		#region IDeckReader Members
+
 		public string DeckType
 		{
 			get { return "Mage"; }
@@ -33,41 +35,38 @@ namespace Mage
 
 		public Deck Read(Stream input, IEnumerable<Card> database)
 		{
-			Deck deck = new Deck();
-			try
+			var deck = new Deck();
+			MAGEDeck gdeck = Open(input);
+			if (gdeck.MainBoard.Count + gdeck.SideBoard.Count > 0)
 			{
-				var gdeck = Open(input);
-				if (gdeck.MainBoard.Count + gdeck.SideBoard.Count > 0)
+				foreach (MAGECard item in gdeck.MainBoard)
 				{
-					foreach (var item in gdeck.MainBoard)
+					for (int i = 0; i < item.Count; i++)
 					{
-						for (int i = 0; i < item.Count; i++)
-						{
-							deck.MainBoard.Add(Convert(item, database));
-						}
+						deck.MainBoard.Add(Convert(item, database));
 					}
-					foreach (var item in gdeck.SideBoard)
-					{
-						for (int i = 0; i < item.Count; i++)
-						{
-							deck.SideBoard.Add(Convert(item, database));
-						}
-					}
-					deck.Name = gdeck.Name;
 				}
-				return deck;
+				foreach (MAGECard item in gdeck.SideBoard)
+				{
+					for (int i = 0; i < item.Count; i++)
+					{
+						deck.SideBoard.Add(Convert(item, database));
+					}
+				}
+				deck.Name = gdeck.Name;
 			}
-			catch
-			{
-				throw;
-			}
+			return deck;
 		}
+
+		#endregion
+
+		#region IDeckWriter Members
 
 		public bool Write(Deck deck, Stream output)
 		{
 			try
 			{
-				var gdeck = Convert(deck);
+				MAGEDeck gdeck = Convert(deck);
 				Export(gdeck, output);
 				return true;
 			}
@@ -77,48 +76,40 @@ namespace Mage
 			}
 		}
 
+		#endregion
+
 		private Card Convert(MAGECard card, IEnumerable<Card> database)
 		{
-			var res = database.FirstOrDefault(c => card.SetCode == c.SetCode && card.Name == c.GetLegalName());
+			Card res = database.FirstOrDefault(c => card.SetCode == c.SetCode && card.Name == c.GetLegalName());
 			if (res != null)
 			{
 				return res;
 			}
-			else
-			{
-				throw new CardMissingXception("Card not found when loading Mage deck.", card.Name, card.SetCode);
-			}
+			throw new CardMissingException();
 		}
 
 		private MAGEDeck Convert(Deck deck)
 		{
-			try
+			var gdeck = new MAGEDeck();
+			ILookup<string, Card> lpM = deck.MainBoard.ToLookup(c => c.ID);
+			foreach (var gp in lpM)
 			{
-				MAGEDeck gdeck = new MAGEDeck();
-				var lpM = deck.MainBoard.ToLookup(c => c.ID);
-				foreach (var gp in lpM)
-				{
-					var tcard = gp.First();
-					MAGECard gcard = new MAGECard() { Name = tcard.Name, SetCode = tcard.SetCode, Number = tcard.Number, Count = gp.Count() };
-					gdeck.MainBoard.Add(gcard);
-				}
-
-				var lpS = deck.SideBoard.ToLookup(c => c.ID);
-				foreach (var gp in lpS)
-				{
-					var tcard = gp.First();
-					MAGECard gcard = new MAGECard() { Name = tcard.Name, SetCode = tcard.SetCode, Number = tcard.Number, Count = gp.Count() };
-					gdeck.SideBoard.Add(gcard);
-				}
-
-				gdeck.Name = deck.Name;
-
-				return gdeck;
+				Card tcard = gp.First();
+				var gcard = new MAGECard {Name = tcard.Name, SetCode = tcard.SetCode, Number = tcard.Number, Count = gp.Count()};
+				gdeck.MainBoard.Add(gcard);
 			}
-			catch
+
+			ILookup<string, Card> lpS = deck.SideBoard.ToLookup(c => c.ID);
+			foreach (var gp in lpS)
 			{
-				throw;
+				Card tcard = gp.First();
+				var gcard = new MAGECard {Name = tcard.Name, SetCode = tcard.SetCode, Number = tcard.Number, Count = gp.Count()};
+				gdeck.SideBoard.Add(gcard);
 			}
+
+			gdeck.Name = deck.Name;
+
+			return gdeck;
 		}
 
 		private void Export(MAGEDeck deck, Stream stream)
@@ -129,15 +120,15 @@ namespace Mage
 
 				sw.WriteLine("NAME: " + deck.Name);
 
-				deck.MainBoard.ForEach(c => sw.WriteLine(String.Format("{0} [{1}:{2}] {3}", c.Count, c.SetCode, c.Number, c.Name)));
+				deck.MainBoard.ForEach(c => sw.WriteLine("{0} [{1}:{2}] {3}", c.Count, c.SetCode, c.Number, c.Name));
 
-				deck.SideBoard.ForEach(c => sw.WriteLine(String.Format("SB: {0} [{1}:{2}] {3}", c.Count, c.SetCode, c.Number, c.Name)));
+				deck.SideBoard.ForEach(c => sw.WriteLine("SB: {0} [{1}:{2}] {3}", c.Count, c.SetCode, c.Number, c.Name));
 
 				sw.Flush();
 			}
 			catch (Exception ex)
 			{
-				throw new IOXception("IO Error happended when exporting MAGE file", ex);
+				throw new IOException(ex);
 			}
 		}
 
@@ -147,31 +138,31 @@ namespace Mage
 			{
 				var sr = new StreamReader(input);
 				sr.BaseStream.Seek(0L, SeekOrigin.Begin);
-				MAGEDeck deck = new MAGEDeck();
+				var deck = new MAGEDeck();
 
-				var line = sr.ReadLine();
+				string line = sr.ReadLine();
 
 				while (line != null)
 				{
 					if (line.Contains("["))
 					{
-						MAGECard card = new MAGECard();
+						var card = new MAGECard();
 
 						if (line.Contains("SB:"))
 						{
-							var idxa = line.IndexOf("[");
-							var idxb = line.IndexOf("]");
+							int idxa = line.IndexOf("[");
+							int idxb = line.IndexOf("]");
 
 							if (idxa > 0 && idxb > idxa)
 							{
-								var idxc = line.IndexOf(":", idxa);
-								var idxd = line.IndexOf(":");
+								int idxc = line.IndexOf(":", idxa);
+								int idxd = line.IndexOf(":");
 								if (idxc > idxa && idxc < idxb)
 								{
-									var count = line.Substring(idxd + 1, idxa - idxd - 1).Trim();
-									var setcode = line.Substring(idxa + 1, idxc - idxa - 1).Trim();
-									var number = line.Substring(idxc + 1, idxb - idxc - 1).Trim();
-									var name = line.Substring(idxb + 1).Replace("SB:", string.Empty).Trim();
+									string count = line.Substring(idxd + 1, idxa - idxd - 1).Trim();
+									string setcode = line.Substring(idxa + 1, idxc - idxa - 1).Trim();
+									string number = line.Substring(idxc + 1, idxb - idxc - 1).Trim();
+									string name = line.Substring(idxb + 1).Replace("SB:", string.Empty).Trim();
 									int cnt;
 
 									if (Int32.TryParse(count, out cnt))
@@ -188,18 +179,18 @@ namespace Mage
 						}
 						else
 						{
-							var idxa = line.IndexOf("[");
-							var idxb = line.IndexOf("]");
+							int idxa = line.IndexOf("[");
+							int idxb = line.IndexOf("]");
 
 							if (idxa > 0 && idxb > idxa)
 							{
-								var idxc = line.IndexOf(":", idxa);
+								int idxc = line.IndexOf(":", idxa);
 								if (idxc > idxa && idxc < idxb)
 								{
-									var count = line.Remove(idxa).Trim();
-									var setcode = line.Substring(idxa + 1, idxc - idxa - 1).Trim();
-									var number = line.Substring(idxc + 1, idxb - idxc - 1).Trim();
-									var name = line.Substring(idxb + 1).Trim();
+									string count = line.Remove(idxa).Trim();
+									string setcode = line.Substring(idxa + 1, idxc - idxa - 1).Trim();
+									string number = line.Substring(idxc + 1, idxb - idxc - 1).Trim();
+									string name = line.Substring(idxb + 1).Trim();
 									int cnt;
 
 									if (Int32.TryParse(count, out cnt))
@@ -227,42 +218,26 @@ namespace Mage
 			}
 			catch (Exception ex)
 			{
-				throw new IOXception("IO Error happended when opening mage file", ex);
+				throw new IOException(ex);
 			}
 		}
 	}
 
 	internal class MAGECard
 	{
-		public int Count
-		{
-			get;
-			set;
-		}
+		public int Count { get; set; }
 
-		public string Name
-		{
-			get;
-			set;
-		}
+		public string Name { get; set; }
 
-		public string Number
-		{
-			get;
-			set;
-		}
+		public string Number { get; set; }
 
-		public string SetCode
-		{
-			get;
-			set;
-		}
+		public string SetCode { get; set; }
 	}
 
 	internal class MAGEDeck
 	{
 		/// <summary>
-		/// Initializes a new instance of the MageDeck class.
+		///     Initializes a new instance of the MageDeck class.
 		/// </summary>
 		public MAGEDeck(IEnumerable<MAGECard> mainBoard, IEnumerable<MAGECard> sideBoard, string name = "")
 		{
@@ -272,7 +247,7 @@ namespace Mage
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the MageDeck class.
+		///     Initializes a new instance of the MageDeck class.
 		/// </summary>
 		public MAGEDeck()
 		{
@@ -281,22 +256,10 @@ namespace Mage
 			SideBoard = new List<MAGECard>();
 		}
 
-		public List<MAGECard> MainBoard
-		{
-			get;
-			set;
-		}
+		public List<MAGECard> MainBoard { get; set; }
 
-		public string Name
-		{
-			get;
-			set;
-		}
+		public string Name { get; set; }
 
-		public List<MAGECard> SideBoard
-		{
-			get;
-			set;
-		}
+		public List<MAGECard> SideBoard { get; set; }
 	}
 }

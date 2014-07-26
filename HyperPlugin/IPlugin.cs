@@ -1,4 +1,4 @@
-﻿namespace HyperKore.Plugin
+﻿namespace HyperPlugin
 {
 	public interface IPlugin
 	{

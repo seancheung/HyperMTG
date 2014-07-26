@@ -1,31 +1,35 @@
-﻿using HyperKore.Common;
-using HyperKore.IO;
-using HyperKore.Utilities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Linq;
 using System.Data.SQLite;
 using System.Linq;
+using HyperKore.Common;
+using HyperKore.Utilities;
+using HyperPlugin;
 
 namespace SQLiteIO
 {
 	public class DBSQLite : IDBReader, IDBWriter
 	{
-		private const string BuildCmd = "CREATE TABLE IF NOT EXISTS 'Card'('id' TEXT NOT NULL,'zid' TEXT,'var' TEXT,'name' TEXT NOT NULL,'zname' TEXT,'set' TEXT NOT NULL,'setcode' TEXT NOT NULL,'color' TEXT,'colorcode' TEXT,'cost' TEXT,'cmc' TEXT,'type' TEXT NOT NULL,'ztype' TEXT,'typecode' TEXT NOT NULL,'pow' TEXT,'tgh' TEXT,'loyalty' TEXT,'text' TEXT,'ztext' TEXT,'flavor' TEXT,'zflavor' TEXT,'artist' TEXT,'rarity' TEXT NOT NULL,'raritycode' TEXT NOT NULL,'number' TEXT NOT NULL,'rulings' TEXT,'legality' TEXT,'rating' TEXT,PRIMARY KEY('id'));CREATE TABLE IF NOT EXISTS 'Set'('SetName' TEXT NOT NULL,'SetCode' TEXT,'LastUpdate' TEXT,'Local' INTEGER,PRIMARY KEY('SetName'));CREATE TABLE IF NOT EXISTS 'File'('id' TEXT NOT NULL,'data' BLOB,'length' INTEGER,PRIMARY KEY('id'))";
+		private const string BuildCmd =
+			"CREATE TABLE IF NOT EXISTS 'Card'('id' TEXT NOT NULL,'zid' TEXT,'var' TEXT,'name' TEXT NOT NULL,'zname' TEXT,'set' TEXT NOT NULL,'setcode' TEXT NOT NULL,'color' TEXT,'colorcode' TEXT,'cost' TEXT,'cmc' TEXT,'type' TEXT NOT NULL,'ztype' TEXT,'typecode' TEXT NOT NULL,'pow' TEXT,'tgh' TEXT,'loyalty' TEXT,'text' TEXT,'ztext' TEXT,'flavor' TEXT,'zflavor' TEXT,'artist' TEXT,'rarity' TEXT NOT NULL,'raritycode' TEXT NOT NULL,'number' TEXT NOT NULL,'rulings' TEXT,'legality' TEXT,'rating' TEXT,PRIMARY KEY('id'));CREATE TABLE IF NOT EXISTS 'Set'('SetName' TEXT NOT NULL,'SetCode' TEXT,'LastUpdate' TEXT,'Local' INTEGER,PRIMARY KEY('SetName'));CREATE TABLE IF NOT EXISTS 'File'('id' TEXT NOT NULL,'data' BLOB,'length' INTEGER,PRIMARY KEY('id'))";
+
 		private const string ConnString = "data source=DATA.db;password=5AEB55D5-F169-4EB2-A768-B20EBD20151E";
 
 		/// <summary>
-		/// Single instance of SQLiteConnection
+		///     Single instance of SQLiteConnection
 		/// </summary>
 		private static readonly SQLiteConnection Conn = new SQLiteConnection();
 
 		/// <summary>
-		/// Initializes a new instance of the SQLiteIO class.
+		///     Initializes a new instance of the SQLiteIO class.
 		/// </summary>
 		public DBSQLite()
 		{
 			Conn.ConnectionString = ConnString;
 			Create();
 		}
+
+		#region IDBReader Members
 
 		public string DBType
 		{
@@ -42,12 +46,50 @@ namespace SQLiteIO
 			get { return "DBSQLite"; }
 		}
 
+		public IEnumerable<Card> LoadCards()
+		{
+			using (var datacontext = new DataContext(Conn))
+			{
+				Table<Card> tab = datacontext.GetTable<Card>();
+				return tab.ToList();
+			}
+		}
+
+		public byte[] LoadFile(string id, ICompressor compressor)
+		{
+			using (var datacontext = new DataContext(Conn))
+			{
+				Table<Bin> tab = datacontext.GetTable<Bin>();
+				Bin[] datas = tab.Where(i => i.ID == id).ToArray();
+
+				if (datas.Count() != 1)
+				{
+					return null;
+				}
+
+				return compressor == null ? datas[0].Data : compressor.Decompress(datas[0].Data, datas[0].Length);
+			}
+		}
+
+		public IEnumerable<Set> LoadSets()
+		{
+			using (var datacontext = new DataContext(Conn))
+			{
+				Table<Set> tab = datacontext.GetTable<Set>();
+				return tab.ToList();
+			}
+		}
+
+		#endregion
+
+		#region IDBWriter Members
+
 		public bool Delete(Card card)
 		{
 			using (var datacontext = new DataContext(Conn))
 			{
-				var tab = datacontext.GetTable<Card>();
-				var que = tab.Where(c => c.ID == card.ID);
+				Table<Card> tab = datacontext.GetTable<Card>();
+				IQueryable<Card> que = tab.Where(c => c.ID == card.ID);
 
 				if (!que.Any())
 				{
@@ -65,8 +107,8 @@ namespace SQLiteIO
 		{
 			using (var datacontext = new DataContext(Conn))
 			{
-				var tab = datacontext.GetTable<Bin>();
-				var que = tab.Where(i => i.ID == id);
+				Table<Bin> tab = datacontext.GetTable<Bin>();
+				IQueryable<Bin> que = tab.Where(i => i.ID == id);
 
 				if (!que.Any())
 				{
@@ -84,12 +126,12 @@ namespace SQLiteIO
 		{
 			using (var datacontext = new DataContext(Conn))
 			{
-				var tab = datacontext.GetTable<Card>();
-				var que = tab.Where(c => c.ID == card.ID);
+				Table<Card> tab = datacontext.GetTable<Card>();
+				IQueryable<Card> que = tab.Where(c => c.ID == card.ID);
 
 				if (que.Any())
 				{
-					foreach (var item in que)
+					foreach (Card item in que)
 					{
 						item.CopyFrom(card);
 					}
@@ -107,14 +149,14 @@ namespace SQLiteIO
 		{
 			using (var datacontext = new DataContext(Conn))
 			{
-				var tab = datacontext.GetTable<Card>();
+				Table<Card> tab = datacontext.GetTable<Card>();
 
-				foreach (var card in cards)
+				foreach (Card card in cards)
 				{
-					var que = tab.Where(c => c.ID == card.ID); 
+					IQueryable<Card> que = tab.Where(c => c.ID == card.ID);
 					if (que.Any())
 					{
-						foreach (var item in que)
+						foreach (Card item in que)
 						{
 							item.CopyFrom(card);
 						}
@@ -129,27 +171,12 @@ namespace SQLiteIO
 			}
 		}
 
-		public void Reset(IEnumerable<Set> sets)
-		{
-			using (var datacontext = new DataContext(Conn))
-			{
-				var tab = datacontext.GetTable<Set>();
-				if (tab.Any())
-				{
-					tab.DeleteAllOnSubmit(tab);
-					tab.InsertAllOnSubmit(sets);
-					datacontext.SubmitChanges();
-				}
-				
-			}
-		}
-
 		public void Insert(IEnumerable<Set> sets)
 		{
 			using (var datacontext = new DataContext(Conn))
 			{
-				var tab = datacontext.GetTable<Set>();
-				foreach (var set in sets)
+				Table<Set> tab = datacontext.GetTable<Set>();
+				foreach (Set set in sets)
 				{
 					if (!tab.Any(s => s.SetName == set.SetName))
 					{
@@ -157,7 +184,6 @@ namespace SQLiteIO
 					}
 				}
 				datacontext.SubmitChanges();
-
 			}
 		}
 
@@ -165,8 +191,8 @@ namespace SQLiteIO
 		{
 			using (var datacontext = new DataContext(Conn))
 			{
-				var tab = datacontext.GetTable<Bin>();
-				var compdata = compressor == null ? data : compressor.Compress(data);
+				Table<Bin> tab = datacontext.GetTable<Bin>();
+				byte[] compdata = compressor == null ? data : compressor.Compress(data);
 
 				if (tab.Any(i => i.ID == id))
 				{
@@ -179,53 +205,19 @@ namespace SQLiteIO
 			}
 		}
 
-		public IEnumerable<Card> LoadCards()
-		{
-			using (var datacontext = new DataContext(Conn))
-			{
-				var tab = datacontext.GetTable<Card>();
-				return tab.ToList();
-			}
-		}
-
-		public byte[] LoadFile(string id, ICompressor compressor)
-		{
-			using (var datacontext = new DataContext(Conn))
-			{
-				var tab = datacontext.GetTable<Bin>();
-				var datas = tab.Where(i => i.ID == id).ToArray();
-
-				if (datas.Count() != 1)
-				{
-					return null;
-				}
-
-				return compressor == null ? datas[0].Data : compressor.Decompress(datas[0].Data, datas[0].Length);
-			}
-		}
-
-		public IEnumerable<Set> LoadSets()
-		{
-			using (var datacontext = new DataContext(Conn))
-			{
-				var tab = datacontext.GetTable<Set>();
-				return tab.ToList();
-			}
-		}
-
 		public bool Update(Card card)
 		{
 			using (var datacontext = new DataContext(Conn))
 			{
-				var tab = datacontext.GetTable<Card>();
-				var que = tab.Where(c => c.ID == card.ID);
+				Table<Card> tab = datacontext.GetTable<Card>();
+				IQueryable<Card> que = tab.Where(c => c.ID == card.ID);
 
 				if (!que.Any())
 				{
 					return false;
 				}
 
-				foreach (var item in que)
+				foreach (Card item in que)
 				{
 					item.CopyFrom(card);
 				}
@@ -238,16 +230,16 @@ namespace SQLiteIO
 		{
 			using (var datacontext = new DataContext(Conn))
 			{
-				var tab = datacontext.GetTable<Bin>();
-				var compdata = compressor == null ? data : compressor.Compress(data);
-				var que = tab.Where(i => i.ID == id);
+				Table<Bin> tab = datacontext.GetTable<Bin>();
+				byte[] compdata = compressor == null ? data : compressor.Compress(data);
+				IQueryable<Bin> que = tab.Where(i => i.ID == id);
 
 				if (!que.Any())
 				{
 					return false;
 				}
 
-				foreach (var item in que)
+				foreach (Bin item in que)
 				{
 					item.Data = compdata;
 					item.Length = data.Length;
@@ -261,15 +253,15 @@ namespace SQLiteIO
 		{
 			using (var datacontext = new DataContext(Conn))
 			{
-				var tab = datacontext.GetTable<Set>();
-				var que = tab.Where(c => c.SetName == set.SetName);
+				Table<Set> tab = datacontext.GetTable<Set>();
+				IQueryable<Set> que = tab.Where(c => c.SetName == set.SetName);
 
 				if (!que.Any())
 				{
 					return false;
 				}
 
-				foreach (var item in que)
+				foreach (Set item in que)
 				{
 					item.SetCode = set.SetCode;
 					item.LastUpdate = set.LastUpdate;
@@ -277,6 +269,22 @@ namespace SQLiteIO
 				}
 				datacontext.SubmitChanges();
 				return true;
+			}
+		}
+
+		#endregion
+
+		public void Reset(IEnumerable<Set> sets)
+		{
+			using (var datacontext = new DataContext(Conn))
+			{
+				Table<Set> tab = datacontext.GetTable<Set>();
+				if (tab.Any())
+				{
+					tab.DeleteAllOnSubmit(tab);
+					tab.InsertAllOnSubmit(sets);
+					datacontext.SubmitChanges();
+				}
 			}
 		}
 

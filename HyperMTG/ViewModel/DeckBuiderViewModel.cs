@@ -1,10 +1,9 @@
 ﻿using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using HyperKore.Common;
-using HyperKore.IO;
 using HyperMTG.Helper;
+using HyperPlugin;
 
 namespace HyperMTG.ViewModel
 {
@@ -39,13 +38,14 @@ namespace HyperMTG.ViewModel
 			Deck = new Deck();
 			Cards = new ObservableCollection<Card>();
 
-			_dbReader = IOHandler.Instance.GetPlugins<IDBReader>().FirstOrDefault();
-			_dbWriter = IOHandler.Instance.GetPlugins<IDBWriter>().FirstOrDefault();
-			_compressor = IOHandler.Instance.GetPlugins<ICompressor>().FirstOrDefault();
+			_dbReader = PluginManager.Instance.GetPlugin<IDBReader>();
+			_dbWriter = PluginManager.Instance.GetPlugin<IDBWriter>();
+			_compressor = PluginManager.Instance.GetPlugin<ICompressor>();
 
 			_dispatcher = Application.Current.Dispatcher;
 
 			if (_dbReader != null) Cards = new ObservableCollection<Card>(_dbReader.LoadCards());
+			else Info = "Assemblly Missing";
 
 			SelectedCard = new ExCard(_dbReader, _compressor);
 		}

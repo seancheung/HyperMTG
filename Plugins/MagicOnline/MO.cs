@@ -1,16 +1,18 @@
-﻿using HyperKore.Common;
-using HyperKore.IO;
-using HyperKore.Utilities;
-using HyperKore.Xception;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using HyperKore.Common;
+using HyperKore.Exception;
+using HyperKore.Utilities;
+using IOException = HyperKore.Exception.IOException;
 
-namespace MagicOnline
+namespace HyperPlugin.IO.MagicOnline
 {
 	public class MO : IDeckReader, IDeckWriter
 	{
+		#region IDeckReader Members
+
 		public string DeckType
 		{
 			get { return "Magic Online"; }
@@ -33,41 +35,38 @@ namespace MagicOnline
 
 		public Deck Read(Stream input, IEnumerable<Card> database)
 		{
-			Deck deck = new Deck();
-			try
+			var deck = new Deck();
+			MODeck odeck = Open(input);
+			if (odeck.MainBoard.Count + odeck.SideBoard.Count > 0)
 			{
-				var odeck = Open(input);
-				if (odeck.MainBoard.Count + odeck.SideBoard.Count > 0)
+				foreach (MOCard item in odeck.MainBoard)
 				{
-					foreach (var item in odeck.MainBoard)
+					for (int i = 0; i < item.Count; i++)
 					{
-						for (int i = 0; i < item.Count; i++)
-						{
-							deck.MainBoard.Add(Convert(item, database));
-						}
+						deck.MainBoard.Add(Convert(item, database));
 					}
-					foreach (var item in odeck.SideBoard)
-					{
-						for (int i = 0; i < item.Count; i++)
-						{
-							deck.SideBoard.Add(Convert(item, database));
-						}
-					}
-					deck.Name = odeck.Name;
 				}
-				return deck;
+				foreach (MOCard item in odeck.SideBoard)
+				{
+					for (int i = 0; i < item.Count; i++)
+					{
+						deck.SideBoard.Add(Convert(item, database));
+					}
+				}
+				deck.Name = odeck.Name;
 			}
-			catch
-			{
-				throw;
-			}
+			return deck;
 		}
+
+		#endregion
+
+		#region IDeckWriter Members
 
 		public bool Write(Deck deck, Stream output)
 		{
 			try
 			{
-				var odeck = Convert(deck);
+				MODeck odeck = Convert(deck);
 				Export(odeck, output);
 				return true;
 			}
@@ -77,48 +76,40 @@ namespace MagicOnline
 			}
 		}
 
+		#endregion
+
 		private Card Convert(MOCard card, IEnumerable<Card> database)
 		{
-			var res = database.FirstOrDefault(c => card.Name == c.GetLegalName());
+			Card res = database.FirstOrDefault(c => card.Name == c.GetLegalName());
 			if (res != null)
 			{
 				return res;
 			}
-			else
-			{
-				throw new CardMissingXception("Card not found when loading MO deck.", card.Name);
-			}
+			throw new CardMissingException();
 		}
 
 		private MODeck Convert(Deck deck)
 		{
-			try
+			var odeck = new MODeck();
+			ILookup<string, Card> lpM = deck.MainBoard.ToLookup(c => c.ID);
+			foreach (var gp in lpM)
 			{
-				MODeck odeck = new MODeck();
-				var lpM = deck.MainBoard.ToLookup(c => c.ID);
-				foreach (var gp in lpM)
-				{
-					var tcard = gp.First();
-					MOCard ocard = new MOCard() { Name = tcard.Name, Count = gp.Count() };
-					odeck.MainBoard.Add(ocard);
-				}
-
-				var lpS = deck.SideBoard.ToLookup(c => c.ID);
-				foreach (var gp in lpS)
-				{
-					var tcard = gp.First();
-					MOCard ocard = new MOCard() { Name = tcard.Name, Count = gp.Count() };
-					odeck.SideBoard.Add(ocard);
-				}
-
-				odeck.Name = deck.Name;
-
-				return odeck;
+				Card tcard = gp.First();
+				var ocard = new MOCard {Name = tcard.Name, Count = gp.Count()};
+				odeck.MainBoard.Add(ocard);
 			}
-			catch
+
+			ILookup<string, Card> lpS = deck.SideBoard.ToLookup(c => c.ID);
+			foreach (var gp in lpS)
 			{
-				throw;
+				Card tcard = gp.First();
+				var ocard = new MOCard {Name = tcard.Name, Count = gp.Count()};
+				odeck.SideBoard.Add(ocard);
 			}
+
+			odeck.Name = deck.Name;
+
+			return odeck;
 		}
 
 		private void Export(MODeck deck, Stream stream)
@@ -127,17 +118,17 @@ namespace MagicOnline
 			{
 				var sw = new StreamWriter(stream);
 
-				deck.MainBoard.ForEach(c => sw.WriteLine(String.Format("{0} {1}", c.Count, c.Name)));
+				deck.MainBoard.ForEach(c => sw.WriteLine("{0} {1}", c.Count, c.Name));
 
 				sw.WriteLine("Sideboard");
 
-				deck.SideBoard.ForEach(c => sw.WriteLine(String.Format("{0} {1}", c.Count, c.Name)));
+				deck.SideBoard.ForEach(c => sw.WriteLine("{0} {1}", c.Count, c.Name));
 
 				sw.Flush();
 			}
 			catch (Exception ex)
 			{
-				throw new IOXception("IO Error happended when exporting MO file", ex);
+				throw new IOException(ex);
 			}
 		}
 
@@ -147,9 +138,9 @@ namespace MagicOnline
 			{
 				var sr = new StreamReader(input);
 				sr.BaseStream.Seek(0L, SeekOrigin.Begin);
-				MODeck deck = new MODeck();
+				var deck = new MODeck();
 
-				var line = sr.ReadLine();
+				string line = sr.ReadLine();
 				int partID = 0; // 0 - main, 1 - side
 				while (line != null)
 				{
@@ -159,16 +150,16 @@ namespace MagicOnline
 					}
 					else if (!string.IsNullOrWhiteSpace(line))
 					{
-						MOCard card = new MOCard();
+						var card = new MOCard();
 
 						if (partID == 0)
 						{
-							var idx = line.IndexOf(" ");
+							int idx = line.IndexOf(" ");
 							if (idx > 0)
 							{
-								var count = line.Remove(idx).Trim();
-								var name = line.Substring(idx).Trim();
-								int cnt = 0;
+								string count = line.Remove(idx).Trim();
+								string name = line.Substring(idx).Trim();
+								int cnt;
 								if (Int32.TryParse(count, out cnt))
 								{
 									card.Count = cnt;
@@ -180,11 +171,11 @@ namespace MagicOnline
 						}
 						else
 						{
-							var idx = line.IndexOf(" ");
+							int idx = line.IndexOf(" ");
 							if (idx > 0)
 							{
-								var count = line.Remove(idx).Trim();
-								var name = line.Substring(idx).Trim();
+								string count = line.Remove(idx).Trim();
+								string name = line.Substring(idx).Trim();
 								int cnt;
 								if (Int32.TryParse(count, out cnt))
 								{
@@ -204,30 +195,22 @@ namespace MagicOnline
 			}
 			catch (Exception ex)
 			{
-				throw new IOXception("IO Error happended when opening MO file", ex);
+				throw new IOException(ex);
 			}
 		}
 	}
 
 	internal class MOCard
 	{
-		public int Count
-		{
-			get;
-			set;
-		}
+		public int Count { get; set; }
 
-		public string Name
-		{
-			get;
-			set;
-		}
+		public string Name { get; set; }
 	}
 
 	internal class MODeck
 	{
 		/// <summary>
-		/// Initializes a new instance of the MODeck class.
+		///     Initializes a new instance of the MODeck class.
 		/// </summary>
 		public MODeck(IEnumerable<MOCard> mainBoard, IEnumerable<MOCard> sideBoard, string name = "")
 		{
@@ -237,7 +220,7 @@ namespace MagicOnline
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the MODeck class.
+		///     Initializes a new instance of the MODeck class.
 		/// </summary>
 		public MODeck()
 		{
@@ -246,22 +229,10 @@ namespace MagicOnline
 			SideBoard = new List<MOCard>();
 		}
 
-		public List<MOCard> MainBoard
-		{
-			get;
-			set;
-		}
+		public List<MOCard> MainBoard { get; set; }
 
-		public string Name
-		{
-			get;
-			set;
-		}
+		public string Name { get; set; }
 
-		public List<MOCard> SideBoard
-		{
-			get;
-			set;
-		}
+		public List<MOCard> SideBoard { get; set; }
 	}
 }

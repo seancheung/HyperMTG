@@ -1,16 +1,18 @@
-﻿using HyperKore.Common;
-using HyperKore.IO;
-using HyperKore.Utilities;
-using HyperKore.Xception;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using HyperKore.Common;
+using HyperKore.Exception;
+using HyperKore.Utilities;
+using IOException = HyperKore.Exception.IOException;
 
-namespace MagicWorkstation
+namespace HyperPlugin.IO.MagicWorkstation
 {
 	public sealed class MWS : IDeckReader, IDeckWriter
 	{
+		#region IDeckReader Members
+
 		public string DeckType
 		{
 			get { return "Magic Workstation"; }
@@ -33,48 +35,45 @@ namespace MagicWorkstation
 
 		public Deck Read(Stream input, IEnumerable<Card> database)
 		{
-			Deck deck = new Deck();
-			try
+			var deck = new Deck();
+			MWSDeck mdeck = Open(input);
+			foreach (MWSCard item in mdeck.MainBoardLands)
 			{
-				var mdeck = Open(input);
-				foreach (var item in mdeck.MainBoardLands)
+				for (int i = 0; i < item.Count; i++)
 				{
-					for (int i = 0; i < item.Count; i++)
-					{
-						deck.MainBoard.Add(Convert(item, database));
-					}
+					deck.MainBoard.Add(Convert(item, database));
 				}
-				foreach (var item in mdeck.MainBoardSpells)
-				{
-					for (int i = 0; i < item.Count; i++)
-					{
-						deck.MainBoard.Add(Convert(item, database));
-					}
-				}
-				foreach (var item in mdeck.SideBoard)
-				{
-					for (int i = 0; i < item.Count; i++)
-					{
-						deck.SideBoard.Add(Convert(item, database));
-					}
-				}
-
-				deck.Name = mdeck.Name;
-				deck.Comment = mdeck.Comment;
-
-				return deck;
 			}
-			catch
+			foreach (MWSCard item in mdeck.MainBoardSpells)
 			{
-				throw;
+				for (int i = 0; i < item.Count; i++)
+				{
+					deck.MainBoard.Add(Convert(item, database));
+				}
 			}
+			foreach (MWSCard item in mdeck.SideBoard)
+			{
+				for (int i = 0; i < item.Count; i++)
+				{
+					deck.SideBoard.Add(Convert(item, database));
+				}
+			}
+
+			deck.Name = mdeck.Name;
+			deck.Comment = mdeck.Comment;
+
+			return deck;
 		}
+
+		#endregion
+
+		#region IDeckWriter Members
 
 		public bool Write(Deck deck, Stream output)
 		{
 			try
 			{
-				var mdeck = Convert(deck);
+				MWSDeck mdeck = Convert(deck);
 				Export(mdeck, output);
 				return true;
 			}
@@ -84,56 +83,48 @@ namespace MagicWorkstation
 			}
 		}
 
+		#endregion
+
 		private Card Convert(MWSCard card, IEnumerable<Card> database)
 		{
-			var res = database.FirstOrDefault(c => card.SetCode == c.SetCode && card.Name == c.GetLegalName());
+			Card res = database.FirstOrDefault(c => card.SetCode == c.SetCode && card.Name == c.GetLegalName());
 			if (res != null)
 			{
 				return res;
 			}
-			else
-			{
-				throw new CardMissingXception("Card not found when loading MWS deck.", card.Name, card.SetCode);
-			}
+			throw new CardMissingException();
 		}
 
 		private MWSDeck Convert(Deck deck)
 		{
-			try
+			var mdeck = new MWSDeck();
+			ILookup<string, Card> lpM = deck.MainBoard.ToLookup(c => c.ID);
+			foreach (var gp in lpM)
 			{
-				MWSDeck mdeck = new MWSDeck();
-				var lpM = deck.MainBoard.ToLookup(c => c.ID);
-				foreach (var gp in lpM)
+				Card tcard = gp.First();
+				var mcard = new MWSCard {Name = tcard.Name, SetCode = tcard.SetCode, Var = tcard.Var, Count = gp.Count()};
+				if (tcard.TypeCode.Contains("L"))
 				{
-					var tcard = gp.First();
-					MWSCard mcard = new MWSCard() { Name = tcard.Name, SetCode = tcard.SetCode, Var = tcard.Var, Count = gp.Count() };
-					if (tcard.TypeCode.Contains("L"))
-					{
-						mdeck.MainBoardLands.Add(mcard);
-					}
-					else
-					{
-						mdeck.MainBoardSpells.Add(mcard);
-					}
+					mdeck.MainBoardLands.Add(mcard);
 				}
-
-				var lpS = deck.SideBoard.ToLookup(c => c.ID);
-				foreach (var gp in lpS)
+				else
 				{
-					var tcard = gp.First();
-					MWSCard mcard = new MWSCard() { Name = tcard.Name, SetCode = tcard.SetCode, Var = tcard.Var, Count = gp.Count() };
-					mdeck.SideBoard.Add(mcard);
+					mdeck.MainBoardSpells.Add(mcard);
 				}
-
-				mdeck.Name = deck.Name;
-				mdeck.Comment = deck.Comment;
-
-				return mdeck;
 			}
-			catch
+
+			ILookup<string, Card> lpS = deck.SideBoard.ToLookup(c => c.ID);
+			foreach (var gp in lpS)
 			{
-				throw;
+				Card tcard = gp.First();
+				var mcard = new MWSCard {Name = tcard.Name, SetCode = tcard.SetCode, Var = tcard.Var, Count = gp.Count()};
+				mdeck.SideBoard.Add(mcard);
 			}
+
+			mdeck.Name = deck.Name;
+			mdeck.Comment = deck.Comment;
+
+			return mdeck;
 		}
 
 		private void Export(MWSDeck deck, Stream stream)
@@ -147,8 +138,10 @@ namespace MagicWorkstation
 				sw.WriteLine(deck.Comment);
 
 				sw.WriteLine("\r\n// Lands\n");
-				deck.MainBoardLands.FindAll(c => !string.IsNullOrWhiteSpace(c.Var)).ForEach(c => sw.WriteLine(string.Format("{0} [{1}] {2} (1)", c.Count, c.SetCode, c.Name, c.Var)));
-				deck.MainBoardLands.FindAll(c => string.IsNullOrWhiteSpace(c.Var)).ForEach(c => sw.WriteLine(string.Format("{0} [{1}] {2}", c.Count, c.SetCode, c.Name)));
+				deck.MainBoardLands.FindAll(c => !string.IsNullOrWhiteSpace(c.Var))
+					.ForEach(c => sw.WriteLine("{0} [{1}] {2} (1)", c.Count, c.SetCode, c.Name));
+				deck.MainBoardLands.FindAll(c => string.IsNullOrWhiteSpace(c.Var))
+					.ForEach(c => sw.WriteLine("{0} [{1}] {2}", c.Count, c.SetCode, c.Name));
 
 				sw.WriteLine("\r\n// Spells\n");
 				deck.MainBoardSpells.ForEach(c => sw.WriteLine("{0} [{1}] {2}", c.Count, c.SetCode, c.Name));
@@ -160,7 +153,7 @@ namespace MagicWorkstation
 			}
 			catch (Exception ex)
 			{
-				throw new IOXception("IO Error happended when exporting MWS file", ex);
+				throw new IOException(ex);
 			}
 		}
 
@@ -170,11 +163,11 @@ namespace MagicWorkstation
 			{
 				var sr = new StreamReader(input);
 				sr.BaseStream.Seek(0L, SeekOrigin.Begin);
-				MWSDeck deck = new MWSDeck();
+				var deck = new MWSDeck();
 
 				int partID = 1; // 0 - comment,1 - mainlands, 2 - mainspells, 3 - side
 
-				var line = sr.ReadLine();
+				string line = sr.ReadLine();
 				while (line != null)
 				{
 					if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("//"))
@@ -198,20 +191,20 @@ namespace MagicWorkstation
 								break;
 
 							case 1:
-								var idxa = line.IndexOf("[");
-								var idxb = line.IndexOf("]");
+								int idxa = line.IndexOf("[");
+								int idxb = line.IndexOf("]");
 
 								if (idxa > 0 && idxb > idxa)
 								{
-									MWSCard card = new MWSCard();
+									var card = new MWSCard();
 
-									var count = line.Remove(idxa).Trim();
+									string count = line.Remove(idxa).Trim();
 									card.Count = System.Convert.ToInt32(count);
 
-									var setcode = idxb - idxa > 1 ? line.Substring(idxa + 1, idxb - idxa - 1) : string.Empty;
+									string setcode = idxb - idxa > 1 ? line.Substring(idxa + 1, idxb - idxa - 1) : string.Empty;
 									card.SetCode = setcode.Trim();
 
-									var name = idxb < line.Length ? line.Substring(idxb + 1) : string.Empty;
+									string name = idxb < line.Length ? line.Substring(idxb + 1) : string.Empty;
 									card.Name = name.Trim();
 
 									deck.MainBoardSpells.Add(card);
@@ -225,22 +218,22 @@ namespace MagicWorkstation
 
 								if (idxa > 0 && idxb > idxa)
 								{
-									MWSCard card = new MWSCard();
+									var card = new MWSCard();
 
-									var count = line.Remove(idxa).Trim();
+									string count = line.Remove(idxa).Trim();
 									card.Count = System.Convert.ToInt32(count);
 
-									var setcode = idxb - idxa > 1 ? line.Substring(idxa + 1, idxb - idxa - 1) : string.Empty;
+									string setcode = idxb - idxa > 1 ? line.Substring(idxa + 1, idxb - idxa - 1) : string.Empty;
 									card.SetCode = setcode.Trim();
 
-									var name = idxb < line.Length ? line.Substring(idxb + 1) : string.Empty;
+									string name = idxb < line.Length ? line.Substring(idxb + 1) : string.Empty;
 									card.Name = name.Trim();
 
-									var idxc = line.IndexOf("(");
-									var idxd = line.IndexOf(")");
+									int idxc = line.IndexOf("(");
+									int idxd = line.IndexOf(")");
 									if (idxc > 0 && idxd > idxc)
 									{
-										var var = idxd - idxc > 1 ? line.Substring(idxc + 1, idxd - idxc - 1) : string.Empty;
+										string var = idxd - idxc > 1 ? line.Substring(idxc + 1, idxd - idxc - 1) : string.Empty;
 										card.Var = var.Trim();
 										card.Name = name.Remove(name.IndexOf("(")).Trim();
 									}
@@ -255,31 +248,28 @@ namespace MagicWorkstation
 
 								if (idxa > 0 && idxb > idxa)
 								{
-									MWSCard card = new MWSCard();
+									var card = new MWSCard();
 
-									var count = line.Remove(idxa).Replace("SB:", string.Empty).Trim();
+									string count = line.Remove(idxa).Replace("SB:", string.Empty).Trim();
 									card.Count = System.Convert.ToInt32(count);
 
-									var setcode = idxb - idxa > 1 ? line.Substring(idxa + 1, idxb - idxa - 1) : string.Empty;
+									string setcode = idxb - idxa > 1 ? line.Substring(idxa + 1, idxb - idxa - 1) : string.Empty;
 									card.SetCode = setcode.Trim();
 
-									var name = idxb < line.Length ? line.Substring(idxb + 1) : string.Empty;
+									string name = idxb < line.Length ? line.Substring(idxb + 1) : string.Empty;
 									card.Name = name.Trim();
 
-									var idxc = line.IndexOf("(");
-									var idxd = line.IndexOf(")");
+									int idxc = line.IndexOf("(");
+									int idxd = line.IndexOf(")");
 									if (idxc > 0 && idxd > idxc)
 									{
-										var var = idxd - idxc > 1 ? line.Substring(idxc + 1, idxd - idxc - 1) : string.Empty;
+										string var = idxd - idxc > 1 ? line.Substring(idxc + 1, idxd - idxc - 1) : string.Empty;
 										card.Var = var.Trim();
 										card.Name = name.Remove(name.IndexOf("(")).Trim();
 									}
 
 									deck.SideBoard.Add(card);
 								}
-								break;
-
-							default:
 								break;
 						}
 					}
@@ -310,7 +300,7 @@ namespace MagicWorkstation
 			}
 			catch (Exception ex)
 			{
-				throw new IOXception("IO Error happended when opening MWS file", ex);
+				throw new IOException(ex);
 			}
 		}
 	}
@@ -318,7 +308,7 @@ namespace MagicWorkstation
 	internal class MWSCard
 	{
 		/// <summary>
-		/// Initializes a new instance of the MWSCard class with parameters.
+		///     Initializes a new instance of the MWSCard class with parameters.
 		/// </summary>
 		public MWSCard(string setCode, string name, int count = 1, string @var = null)
 		{
@@ -329,7 +319,7 @@ namespace MagicWorkstation
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the MWSCard class.
+		///     Initializes a new instance of the MWSCard class.
 		/// </summary>
 		public MWSCard()
 		{
@@ -339,37 +329,22 @@ namespace MagicWorkstation
 			Var = String.Empty;
 		}
 
-		public int Count
-		{
-			get;
-			set;
-		}
+		public int Count { get; set; }
 
-		public string Name
-		{
-			get;
-			set;
-		}
+		public string Name { get; set; }
 
-		public string SetCode
-		{
-			get;
-			set;
-		}
+		public string SetCode { get; set; }
 
-		public string Var
-		{
-			get;
-			set;
-		}
+		public string Var { get; set; }
 	}
 
 	internal class MWSDeck
 	{
 		/// <summary>
-		/// Initializes a new instance of the MWSDeck class with parameters.
+		///     Initializes a new instance of the MWSDeck class with parameters.
 		/// </summary>
-		public MWSDeck(string name, IEnumerable<MWSCard> mainBoardLands, IEnumerable<MWSCard> mainBoardSpells, IEnumerable<MWSCard> sideBoard, string comment = "")
+		public MWSDeck(string name, IEnumerable<MWSCard> mainBoardLands, IEnumerable<MWSCard> mainBoardSpells,
+			IEnumerable<MWSCard> sideBoard, string comment = "")
 		{
 			Name = name;
 			Comment = comment;
@@ -379,7 +354,7 @@ namespace MagicWorkstation
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the MWSDeck class.
+		///     Initializes a new instance of the MWSDeck class.
 		/// </summary>
 		public MWSDeck()
 		{
@@ -390,34 +365,14 @@ namespace MagicWorkstation
 			SideBoard = new List<MWSCard>();
 		}
 
-		public string Comment
-		{
-			get;
-			set;
-		}
+		public string Comment { get; set; }
 
-		public List<MWSCard> MainBoardLands
-		{
-			get;
-			set;
-		}
+		public List<MWSCard> MainBoardLands { get; set; }
 
-		public List<MWSCard> MainBoardSpells
-		{
-			get;
-			set;
-		}
+		public List<MWSCard> MainBoardSpells { get; set; }
 
-		public string Name
-		{
-			get;
-			set;
-		}
+		public string Name { get; set; }
 
-		public List<MWSCard> SideBoard
-		{
-			get;
-			set;
-		}
+		public List<MWSCard> SideBoard { get; set; }
 	}
 }

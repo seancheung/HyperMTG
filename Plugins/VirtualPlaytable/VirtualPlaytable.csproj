@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HyperPlugin.IO.VirtualPlaytable</RootNamespace>
-    <AssemblyName>vpt</AssemblyName>
+    <AssemblyName>HyperPlugin.IO.VirtualPlaytable</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -24,7 +24,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\HyperMTG\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -43,25 +43,13 @@
     <Compile Include="VPT.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\HyperBase\HyperBase.csproj">
+    <ProjectReference Include="..\..\HyperBase\HyperKore.csproj">
       <Project>{74f65d7f-c999-4a0b-8316-9c093660dcf7}</Project>
-      <Name>HyperBase</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\HyperIO\HyperIO.csproj">
-      <Project>{5d3dabd4-c6c8-44a1-9cfb-772775bb1e41}</Project>
-      <Name>HyperIO</Name>
+      <Name>HyperKore</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\HyperPlugin\HyperPlugin.csproj">
       <Project>{bef59a5b-5faf-405e-9e47-862da747ab4e}</Project>
       <Name>HyperPlugin</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\HyperUtilities\HyperUtilities.csproj">
-      <Project>{bc0a9ee3-7d4a-4dab-9f0b-f2d1ea31778b}</Project>
-      <Name>HyperUtilities</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\HyperXception\HyperXception.csproj">
-      <Project>{47841b31-279e-4dec-9b61-aa92a970c903}</Project>
-      <Name>HyperXception</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

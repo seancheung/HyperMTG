@@ -34,7 +34,6 @@
             <ListBox Grid.Row="1" Grid.Column="0"
                      ItemsSource="{Binding Sets}">
                 <ListBox.Resources>
-                    <hp:MutiColorConverter x:Key="ColorConverter" />
                     <hp:VisibaleConverter x:Key="VisibaleConverter" />
                     <hp:TooltipConverter x:Key="TooltipConverter" />
                     <hp:FontConverter x:Key="FontConverter" />
@@ -66,7 +65,7 @@
             </ListBox>
             <GridSplitter Grid.Row="1" Grid.Column="1"
                           Width="1" Margin="1"
-                          Background="#FF60A1BF" />
+                          Background="{StaticResource ItemBorder}" />
             <Grid Grid.Row="1" Grid.Column="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />

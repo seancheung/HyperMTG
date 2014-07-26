@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using HyperKore.Common;
-using HyperKore.IO;
-using HyperKore.Web;
 using HyperMTG.Helper;
+using HyperPlugin;
 
 namespace HyperMTG.ViewModel
 {
@@ -26,14 +24,22 @@ namespace HyperMTG.ViewModel
 		/// </summary>
 		private static readonly object Lock = new object();
 
+		private readonly ICompressor _compressor;
+		private readonly IDataParse _dataParse;
 		private readonly IDBReader _dbReader;
 		private readonly IDBWriter _dbWriter;
-		private readonly ICompressor _compressor;
 
 		/// <summary>
 		///     UI dispatcher(to handle ObservableCollection)
 		/// </summary>
 		private readonly Dispatcher _dispatcher;
+
+		private readonly IImageParse _imageParse;
+
+		/// <summary>
+		///     Thread Canceling
+		/// </summary>
+		private readonly CancellationTokenSource cts = new CancellationTokenSource();
 
 		private ObservableCollection<Card> _cards;
 		private int _currentPage;
@@ -44,21 +50,16 @@ namespace HyperMTG.ViewModel
 		private volatile int _processCount;
 		private int _recordSize;
 
-		/// <summary>
-		/// Thread Canceling
-		/// </summary>
-		private CancellationTokenSource cts = new CancellationTokenSource();
-
 		public DatabaseViewModel()
 		{
 			Cards = new ObservableCollection<Card>();
 			Sets = new ObservableCollection<CheckSetItem>();
 
-			_dbReader = IOHandler.Instance.GetPlugins<IDBReader>().FirstOrDefault();
-			_dbWriter = IOHandler.Instance.GetPlugins<IDBWriter>().FirstOrDefault();
-			_compressor = IOHandler.Instance.GetPlugins<ICompressor>().FirstOrDefault();
-
-
+			_dbReader = PluginManager.Instance.GetPlugin<IDBReader>();
+			_dbWriter = PluginManager.Instance.GetPlugin<IDBWriter>();
+			_compressor = PluginManager.Instance.GetPlugin<ICompressor>();
+			_dataParse = PluginManager.Instance.GetPlugin<IDataParse>();
+			_imageParse = PluginManager.Instance.GetPlugin<IImageParse>();
 			_dispatcher = Application.Current.Dispatcher;
 
 			RecordSize = 20;
@@ -177,13 +178,13 @@ namespace HyperMTG.ViewModel
 				Info = "Loading";
 				IEnumerable<Card> cards = _dbReader.LoadCards();
 				int count = cards.Count();
-				PageSize = count / RecordSize + (count % RecordSize == 0 ? 0 : 1);
+				PageSize = count/RecordSize + (count%RecordSize == 0 ? 0 : 1);
 				if (Convert.ToBoolean(next))
 					CurrentPage++;
 				else
 					CurrentPage--;
 
-				var result = cards.Take(RecordSize * CurrentPage).Skip(RecordSize * (CurrentPage - 1));
+				IEnumerable<Card> result = cards.Take(RecordSize*CurrentPage).Skip(RecordSize*(CurrentPage - 1));
 				_dispatcher.Invoke(
 					new Action(() => { Cards = new ObservableCollection<Card>(result); }));
 				Info = "Done!";
@@ -219,17 +220,16 @@ namespace HyperMTG.ViewModel
 				Info = "Loading";
 				IEnumerable<Card> cards = _dbReader.LoadCards();
 				int count = cards.Count();
-				PageSize = count / RecordSize + (count % RecordSize == 0 ? 0 : 1);
+				PageSize = count/RecordSize + (count%RecordSize == 0 ? 0 : 1);
 				CurrentPage = 1;
 
-				var result = cards.Take(RecordSize * CurrentPage).Skip(RecordSize * (CurrentPage - 1));
+				IEnumerable<Card> result = cards.Take(RecordSize*CurrentPage).Skip(RecordSize*(CurrentPage - 1));
 				_dispatcher.Invoke(
 					new Action(() => { Cards = new ObservableCollection<Card>(result); }));
 
 				Info = "Done!";
 
 				_processCount--;
-
 			});
 			td.Start();
 		}
@@ -240,7 +240,7 @@ namespace HyperMTG.ViewModel
 			Info = "Waiting...Grabbing Source";
 			var td = new Thread(() =>
 			{
-				IEnumerable<Set> sets = DataParse.Instance.ParSetWithCode();
+				IEnumerable<Set> sets = _dataParse.ParSetWithCode();
 				IList<Set> enumerable = sets as IList<Set> ?? sets.ToList();
 				_dbWriter.Insert(enumerable);
 				_dispatcher.Invoke(new Action(() =>
@@ -270,7 +270,7 @@ namespace HyperMTG.ViewModel
 						_processCount++;
 						checkSetItem.IsProcessing = true;
 						Info = "Preparing for " + checkSetItem.Content.FullName;
-						IEnumerable<Card> cards = DataParse.Instance.Prepare(checkSetItem.Content);
+						IEnumerable<Card> cards = _dataParse.Prepare(checkSetItem.Content);
 						List<Card> enumerable = cards as List<Card> ?? cards.ToList();
 						checkSetItem.Max = enumerable.Count();
 						checkSetItem.Prog = 0;
@@ -279,10 +279,10 @@ namespace HyperMTG.ViewModel
 						var cardsThread = new List<List<Card>>();
 						for (int i = 0; i < MaxThread - 1; i++)
 						{
-							cardsThread.Add(enumerable.GetRange(enumerable.Count / MaxThread * i, enumerable.Count / MaxThread));
+							cardsThread.Add(enumerable.GetRange(enumerable.Count/MaxThread*i, enumerable.Count/MaxThread));
 						}
-						cardsThread.Add(enumerable.GetRange(enumerable.Count / MaxThread * (MaxThread - 1),
-							enumerable.Count / MaxThread + enumerable.Count % MaxThread));
+						cardsThread.Add(enumerable.GetRange(enumerable.Count/MaxThread*(MaxThread - 1),
+							enumerable.Count/MaxThread + enumerable.Count%MaxThread));
 
 						#region WaitCallback
 
@@ -301,16 +301,15 @@ namespace HyperMTG.ViewModel
 							//If action is cancelled, break
 							for (int i = 0; i < tmpCards.Count && !cts.Token.IsCancellationRequested; i++)
 							{
-
 								Info = enumerable.Count + ": " + tmpCards[i].ID;
-								bool result = DataParse.Instance.Process(tmpCards[i], LANGUAGE.ChineseSimplified);
+								bool result = _dataParse.Process(tmpCards[i], LANGUAGE.ChineseSimplified);
 								if (!result)
 									tmpCards.RemoveAt(i);
 								else
 								{
-									foreach (var id in tmpCards[i].ID.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries))
+									foreach (string id in tmpCards[i].ID.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries))
 									{
-										var data = ImageParse.Instance.Download(id);
+										byte[] data = _imageParse.Download(id);
 										if (data != null && _compressor != null)
 											lock (Lock)
 											{
@@ -318,9 +317,9 @@ namespace HyperMTG.ViewModel
 											}
 									}
 									if (tmpCards[i].zID != null)
-										foreach (var id in tmpCards[i].zID.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries))
+										foreach (string id in tmpCards[i].zID.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries))
 										{
-											var data = ImageParse.Instance.Download(id);
+											byte[] data = _imageParse.Download(id);
 											if (data != null && _compressor != null)
 												lock (Lock)
 												{
@@ -332,7 +331,6 @@ namespace HyperMTG.ViewModel
 								}
 
 								checkSetItem.Prog++;
-
 							}
 
 							if (!cts.Token.IsCancellationRequested)
@@ -355,7 +353,7 @@ namespace HyperMTG.ViewModel
 						for (int i = 0; i < MaxThread; i++)
 						{
 							waitHandles[i] = new AutoResetEvent(false);
-							ThreadPool.QueueUserWorkItem(waitCallback, new object[] { cardsThread[i], waitHandles[i] });
+							ThreadPool.QueueUserWorkItem(waitCallback, new object[] {cardsThread[i], waitHandles[i]});
 						}
 
 						//Wait for all downloading threads to finish
@@ -402,20 +400,17 @@ namespace HyperMTG.ViewModel
 
 		private bool CanExecuteWrite()
 		{
-			if (_dbWriter != null)
+			if (_dbWriter == null || _imageParse == null || _dataParse == null || _compressor == null)
 			{
-				return _processCount == 0;
+				Info = "Assembly missing";
+				return false;
 			}
-			Info = "Assembly missing";
-			return false;
+			return _processCount == 0;
 		}
 
 		private bool CanExecuteRead()
 		{
-			if (_dbReader != null)
-			{
-				return _processCount == 0;
-			}
+			if (_dbReader != null) return _processCount == 0;
 			Info = "Assembly missing";
 			return false;
 		}

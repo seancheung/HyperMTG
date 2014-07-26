@@ -19,9 +19,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
-namespace HyperKore.Plugin
+namespace HyperPlugin
 {
-	public class PluginLoader<T>
+	internal class PluginLoader<T>
 	{
 		public static ICollection<T> Load(string path)
 		{
@@ -37,7 +37,7 @@ namespace HyperKore.Plugin
 					assemblies.Add(assembly);
 				}
 
-				Type pluginType = typeof(T);
+				Type pluginType = typeof (T);
 				ICollection<Type> pluginTypes = new List<Type>();
 				foreach (Assembly assembly in assemblies)
 				{
@@ -62,7 +62,7 @@ namespace HyperKore.Plugin
 				ICollection<T> plugins = new List<T>(pluginTypes.Count);
 				foreach (Type type in pluginTypes)
 				{
-					T plugin = (T)Activator.CreateInstance(type);
+					var plugin = (T) Activator.CreateInstance(type);
 					plugins.Add(plugin);
 				}
 

@@ -1,11 +1,12 @@
-﻿using HyperKore.IO;
-using System.IO;
+﻿using System.IO;
 using System.IO.Compression;
 
-namespace GZipIO
+namespace HyperPlugin.IO.GZip
 {
 	public class GZipCompressor : ICompressor
 	{
+		#region ICompressor Members
+
 		public string CompressorType
 		{
 			get { return "GZip"; }
@@ -23,8 +24,8 @@ namespace GZipIO
 
 		public byte[] Compress(byte[] data)
 		{
-			MemoryStream ms = new MemoryStream();
-			GZipStream zipStream = new GZipStream(ms, CompressionMode.Compress);
+			var ms = new MemoryStream();
+			var zipStream = new GZipStream(ms, CompressionMode.Compress);
 			zipStream.Write(data, 0, data.Length);
 			zipStream.Close();
 			return ms.ToArray();
@@ -32,10 +33,10 @@ namespace GZipIO
 
 		public byte[] Decompress(byte[] data, int length)
 		{
-			MemoryStream srcMs = new MemoryStream(data);
-			GZipStream zipStream = new GZipStream(srcMs, CompressionMode.Decompress);
-			MemoryStream ms = new MemoryStream();
-			byte[] bytes = new byte[length];
+			var srcMs = new MemoryStream(data);
+			var zipStream = new GZipStream(srcMs, CompressionMode.Decompress);
+			var ms = new MemoryStream();
+			var bytes = new byte[length];
 			int n;
 			while ((n = zipStream.Read(bytes, 0, bytes.Length)) > 0)
 			{
@@ -49,5 +50,7 @@ namespace GZipIO
 		{
 			return Decompress(data, 40960);
 		}
+
+		#endregion
 	}
 }
