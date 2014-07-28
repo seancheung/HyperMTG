@@ -75,13 +75,11 @@
     <Compile Include="Helper\DataContextProxy.cs" />
     <Compile Include="Helper\DelegateCommand.cs" />
     <Compile Include="Helper\ImageHelper.cs" />
+    <Compile Include="Helper\ManaDataConverter.cs" />
     <Compile Include="Helper\MutiColorConverter.cs" />
     <Compile Include="Helper\TooltipConverter.cs" />
     <Compile Include="Helper\TriggerConverter.cs" />
     <Compile Include="Helper\VisibaleConverter.cs" />
-    <Compile Include="Resources\RichTextBlock.xaml.cs">
-      <DependentUpon>RichTextBlock.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ViewModel\DatabaseViewModel.cs" />
     <Compile Include="ViewModel\DeckBuiderViewModel.cs" />
     <Compile Include="ViewModel\FilterViewModel.cs" />
@@ -168,10 +166,6 @@
     <Page Include="Resources\MTGIcons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\RichTextBlock.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,7 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace HyperKore.Utilities
 {
@@ -117,6 +120,37 @@ namespace HyperKore.Utilities
 
 			//Replace multiple empty lines with one
 			return Regex.Replace(text, @"([\r\n])[\s]+", "\n", RegexOptions.IgnoreCase).Trim();
+		}
+
+		/// <summary>
+		///     Get all multiverse id from the input string
+		/// </summary>
+		/// <param name="input"></param>
+		/// <returns></returns>
+		public static IEnumerable<string> MatchMultiverseID(this string input)
+		{
+			MatchCollection matches = Regex.Matches(input, @"multiverseid=[0-9]+");
+			return from Match match in matches where match.Success select match.Value.Remove(0, 13);
+		}
+
+		/// <summary>
+		///     Get all cost symbols from the input string
+		/// </summary>
+		/// <param name="input"></param>
+		/// <returns></returns>
+		public static string MatchCost(this string input)
+		{
+			MatchCollection matches = Regex.Matches(input, @"alt=""\w+""");
+			var sb = new StringBuilder();
+			foreach (Match match in matches)
+			{
+				string cost = match.Value.Remove(0, 4).Replace("\"", string.Empty).Replace("or", string.Empty);
+				cost = Regex.Replace(cost, @"\s*", string.Empty);
+
+				sb.Append("{" + cost.ReplaceColor() + "}");
+			}
+
+			return sb.ToString();
 		}
 	}
 }
