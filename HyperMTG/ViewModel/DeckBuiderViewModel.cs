@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Threading;
 using HyperKore.Common;
 using HyperMTG.Helper;
@@ -89,6 +91,78 @@ namespace HyperMTG.ViewModel
 				RaisePropertyChanged("Info");
 			}
 		}
+
+		#region Command
+
+		public ICommand AddCardMainCommand
+		{
+			get { return new RelayCommand<Card>(AddCardMainExecute, CanExecuteAddCardMain); }
+		}
+
+		public ICommand AddCardSideCommand
+		{
+			get { return new RelayCommand<Card>(AddCardSideExecute, CanExecuteAddCardSide); }
+		}
+
+		public ICommand DeleteCardMainCommand
+		{
+			get { return new RelayCommand<Card>(DeleteCardMainExecute, CanExecuteDeleteCardMain); }
+		}
+
+		public ICommand DeleteCardSideCommand
+		{
+			get { return new RelayCommand<Card>(DeleteCardSideExecute, CanExecuteDeleteCardSide); }
+		}
+
+		#endregion
+
+		#region Execute
+
+		private void AddCardMainExecute(Card card)
+		{
+			Deck.MainBoard.Add(card);
+		}
+
+		private void AddCardSideExecute(Card card)
+		{
+			Deck.SideBoard.Add(card);
+		}
+
+		private void DeleteCardMainExecute(Card card)
+		{
+			Deck.MainBoard.Remove(card);
+		}
+
+		private void DeleteCardSideExecute(Card card)
+		{
+			Deck.SideBoard.Remove(card);
+		}
+
+		#endregion
+
+		#region CanExecute
+
+		private bool CanExecuteDeleteCardMain(Card card)
+		{
+			return Deck.MainBoard.Contains(card, Card.IDComparer);
+		}
+
+		private bool CanExecuteDeleteCardSide(Card card)
+		{
+			return Deck.SideBoard.Contains(card, Card.IDComparer);
+		}
+
+		private bool CanExecuteAddCardMain(Card card)
+		{
+			return card != null;
+		}
+
+		private bool CanExecuteAddCardSide(Card card)
+		{
+			return card != null;
+		}
+
+		#endregion
 	}
 
 	internal class ExCard : ObservableObject

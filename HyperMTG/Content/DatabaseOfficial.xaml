@@ -98,9 +98,9 @@
                     <Button Margin="5"
                             Command="{Binding PageCommand}"
                             CommandParameter="false" Content="Prev Page" />
-                    <mui:BBCodeBlock VerticalAlignment="Center" Text="{Binding CurrentPage}" />
-                    <mui:BBCodeBlock VerticalAlignment="Center" Text="/" />
-                    <mui:BBCodeBlock VerticalAlignment="Center" Text="{Binding PageSize}" />
+                    <mui:BBCodeBlock VerticalAlignment="Center" BBCode="{Binding CurrentPage}" />
+                    <mui:BBCodeBlock VerticalAlignment="Center" BBCode="/" />
+                    <mui:BBCodeBlock VerticalAlignment="Center" BBCode="{Binding PageSize}" />
                     <Button Margin="5"
                             Command="{Binding PageCommand}"
                             CommandParameter="true" Content="Next Page" />
