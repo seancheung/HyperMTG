@@ -7,8 +7,6 @@
              mc:Ignorable="d">
 
     <Grid Style="{StaticResource ContentRoot}">
-        <ScrollViewer>
-            <Canvas MinWidth="200" />
-        </ScrollViewer>
+        <ScrollViewer />
     </Grid>
 </UserControl>
