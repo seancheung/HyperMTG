@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using HyperKore.Common;
 using HyperMTG.Helper;
@@ -94,6 +95,16 @@ namespace HyperMTG.ViewModel
 
 		#region Command
 
+		public ICommand MoveToSideCommand
+		{
+			get { return new RelayCommand<Card>(MoveToSideExecute, CanExecuteDeleteCardMain); }
+		}
+
+		public ICommand MoveToMainCommand
+		{
+			get { return new RelayCommand<Card>(MoveToMainExecute, CanExecuteDeleteCardSide); }
+		}
+
 		public ICommand AddCardMainCommand
 		{
 			get { return new RelayCommand<Card>(AddCardMainExecute, CanExecuteAddCardMain); }
@@ -138,18 +149,30 @@ namespace HyperMTG.ViewModel
 			Deck.SideBoard.Remove(card);
 		}
 
+		private void MoveToSideExecute(Card card)
+		{
+			Deck.MainBoard.Remove(card);
+			Deck.SideBoard.Add(card);
+		}
+
+		private void MoveToMainExecute(Card card)
+		{
+			Deck.SideBoard.Remove(card);
+			Deck.MainBoard.Add(card);
+		}
+
 		#endregion
 
 		#region CanExecute
 
 		private bool CanExecuteDeleteCardMain(Card card)
 		{
-			return Deck.MainBoard.Contains(card, Card.IDComparer);
+			return Deck.MainBoard.Contains(card);
 		}
 
 		private bool CanExecuteDeleteCardSide(Card card)
 		{
-			return Deck.SideBoard.Contains(card, Card.IDComparer);
+			return Deck.SideBoard.Contains(card);
 		}
 
 		private bool CanExecuteAddCardMain(Card card)
@@ -170,6 +193,8 @@ namespace HyperMTG.ViewModel
 		private readonly ICompressor _compressor;
 		private readonly IDBReader _dbReader;
 		private Card _card;
+
+		private static readonly object Locker = new object();
 
 		public ExCard(IDBReader dbReader, ICompressor compressor)
 		{
@@ -199,7 +224,10 @@ namespace HyperMTG.ViewModel
 		{
 			get
 			{
-				return Card != null && _dbReader != null && _compressor != null ? _dbReader.LoadFile(IDA, _compressor) : null;
+				lock (Locker)
+				{
+					return Card != null && _dbReader != null && _compressor != null ? _dbReader.LoadFile(IDA, _compressor) : null;
+				}
 			}
 		}
 
@@ -207,7 +235,10 @@ namespace HyperMTG.ViewModel
 		{
 			get
 			{
-				return Card != null && _dbReader != null && _compressor != null ? _dbReader.LoadFile(IDB, _compressor) : null;
+				lock (Locker)
+				{
+					return Card != null && _dbReader != null && _compressor != null ? _dbReader.LoadFile(IDB, _compressor) : null;
+				}
 			}
 		}
 

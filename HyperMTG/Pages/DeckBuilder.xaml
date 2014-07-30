@@ -5,6 +5,7 @@
              xmlns:hp="clr-namespace:HyperMTG.Helper"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:vm="clr-namespace:HyperMTG.ViewModel"
              d:DesignHeight="320" d:DesignWidth="480"
              mc:Ignorable="d">
@@ -12,16 +13,29 @@
         <vm:DeckBuiderViewModel />
     </UserControl.DataContext>
     <UserControl.Resources>
-        <CollectionViewSource x:Key="MainboardSource" Source="{Binding Deck.MainBoard}">
-            <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="Name" />
-            </CollectionViewSource.GroupDescriptions>
-        </CollectionViewSource>
-        <CollectionViewSource x:Key="SideboardSource" Source="{Binding Deck.SideBoard}">
-            <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="Name" />
-            </CollectionViewSource.GroupDescriptions>
-        </CollectionViewSource>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/ExpanderStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <CollectionViewSource x:Key="MainboardSource" Source="{Binding Deck.MainBoard}">
+                <CollectionViewSource.GroupDescriptions>
+                    <PropertyGroupDescription PropertyName="Name" />
+                </CollectionViewSource.GroupDescriptions>
+                <CollectionViewSource.SortDescriptions>
+                    <scm:SortDescription PropertyName="TypeCode" />
+                    <scm:SortDescription PropertyName="CMC" />
+                </CollectionViewSource.SortDescriptions>
+            </CollectionViewSource>
+            <CollectionViewSource x:Key="SideboardSource" Source="{Binding Deck.SideBoard}">
+                <CollectionViewSource.GroupDescriptions>
+                    <PropertyGroupDescription PropertyName="Name" />
+                </CollectionViewSource.GroupDescriptions>
+                <CollectionViewSource.SortDescriptions>
+                    <scm:SortDescription PropertyName="TypeCode" />
+                    <scm:SortDescription PropertyName="CMC" />
+                </CollectionViewSource.SortDescriptions>
+            </CollectionViewSource>
+        </ResourceDictionary>
     </UserControl.Resources>
     <Grid Style="{StaticResource ContentRoot}">
         <Grid>
@@ -39,24 +53,27 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" MinWidth="100" />
             </Grid.ColumnDefinitions>
-            <Expander Grid.Row="0" Grid.Column="0"
-                      Height="Auto" ExpandDirection="Down"
-                      Header="Property Filter">
+            <!--
+                <Expander Grid.Row="0" Grid.Column="0"
+                Height="Auto" ExpandDirection="Down"
+                Header="Property Filter">
                 <ListBox hp:ColumnObject.ItemsSourceFromColumns="{Binding ElementName=ListView}">
-                    <ListBox.ItemContainerStyle>
-                        <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="ListBoxItem">
-                            <Setter Property="Focusable" Value="False" />
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <CheckBox Margin="2"
-                                      Content="{Binding Column.Header}"
-                                      IsChecked="{Binding IsVisible}" />
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
+                <ListBox.ItemContainerStyle>
+                <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="ListBoxItem">
+                <Setter Property="Focusable" Value="False" />
+                </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                <DataTemplate>
+                <CheckBox Margin="2"
+                Content="{Binding Column.Header}"
+                IsChecked="{Binding IsVisible}" />
+                </DataTemplate>
+                </ListBox.ItemTemplate>
                 </ListBox>
-            </Expander>
+                </Expander>
+            -->
+            <mui:BBCodeBlock HorizontalAlignment="Center" BBCode="{Binding ElementName=ListView, Path=Items.Count, StringFormat='[i]Total Cards:[/i] [b]{0}[/b]'}" />
             <ListView x:Name="ListView" Grid.Row="1"
                       Grid.Column="0"
                       ItemsSource="{Binding Cards}"
@@ -103,15 +120,8 @@
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
-                        <GridViewColumn DisplayMemberBinding="{Binding zName}" Header="zName" />
                         <GridViewColumn DisplayMemberBinding="{Binding Type}" Header="Type" />
-                        <GridViewColumn DisplayMemberBinding="{Binding zType}" Header="zType" />
                         <GridViewColumn DisplayMemberBinding="{Binding Cost}" Header="Cost" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Set}" Header="Set" />
-                        <GridViewColumn DisplayMemberBinding="{Binding SetCode}" Header="SetCode" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Number}" Header="Number" />
-                        <GridViewColumn DisplayMemberBinding="{Binding RarityCode}" Header="RarityCode" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Rating}" Header="Rating" />
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -130,10 +140,12 @@
                     </Grid.RowDefinitions>
                     <Image Grid.Row="0" MaxWidth="223"
                            MaxHeight="310"
-                           Source="{Binding SelectedCard.ImageA}" />
+                           Source="{Binding SelectedCard.ImageA,
+                                            IsAsync=True}" />
                     <Image Grid.Row="1" MaxWidth="223"
                            MaxHeight="310"
-                           Source="{Binding SelectedCard.ImageB}" />
+                           Source="{Binding SelectedCard.ImageB,
+                                            IsAsync=True}" />
                     <mui:BBCodeBlock Grid.Row="2" BBCode="{Binding SelectedCard.Card.Text}" />
                     <mui:BBCodeBlock Grid.Row="3" BBCode="{Binding SelectedCard.Card.Flavor, StringFormat='[i]{0}[/i]'}" />
                 </Grid>
@@ -159,6 +171,30 @@
                       ItemsSource="{Binding Source={StaticResource MainboardSource}}"
                       SelectedValue="{Binding SelectedCard.Card,
                                               Mode=OneWayToSource}">
+                <ListView.Resources>
+                    <hp:TriggerConverter x:Key="TriggerConverter" />
+                    <hp:CommandReference x:Key="AddCommandReference">
+                        <hp:CommandReference.Command>
+                            <MultiBinding Converter="{StaticResource TriggerConverter}">
+                                <Binding Path="AddCardMainCommand" />
+                            </MultiBinding>
+                        </hp:CommandReference.Command>
+                    </hp:CommandReference>
+                    <hp:CommandReference x:Key="DeleteCommandReference">
+                        <hp:CommandReference.Command>
+                            <MultiBinding Converter="{StaticResource TriggerConverter}">
+                                <Binding Path="DeleteCardMainCommand" />
+                            </MultiBinding>
+                        </hp:CommandReference.Command>
+                    </hp:CommandReference>
+                    <hp:CommandReference x:Key="MoveCommandReference">
+                        <hp:CommandReference.Command>
+                            <MultiBinding Converter="{StaticResource TriggerConverter}">
+                                <Binding Path="MoveToSideCommand" />
+                            </MultiBinding>
+                        </hp:CommandReference.Command>
+                    </hp:CommandReference>
+                </ListView.Resources>
                 <ListView.GroupStyle>
                     <GroupStyle>
                         <GroupStyle.ContainerStyle>
@@ -166,7 +202,7 @@
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type GroupItem}">
-                                            <Expander Focusable="False">
+                                            <Expander Focusable="False" Template="{StaticResource SimpleExpanderTemp}">
                                                 <Expander.Header>
                                                     <StackPanel Orientation="Horizontal">
                                                         <mui:BBCodeBlock Margin="0,0,5,0" BBCode="{Binding ItemCount}" />
@@ -184,18 +220,30 @@
                         </GroupStyle.ContainerStyle>
                     </GroupStyle>
                 </ListView.GroupStyle>
+                <ListView.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource {x:Type ListViewItem}}" TargetType="{x:Type ListViewItem}">
+                        <Setter Property="ContextMenu">
+                            <Setter.Value>
+                                <ContextMenu>
+                                    <MenuItem Command="{DynamicResource AddCommandReference}"
+                                              CommandParameter="{Binding}"
+                                              Header="Add" />
+                                    <MenuItem Command="{DynamicResource DeleteCommandReference}"
+                                              CommandParameter="{Binding}"
+                                              Header="Delete" />
+                                    <MenuItem Command="{DynamicResource MoveCommandReference}"
+                                              CommandParameter="{Binding}"
+                                              Header="Move To Sideboard" />
+                                </ContextMenu>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
-                        <GridViewColumn DisplayMemberBinding="{Binding zName}" Header="zName" />
                         <GridViewColumn DisplayMemberBinding="{Binding Type}" Header="Type" />
-                        <GridViewColumn DisplayMemberBinding="{Binding zType}" Header="zType" />
                         <GridViewColumn DisplayMemberBinding="{Binding Cost}" Header="Cost" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Set}" Header="Set" />
-                        <GridViewColumn DisplayMemberBinding="{Binding SetCode}" Header="SetCode" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Number}" Header="Number" />
-                        <GridViewColumn DisplayMemberBinding="{Binding RarityCode}" Header="RarityCode" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Rating}" Header="Rating" />
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -208,6 +256,30 @@
                       ItemsSource="{Binding Source={StaticResource SideboardSource}}"
                       SelectedValue="{Binding SelectedCard.Card,
                                               Mode=OneWayToSource}">
+                <ListView.Resources>
+                    <hp:TriggerConverter x:Key="TriggerConverter" />
+                    <hp:CommandReference x:Key="AddCommandReference">
+                        <hp:CommandReference.Command>
+                            <MultiBinding Converter="{StaticResource TriggerConverter}">
+                                <Binding Path="AddCardSideCommand" />
+                            </MultiBinding>
+                        </hp:CommandReference.Command>
+                    </hp:CommandReference>
+                    <hp:CommandReference x:Key="DeleteCommandReference">
+                        <hp:CommandReference.Command>
+                            <MultiBinding Converter="{StaticResource TriggerConverter}">
+                                <Binding Path="DeleteCardSideCommand" />
+                            </MultiBinding>
+                        </hp:CommandReference.Command>
+                    </hp:CommandReference>
+                    <hp:CommandReference x:Key="MoveCommandReference">
+                        <hp:CommandReference.Command>
+                            <MultiBinding Converter="{StaticResource TriggerConverter}">
+                                <Binding Path="MoveToMainCommand" />
+                            </MultiBinding>
+                        </hp:CommandReference.Command>
+                    </hp:CommandReference>
+                </ListView.Resources>
                 <ListView.GroupStyle>
                     <GroupStyle>
                         <GroupStyle.ContainerStyle>
@@ -215,7 +287,7 @@
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type GroupItem}">
-                                            <Expander Focusable="False">
+                                            <Expander Focusable="False" Template="{StaticResource SimpleExpanderTemp}">
                                                 <Expander.Header>
                                                     <StackPanel Orientation="Horizontal">
                                                         <mui:BBCodeBlock Margin="0,0,5,0" BBCode="{Binding ItemCount}" />
@@ -233,18 +305,30 @@
                         </GroupStyle.ContainerStyle>
                     </GroupStyle>
                 </ListView.GroupStyle>
+                <ListView.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource {x:Type ListViewItem}}" TargetType="{x:Type ListViewItem}">
+                        <Setter Property="ContextMenu">
+                            <Setter.Value>
+                                <ContextMenu>
+                                    <MenuItem Command="{DynamicResource AddCommandReference}"
+                                              CommandParameter="{Binding}"
+                                              Header="Add" />
+                                    <MenuItem Command="{DynamicResource DeleteCommandReference}"
+                                              CommandParameter="{Binding}"
+                                              Header="Delete" />
+                                    <MenuItem Command="{DynamicResource MoveCommandReference}"
+                                              CommandParameter="{Binding}"
+                                              Header="Move To Mainboard" />
+                                </ContextMenu>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
-                        <GridViewColumn DisplayMemberBinding="{Binding zName}" Header="zName" />
                         <GridViewColumn DisplayMemberBinding="{Binding Type}" Header="Type" />
-                        <GridViewColumn DisplayMemberBinding="{Binding zType}" Header="zType" />
                         <GridViewColumn DisplayMemberBinding="{Binding Cost}" Header="Cost" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Set}" Header="Set" />
-                        <GridViewColumn DisplayMemberBinding="{Binding SetCode}" Header="SetCode" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Number}" Header="Number" />
-                        <GridViewColumn DisplayMemberBinding="{Binding RarityCode}" Header="RarityCode" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Rating}" Header="Rating" />
                     </GridView>
                 </ListView.View>
             </ListView>

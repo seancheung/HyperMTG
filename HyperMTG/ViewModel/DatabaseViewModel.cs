@@ -22,7 +22,7 @@ namespace HyperMTG.ViewModel
 		/// <summary>
 		///     Thread Lock
 		/// </summary>
-		private static readonly object Lock = new object();
+		private static readonly object Locker = new object();
 
 		private readonly ICompressor _compressor;
 		private readonly IDataParse _dataParse;
@@ -63,6 +63,11 @@ namespace HyperMTG.ViewModel
 			_dispatcher = Application.Current.Dispatcher;
 
 			RecordSize = 20;
+
+			if (LoadSetsCommand.CanExecute(null))
+			{
+				LoadSetsCommand.Execute(null);
+			}
 		}
 
 		/// <summary>
@@ -311,7 +316,7 @@ namespace HyperMTG.ViewModel
 									{
 										byte[] data = _imageParse.Download(id);
 										if (data != null && _compressor != null)
-											lock (Lock)
+											lock (Locker)
 											{
 												_dbWriter.Insert(id, data, _compressor);
 											}
@@ -321,7 +326,7 @@ namespace HyperMTG.ViewModel
 										{
 											byte[] data = _imageParse.Download(id);
 											if (data != null && _compressor != null)
-												lock (Lock)
+												lock (Locker)
 												{
 													_dbWriter.Insert(id, data, _compressor);
 												}
@@ -335,7 +340,7 @@ namespace HyperMTG.ViewModel
 
 							if (!cts.Token.IsCancellationRequested)
 							{
-								lock (Lock)
+								lock (Locker)
 								{
 									//Save Data
 									_dbWriter.Insert(tmpCards);
@@ -363,7 +368,10 @@ namespace HyperMTG.ViewModel
 						{
 							checkSetItem.IsLocal = true;
 							checkSetItem.IsChecked = false;
-							_dbWriter.Update(checkSetItem.Content);
+							lock (Locker)
+							{
+								_dbWriter.Update(checkSetItem.Content);
+							}
 						}
 						checkSetItem.IsProcessing = false;
 						Info = "Done!";

@@ -25,7 +25,7 @@
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Row="0" Grid.ColumnSpan="3"
                         Orientation="Horizontal">
-                <mui:ModernButton Command="{Binding LoadSetsCommand}" Content="Load Sets" />
+                <!--  <mui:ModernButton Command="{Binding LoadSetsCommand}" Content="Load Sets" />  -->
                 <mui:ModernButton Command="{Binding UpdateSetsCommand}" Content="Update Sets" />
                 <mui:ModernButton Command="{Binding UpdateCardsCommand}" Content="Update Checked Cards" />
                 <mui:ModernButton Command="{Binding LoadCardsCommand}" Content="Load Cards" />
