@@ -65,7 +65,7 @@
             </ListBox>
             <GridSplitter Grid.Row="1" Grid.Column="1"
                           Width="1" Margin="1"
-                          Background="{StaticResource ItemBorder}" />
+                          Background="{DynamicResource ItemBorder}" />
             <Grid Grid.Row="1" Grid.Column="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />

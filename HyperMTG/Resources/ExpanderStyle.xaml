@@ -15,14 +15,14 @@
                          Width="20" Height="20"
                          HorizontalAlignment="Center"
                          VerticalAlignment="Center"
-                         Stroke="{StaticResource ModernButtonBorder}" />
+                         Stroke="{DynamicResource ModernButtonBorder}" />
                 <Path x:Name="Sign" Grid.Column="0"
                       Width="10" Height="10"
                       HorizontalAlignment="Center"
                       VerticalAlignment="Center"
                       Data="M 0,5 H 10 M 5,0 V 10 Z"
                       RenderTransformOrigin="0.5,0.5"
-                      Stroke="{StaticResource ModernButtonBorder}"
+                      Stroke="{DynamicResource ModernButtonBorder}"
                       StrokeThickness="2" />
                 <ContentPresenter x:Name="HeaderContent" Grid.Column="1"
                                   Margin="4,0,0,0" ContentSource="Content" />
@@ -36,13 +36,13 @@
 
             <!--  MouseOver, Pressed behaviours  -->
             <Trigger Property="IsMouseOver" Value="true">
-                <Setter TargetName="Circle" Property="Stroke" Value="{StaticResource ButtonBorderHover}" />
+                <Setter TargetName="Circle" Property="Stroke" Value="{DynamicResource ButtonBorderHover}" />
                 <Setter TargetName="Sign" Property="Stroke" Value="#222" />
             </Trigger>
             <Trigger Property="IsPressed" Value="true">
-                <Setter TargetName="Circle" Property="Stroke" Value="{StaticResource ButtonBorderPressed}" />
+                <Setter TargetName="Circle" Property="Stroke" Value="{DynamicResource ButtonBorderPressed}" />
                 <Setter TargetName="Circle" Property="StrokeThickness" Value="1.5" />
-                <Setter TargetName="Sign" Property="Stroke" Value="{StaticResource ButtonBorderPressed}" />
+                <Setter TargetName="Sign" Property="Stroke" Value="{DynamicResource ButtonBorderPressed}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
