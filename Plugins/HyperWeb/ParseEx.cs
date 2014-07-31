@@ -47,10 +47,10 @@ namespace HyperPlugin.Web
 				//card.Color += "Blue ";
 				card.ColorCode += "U";
 			}
-			if (card.Cost.Contains("{B}"))
+			if (card.Cost.Contains("B"))
 			{
 				//card.Color += "Black ";
-				card.ColorCode += "{B}";
+				card.ColorCode += "B";
 			}
 			if (card.Cost.Contains("R"))
 			{
@@ -152,7 +152,7 @@ namespace HyperPlugin.Web
 			}
 			else if (card.Rarity.Contains("Basic"))
 			{
-				card.RarityCode = "{B}";
+				card.RarityCode = "B";
 			}
 		}
 

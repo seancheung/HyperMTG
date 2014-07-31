@@ -14,7 +14,7 @@ namespace HyperKore.Common
 
 		/// <summary>
 		///     Colorcode in capital (no separator needed for multi-color, e.g. 'UR') (use use '|' as
-		///     separator for dual, e.g. 'U|{B}')
+		///     separator for dual, e.g. 'U|B')
 		/// </summary>
 		[Column(Name = "colorcode")]
 		[XmlAttribute("colorcode")]
@@ -94,7 +94,7 @@ namespace HyperKore.Common
 		public string Color { get; set; }
 
 		/// <summary>
-		///     Cost of the card (use '{}' for each mana symbol, e.g. '{3}{{B}}{R}') (bracket hybrid mana
+		///     Cost of the card (use '{}' for each mana symbol, e.g. '{3}{B}{R}') (bracket hybrid mana
 		///     symbol as one, e.g. '{WU}') (use use '|' as separator for dual, e.g. '{1}{W}|{2}{G}{G}')
 		/// </summary>
 		[Column(Name = "cost")]
