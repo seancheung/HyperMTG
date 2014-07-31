@@ -4,6 +4,11 @@
 
     <Style x:Key="BasePathStyle" TargetType="Path">
         <Setter Property="Stretch" Value="Uniform" />
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect />
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!--  Path Style  -->
@@ -98,11 +103,21 @@
         <Setter Property="Data" Value="{StaticResource SwampMountainGeometry}" />
         <Setter Property="Fill" Value="{StaticResource SwampMountainBrush}" />
     </Style>
+    <Style x:Key="PathNum"
+           BasedOn="{StaticResource BasePathStyle}"
+           TargetType="Path">
+        <Setter Property="Fill" Value="{StaticResource SwampBrush}" />
+    </Style>
     <Style x:Key="PathMana"
            BasedOn="{StaticResource BasePathStyle}"
            TargetType="Path">
         <Setter Property="Data" Value="{StaticResource ManaGeometry}" />
         <Setter Property="Fill" Value="{StaticResource ColorlessBrush}" />
+        <Setter Property="Effect">
+            <Setter.Value>
+                <x:Null />
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!--  UserControl Style  -->
@@ -178,5 +193,535 @@
         </Setter>
     </Style>
 
+    <!--  Hybrid Style  -->
+
+    <Style x:Key="ManaBG" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8" Style="{StaticResource PathBG}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ManaBR" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8" Style="{StaticResource PathBR}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ManaGU" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8" Style="{StaticResource PathGU}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ManaGW" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8" Style="{StaticResource PathGW}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ManaRG" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8" Style="{StaticResource PathRG}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ManaRW" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8" Style="{StaticResource PathRW}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ManaUB" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8" Style="{StaticResource PathUB}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ManaUR" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8" Style="{StaticResource PathUR}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ManaWB" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8" Style="{StaticResource PathWB}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ManaWU" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8" Style="{StaticResource PathWU}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--  Number Style  -->
+
+    <Style x:Key="ManaX" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource NumXGeometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="Mana0" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource Num0Geometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Mana1" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource Num1Geometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Mana2" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource Num2Geometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Mana3" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource Num3Geometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Mana4" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource Num4Geometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Mana5" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource Num5Geometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Mana6" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource Num6Geometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Mana7" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource Num7Geometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Mana8" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource Num8Geometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Mana9" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource Num9Geometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Mana10" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource Num10Geometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Mana11" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource Num11Geometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Mana12" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource Num12Geometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Mana13" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource Num13Geometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Mana14" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource Num14Geometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Mana15" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource Num15Geometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Mana16" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource Num16Geometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Mana17" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource Num17Geometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Mana18" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource Num18Geometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Mana19" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource Num19Geometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Mana20" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource Num20Geometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ManaHalf" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource NumHalfGeometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ManaT" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8"
+                                  Data="{StaticResource TapGeometry}"
+                                  Style="{StaticResource PathNum}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
 </ResourceDictionary>

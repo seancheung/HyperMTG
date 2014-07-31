@@ -106,7 +106,7 @@ namespace HyperPlugin.Web
 
 					int rca = webdata.IndexOf("\"rarity\"", cob) + 9;
 					int rcb = webdata.IndexOf("<", rca);
-					card.RarityCode = webdata.Substring(rca, rcb - rca).Replace("/", " ");
+					card.RarityCode = webdata.Substring(rca, rcb - rca);
 
 					card.Set = set.SetName;
 					card.SetCode = set.SetCode;

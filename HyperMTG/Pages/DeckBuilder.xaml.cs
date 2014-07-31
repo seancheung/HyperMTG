@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -20,7 +21,7 @@ namespace HyperMTG.Pages
 
 		private void FrameworkElement_OnTargetUpdated(object sender, DataTransferEventArgs e)
 		{
-			BBCodeBlock block = sender as BBCodeBlock;
+			var block = sender as BBCodeBlock;
 			if (block == null)
 			{
 				return;
@@ -31,15 +32,16 @@ namespace HyperMTG.Pages
 				return;
 			}
 
+			IEnumerable<string> result = block.BBCode.ManaSplit();
 			block.Inlines.Clear();
-			foreach (string str in block.BBCode.ManaSplit())
+			foreach (string str in result)
 			{
 				if (Regex.IsMatch(str, "[{.+}]"))
 				{
-					Style style = Application.Current.TryFindResource("Mana" + Regex.Replace(str, "{|}", "").ToUpper()) as Style;
+					var style = Application.Current.TryFindResource("Mana" + Regex.Replace(str, "{|}", "").ToUpper()) as Style;
 					if (style != null)
 					{
-						UserControl control = new UserControl
+						var control = new UserControl
 						{
 							Style = style,
 							Width = block.FontSize,
@@ -58,5 +60,6 @@ namespace HyperMTG.Pages
 				}
 			}
 		}
+
 	}
 }

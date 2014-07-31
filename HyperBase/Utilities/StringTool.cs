@@ -12,7 +12,7 @@ namespace HyperKore.Utilities
 		/// </summary>
 		/// <param name="color"></param>
 		/// <returns></returns>
-		public static string ReplaceColor(this string color)
+		public static string ToShortColor(this string color)
 		{
 			return color
 				.Replace("White", "W")
@@ -29,48 +29,16 @@ namespace HyperKore.Utilities
 		/// </summary>
 		/// <param name="symbol"></param>
 		/// <returns></returns>
-		public static string ReplaceColorBack(this string symbol)
+		public static string ToLongColor(this string symbol)
 		{
 			return symbol
+				.Replace("C", "Colorless")
 				.Replace("W", "White")
 				.Replace("G", "Green")
+				.Replace("B", "Black")
 				.Replace("U", "Blue")
 				.Replace("R", "Red")
-				.Replace("B", "Black")
-				.Replace("C", "Colorless")
 				.Trim();
-		}
-
-		/// <summary>
-		///     Replace cost expressions like '{Blue}' with symbols like '{U}'
-		/// </summary>
-		/// <param name="cost"></param>
-		/// <returns></returns>
-		public static string ReplaceMana(this string cost)
-		{
-			return cost
-				.Replace("{Tap}", "{T}")
-				.Replace("{White}", "{W}")
-				.Replace("{Blue}", "{U}")
-				.Replace("{Black}", "{B}")
-				.Replace("{Red}", "{R}")
-				.Replace("{Green}", "{G}");
-		}
-
-		/// <summary>
-		///     Replace cost symbols like '{U}' with expressions like '{Blue}'
-		/// </summary>
-		/// <param name="symbol"></param>
-		/// <returns></returns>
-		public static string ReplaceManaBack(this string symbol)
-		{
-			return symbol
-				.Replace("{T}", "{Tap}")
-				.Replace("{W}", "{White}")
-				.Replace("{U}", "{Blue}")
-				.Replace("{B}", "{Black}")
-				.Replace("{R}", "{Red}")
-				.Replace("{G}", "{Green}");
 		}
 
 		/// <summary>
@@ -78,7 +46,7 @@ namespace HyperKore.Utilities
 		/// </summary>
 		/// <param name="text"></param>
 		/// <returns></returns>
-		public static string ReplaceSpecial(this string text)
+		public static string ReplaceSpecialCharacter(this string text)
 		{
 			return text
 				.Replace("ō", "o")
@@ -147,21 +115,66 @@ namespace HyperKore.Utilities
 				string cost = match.Value.Remove(0, 4).Replace("\"", string.Empty).Replace("or", string.Empty);
 				cost = Regex.Replace(cost, @"\s*", string.Empty);
 
-				sb.Append("{" + cost.ReplaceColor() + "}");
+				sb.Append("{" + cost.ToShortColor() + "}");
 			}
 
 			return sb.ToString();
 		}
 
 		/// <summary>
-		/// Split input string by mana symbols
+		///     Split input string by mana symbols
 		/// </summary>
 		/// <param name="input"></param>
 		/// <returns></returns>
 		public static IEnumerable<string> ManaSplit(this string input)
 		{
 			//return Regex.Split(input, "(?<=})|(?={)").Where(s => s != "");
-			return Regex.Split(input, "(?<=})|(?!^)(?={)");
+			return Regex.Split(input, @"(?<=})|(?!^)(?={)");
+		}
+
+		/// <summary>
+		///     Format mana cost string into a standard type
+		/// </summary>
+		/// <param name="input"></param>
+		/// <returns></returns>
+		public static string ManaFormat(this string input)
+		{
+			//e.g. {Black or White} => {B or W} => {BW}
+			string text = Regex.Replace(input, @"(?<={)Green|Green(?=})", "G", RegexOptions.IgnoreCase);
+			text = Regex.Replace(text, @"(?<={)Black|Black(?=})", "B", RegexOptions.IgnoreCase);
+			text = Regex.Replace(text, @"(?<={)Blue|Blue(?=})", "U", RegexOptions.IgnoreCase);
+			text = Regex.Replace(text, @"(?<={)Red|Red(?=})", "R", RegexOptions.IgnoreCase);
+			text = Regex.Replace(text, @"(?<={)White|White(?=})", "W", RegexOptions.IgnoreCase);
+			text = Regex.Replace(text, @"(?<={)Tap|Tap(?=})", "T", RegexOptions.IgnoreCase);
+			text = Regex.Replace(text, @"(?<={[^}]*)\s*or\s*(?=[^{]*})|/|\|", "", RegexOptions.IgnoreCase);
+
+			return text;
+		}
+
+		/// <summary>
+		/// Build Mana strings
+		/// e.g. 1(Black)(White) => {1}{Black}{White}
+		/// </summary>
+		/// <param name="input"></param>
+		/// <returns></returns>
+		public static string ManaBuild(this string input)
+		{
+			string text = input;
+			if (!Regex.IsMatch(text, @"{|}") || Regex.IsMatch(text, @"\(\)"))
+			{
+				foreach (Match match in Regex.Matches(text, @"\d+"))
+				{
+					text = Regex.Replace(text, match.Value, "{" + match.Value + "}");
+				}
+
+			}
+
+			text = Regex.Replace(text, @"\(", "{");
+			text = Regex.Replace(text, @"\)", "}");
+			text = Regex.Replace(text, @"{{2,}", "{");
+			text = Regex.Replace(text, @"}{2,}", "}");
+
+			return text;
 		}
 	}
 }

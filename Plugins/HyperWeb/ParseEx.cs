@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
 using HyperKore.Common;
 using HyperKore.Utilities;
@@ -15,7 +14,7 @@ namespace HyperPlugin.Web
 			ParseMana(card);
 			ParseColor(card);
 			ParseType(card);
-			ParseRarity(card);
+			//ParseRarity(card);
 			ParseCharacters(card);
 			RemoveEmptyProp(card);
 		}
@@ -24,10 +23,10 @@ namespace HyperPlugin.Web
 
 		private void ParseCharacters(Card card)
 		{
-			card.Name = card.Name.ReplaceSpecial();
-			card.Text = card.Text.ReplaceSpecial();
-			card.Flavor = card.Flavor.ReplaceSpecial();
-			card.Rulings = card.Rulings.ReplaceSpecial();
+			card.Name = card.Name.ReplaceSpecialCharacter();
+			card.Text = card.Text.ReplaceSpecialCharacter();
+			card.Flavor = card.Flavor.ReplaceSpecialCharacter();
+			card.Rulings = card.Rulings.ReplaceSpecialCharacter();
 		}
 
 		private void ParseColor(Card card)
@@ -37,95 +36,21 @@ namespace HyperPlugin.Web
 				card.Color = "Colorless ";
 				card.ColorCode = "C";
 			}
-			if (card.Cost.Contains("W"))
-			{
-				//card.Color += "White ";
-				card.ColorCode += "W";
-			}
-			if (card.Cost.Contains("U"))
-			{
-				//card.Color += "Blue ";
-				card.ColorCode += "U";
-			}
-			if (card.Cost.Contains("B"))
-			{
-				//card.Color += "Black ";
-				card.ColorCode += "B";
-			}
-			if (card.Cost.Contains("R"))
-			{
-				//card.Color += "Red ";
-				card.ColorCode += "R";
-			}
-			if (card.Cost.Contains("G"))
-			{
-				//card.Color += "Green ";
-				card.ColorCode += "G";
-			}
 
-			card.Color = card.Color.Trim();
+			card.ColorCode = card.Color.ToShortColor().Replace(" ", string.Empty);
+
 			if (card.IsDoubleFaced())
 			{
 				card.Color = String.Format("{0}|{1}", card.Color, card.ColorBside);
 			}
-			card.Color = card.Color.Trim();
 		}
 
 		private void ParseMana(Card card)
 		{
-			card.Cost = card.Cost
-				.ReplaceColor()
-				.Replace("{", string.Empty)
-				.Replace("}", string.Empty)
-				.Replace(" or ", string.Empty)
-				.Replace("/", string.Empty);
-
-			bool flag = false;
-			string cost = string.Empty;
-			string entry = string.Empty;
-
-			foreach (char c in card.Cost)
-			{
-				if (c == '(')
-				{
-					flag = true;
-					entry = string.Empty;
-					continue;
-				}
-				if (c == ')')
-				{
-					flag = false;
-					cost += string.Concat("{", entry, "}");
-					continue;
-				}
-
-				if (flag)
-				{
-					entry += c;
-				}
-				else
-				{
-					if (c == '|' || c == '/')
-					{
-						cost += c;
-					}
-					else
-					{
-						cost += string.Concat("{", c, "}");
-					}
-				}
-			}
-
-			card.Cost = cost;
-
-			if (card.zText.Contains('{'))
-			{
-				card.zText = card.zText.ReplaceMana();
-			}
-			if (card.Text.Contains('{'))
-			{
-				card.Text = card.Text.ReplaceMana();
-			}
+			card.Cost = card.Cost.ManaBuild();
+			card.Cost = card.Cost.ManaFormat();
+			card.Text = card.Text.ManaFormat();
+			card.zText = card.zText.ManaFormat();
 		}
 
 		private void ParseRarity(Card card)
