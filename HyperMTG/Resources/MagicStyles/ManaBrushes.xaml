@@ -1,0 +1,67 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--  Mana Brushes  -->
+
+    <SolidColorBrush x:Key="SwampBrush" Color="#FF3E3E3E" />
+
+    <SolidColorBrush x:Key="ForestBrush" Color="#FF008023" />
+
+    <SolidColorBrush x:Key="PlainBrush" Color="#FFF0E0A9" />
+
+    <SolidColorBrush x:Key="MountainBrush" Color="#FFFD664A" />
+
+    <SolidColorBrush x:Key="IslandBrush" Color="#FF00A3E6" />
+
+    <SolidColorBrush x:Key="ColorlessBrush" Color="#FFE1E1E1" />
+
+    <LinearGradientBrush x:Key="SwampForestBrush">
+        <GradientStop Offset="0.0" Color="#FF3E3E3E" />
+        <GradientStop Offset="1.0" Color="#FF008023" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="IslandSwampBrush">
+        <GradientStop Offset="0.0" Color="#FF00A3E6" />
+        <GradientStop Offset="1.0" Color="#FF3E3E3E" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="IslandMountainBrush">
+        <GradientStop Offset="0.0" Color="#FF00A3E6" />
+        <GradientStop Offset="1.0" Color="#FFFD664A" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="PlainIslandBrush">
+        <GradientStop Offset="0.0" Color="#FFE1E1E1" />
+        <GradientStop Offset="1.0" Color="#FF00A3E6" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="PlainSwampBrush">
+        <GradientStop Offset="0.0" Color="#FFE1E1E1" />
+        <GradientStop Offset="1.0" Color="#FF3E3E3E" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="MountainPlainBrush">
+        <GradientStop Offset="0.0" Color="#FFFD664A" />
+        <GradientStop Offset="1.0" Color="#FFE1E1E1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="MountainForestBrush">
+        <GradientStop Offset="0.0" Color="#FFFD664A" />
+        <GradientStop Offset="1.0" Color="#FF008023" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="ForestPlainBrush">
+        <GradientStop Offset="0.0" Color="#FF008023" />
+        <GradientStop Offset="1.0" Color="#FFE1E1E1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="ForestIslandBrush">
+        <GradientStop Offset="0.0" Color="#FF008023" />
+        <GradientStop Offset="1.0" Color="#FF00A3E6" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="SwampMountainBrush">
+        <GradientStop Offset="0.0" Color="#FF3E3E3E" />
+        <GradientStop Offset="1.0" Color="#FFFD664A" />
+    </LinearGradientBrush>
+
+</ResourceDictionary>

@@ -1,0 +1,182 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--  Base Style  -->
+
+    <Style x:Key="BasePathStyle" TargetType="Path">
+        <Setter Property="Stretch" Value="Uniform" />
+    </Style>
+
+    <!--  Path Style  -->
+
+    <Style x:Key="PathB"
+           BasedOn="{StaticResource BasePathStyle}"
+           TargetType="Path">
+        <Setter Property="Data" Value="{StaticResource SwampGeometry}" />
+        <Setter Property="Fill" Value="{StaticResource SwampBrush}" />
+    </Style>
+    <Style x:Key="PathG"
+           BasedOn="{StaticResource BasePathStyle}"
+           TargetType="Path">
+        <Setter Property="Data" Value="{StaticResource ForestGeometry}" />
+        <Setter Property="Fill" Value="{StaticResource ForestBrush}" />
+    </Style>
+    <Style x:Key="PathW"
+           BasedOn="{StaticResource BasePathStyle}"
+           TargetType="Path">
+        <Setter Property="Data" Value="{StaticResource PlainGeometry}" />
+        <Setter Property="Fill" Value="{StaticResource PlainBrush}" />
+    </Style>
+    <Style x:Key="PathR"
+           BasedOn="{StaticResource BasePathStyle}"
+           TargetType="Path">
+        <Setter Property="Data" Value="{StaticResource MountainGeometry}" />
+        <Setter Property="Fill" Value="{StaticResource MountainBrush}" />
+    </Style>
+    <Style x:Key="PathU"
+           BasedOn="{StaticResource BasePathStyle}"
+           TargetType="Path">
+        <Setter Property="Data" Value="{StaticResource IslandGeometry}" />
+        <Setter Property="Fill" Value="{StaticResource IslandBrush}" />
+    </Style>
+    <Style x:Key="PathBG"
+           BasedOn="{StaticResource BasePathStyle}"
+           TargetType="Path">
+        <Setter Property="Data" Value="{StaticResource SwampForestGeometry}" />
+        <Setter Property="Fill" Value="{StaticResource SwampForestBrush}" />
+    </Style>
+    <Style x:Key="PathUB"
+           BasedOn="{StaticResource BasePathStyle}"
+           TargetType="Path">
+        <Setter Property="Data" Value="{StaticResource IslandSwampGeometry}" />
+        <Setter Property="Fill" Value="{StaticResource IslandSwampBrush}" />
+    </Style>
+    <Style x:Key="PathUR"
+           BasedOn="{StaticResource BasePathStyle}"
+           TargetType="Path">
+        <Setter Property="Data" Value="{StaticResource IslandMountainGeometry}" />
+        <Setter Property="Fill" Value="{StaticResource IslandMountainBrush}" />
+    </Style>
+    <Style x:Key="PathWU"
+           BasedOn="{StaticResource BasePathStyle}"
+           TargetType="Path">
+        <Setter Property="Data" Value="{StaticResource PlainIslandGeometry}" />
+        <Setter Property="Fill" Value="{StaticResource PlainIslandBrush}" />
+    </Style>
+    <Style x:Key="PathWB"
+           BasedOn="{StaticResource BasePathStyle}"
+           TargetType="Path">
+        <Setter Property="Data" Value="{StaticResource PlainSwampGeometry}" />
+        <Setter Property="Fill" Value="{StaticResource PlainSwampBrush}" />
+    </Style>
+    <Style x:Key="PathRW"
+           BasedOn="{StaticResource BasePathStyle}"
+           TargetType="Path">
+        <Setter Property="Data" Value="{StaticResource MountainPlainGeometry}" />
+        <Setter Property="Fill" Value="{StaticResource MountainPlainBrush}" />
+    </Style>
+    <Style x:Key="PathRG"
+           BasedOn="{StaticResource BasePathStyle}"
+           TargetType="Path">
+        <Setter Property="Data" Value="{StaticResource MountainForestGeometry}" />
+        <Setter Property="Fill" Value="{StaticResource MountainForestBrush}" />
+    </Style>
+    <Style x:Key="PathGW"
+           BasedOn="{StaticResource BasePathStyle}"
+           TargetType="Path">
+        <Setter Property="Data" Value="{StaticResource ForestPlainGeometry}" />
+        <Setter Property="Fill" Value="{StaticResource ForestPlainBrush}" />
+    </Style>
+    <Style x:Key="PathGU"
+           BasedOn="{StaticResource BasePathStyle}"
+           TargetType="Path">
+        <Setter Property="Data" Value="{StaticResource ForestIslandGeometry}" />
+        <Setter Property="Fill" Value="{StaticResource ForestIslandBrush}" />
+    </Style>
+    <Style x:Key="PathBR"
+           BasedOn="{StaticResource BasePathStyle}"
+           TargetType="Path">
+        <Setter Property="Data" Value="{StaticResource SwampMountainGeometry}" />
+        <Setter Property="Fill" Value="{StaticResource SwampMountainBrush}" />
+    </Style>
+    <Style x:Key="PathMana"
+           BasedOn="{StaticResource BasePathStyle}"
+           TargetType="Path">
+        <Setter Property="Data" Value="{StaticResource ManaGeometry}" />
+        <Setter Property="Fill" Value="{StaticResource ColorlessBrush}" />
+    </Style>
+
+    <!--  UserControl Style  -->
+
+    <Style x:Key="ManaB" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8" Style="{StaticResource PathB}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ManaG" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8" Style="{StaticResource PathG}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ManaW" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8" Style="{StaticResource PathW}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ManaR" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8" Style="{StaticResource PathR}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ManaU" TargetType="UserControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Viewbox>
+                        <Grid>
+                            <Path Style="{StaticResource PathMana}" />
+                            <Path Margin="8" Style="{StaticResource PathU}" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+</ResourceDictionary>

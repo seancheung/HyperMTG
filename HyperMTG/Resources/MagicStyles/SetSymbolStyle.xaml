@@ -1,0 +1,38 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--  Base Style  -->
+
+    <Style x:Key="RarityPathStyle"
+           BasedOn="{StaticResource BasePathStyle}"
+           TargetType="Path">
+        <Setter Property="Stroke" Value="#FF272626" />
+        <Setter Property="StrokeThickness" Value="4" />
+    </Style>
+
+    <!--  Rarity Path Style  -->
+
+    <Style x:Key="PathCommon"
+           BasedOn="{StaticResource RarityPathStyle}"
+           TargetType="Path">
+        <Setter Property="Fill" Value="{StaticResource CommonBrush}" />
+    </Style>
+
+    <Style x:Key="PathUnCommon"
+           BasedOn="{StaticResource RarityPathStyle}"
+           TargetType="Path">
+        <Setter Property="Fill" Value="{StaticResource UnCommonBrush}" />
+    </Style>
+
+    <Style x:Key="PathRare"
+           BasedOn="{StaticResource RarityPathStyle}"
+           TargetType="Path">
+        <Setter Property="Fill" Value="{StaticResource RareBrush}" />
+    </Style>
+
+    <Style x:Key="PathMythic"
+           BasedOn="{StaticResource RarityPathStyle}"
+           TargetType="Path">
+        <Setter Property="Fill" Value="{StaticResource MythicBrush}" />
+    </Style>
+
+</ResourceDictionary>

@@ -7,7 +7,14 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/FirstFloor.ModernUI;component/Assets/ModernUI.xaml" />
                 <ResourceDictionary Source="/FirstFloor.ModernUI;component/Assets/ModernUI.Light.xaml" />
-                <ResourceDictionary Source="Resources/MTGIcons.xaml" />
+                <ResourceDictionary Source="Resources/MagicStyles/ManaBrushes.xaml" />
+                <ResourceDictionary Source="Resources/MagicStyles/RarityBrushes.xaml" />
+                <ResourceDictionary Source="Resources/MagicStyles/ManaSymbolGeometries.xaml" />
+                <ResourceDictionary Source="Resources/MagicStyles/ManaSymbolStyle.xaml" />
+                <ResourceDictionary Source="Resources/MagicStyles/TypeSymbolGeometries.xaml" />
+                <ResourceDictionary Source="Resources/MagicStyles/TypeSymbolStyle.xaml" />
+                <ResourceDictionary Source="Resources/MagicStyles/SetSymbolGeometries.xaml" />
+                <ResourceDictionary Source="Resources/MagicStyles/SetSymbolStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

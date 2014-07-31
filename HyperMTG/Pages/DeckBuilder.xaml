@@ -160,7 +160,7 @@
                            MaxHeight="310"
                            Source="{Binding SelectedCard.ImageB,
                                             IsAsync=True}" />
-                    <mui:BBCodeBlock Grid.Row="2" BBCode="{Binding SelectedCard.Card.Text}" />
+                    <mui:BBCodeBlock Grid.Row="2" BBCode="{Binding SelectedCard.Card.Text, NotifyOnTargetUpdated=True}" TargetUpdated="FrameworkElement_OnTargetUpdated"/>
                     <mui:BBCodeBlock Grid.Row="3" BBCode="{Binding SelectedCard.Card.Flavor, StringFormat='[i]{0}[/i]'}" />
                 </Grid>
             </ScrollViewer>

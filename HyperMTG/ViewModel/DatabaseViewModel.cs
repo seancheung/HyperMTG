@@ -19,11 +19,6 @@ namespace HyperMTG.ViewModel
 		/// </summary>
 		private const int MaxThread = 10;
 
-		/// <summary>
-		///     Thread Lock
-		/// </summary>
-		private static readonly object Locker = new object();
-
 		private readonly ICompressor _compressor;
 		private readonly IDataParse _dataParse;
 		private readonly IDBReader _dbReader;
@@ -178,7 +173,7 @@ namespace HyperMTG.ViewModel
 		private void PageExecute(object next)
 		{
 			_processCount++;
-			var td = new Thread(() =>
+			Thread td = new Thread(() =>
 			{
 				Info = "Loading";
 				IEnumerable<Card> cards = _dbReader.LoadCards();
@@ -201,9 +196,9 @@ namespace HyperMTG.ViewModel
 		private void LoadSetsExecute()
 		{
 			_processCount++;
-			var td = new Thread(() =>
+			Thread td = new Thread(() =>
 			{
-				var sets = new ObservableCollection<Set>(_dbReader.LoadSets());
+				ObservableCollection<Set> sets = new ObservableCollection<Set>(_dbReader.LoadSets());
 				_dispatcher.Invoke(new Action(() =>
 				{
 					Sets.Clear();
@@ -220,7 +215,7 @@ namespace HyperMTG.ViewModel
 		private void LoadCardsExecute()
 		{
 			_processCount++;
-			var td = new Thread(() =>
+			Thread td = new Thread(() =>
 			{
 				Info = "Loading";
 				IEnumerable<Card> cards = _dbReader.LoadCards();
@@ -243,7 +238,7 @@ namespace HyperMTG.ViewModel
 		{
 			_processCount++;
 			Info = "Waiting...Grabbing Source";
-			var td = new Thread(() =>
+			Thread td = new Thread(() =>
 			{
 				IEnumerable<Set> sets = _dataParse.ParSetWithCode();
 				IList<Set> enumerable = sets as IList<Set> ?? sets.ToList();
@@ -270,7 +265,7 @@ namespace HyperMTG.ViewModel
 			{
 				if (checkSetItem.IsChecked)
 				{
-					var td = new Thread(() =>
+					Thread td = new Thread(() =>
 					{
 						_processCount++;
 						checkSetItem.IsProcessing = true;
@@ -281,7 +276,7 @@ namespace HyperMTG.ViewModel
 						checkSetItem.Prog = 0;
 
 						//Split the full card list into several parts
-						var cardsThread = new List<List<Card>>();
+						List<List<Card>> cardsThread = new List<List<Card>>();
 						for (int i = 0; i < MaxThread - 1; i++)
 						{
 							cardsThread.Add(enumerable.GetRange(enumerable.Count/MaxThread*i, enumerable.Count/MaxThread));
@@ -293,13 +288,13 @@ namespace HyperMTG.ViewModel
 
 						WaitCallback waitCallback = param =>
 						{
-							var parameres = param as object[];
+							object[] parameres = param as object[];
 							if (parameres == null || parameres.Length != 2)
 								return;
-							var tmpCards = parameres[0] as IList<Card>;
+							IList<Card> tmpCards = parameres[0] as IList<Card>;
 							if (tmpCards == null)
 								return;
-							var waitHandle = parameres[1] as AutoResetEvent;
+							AutoResetEvent waitHandle = parameres[1] as AutoResetEvent;
 							if (waitHandle == null)
 								return;
 
@@ -316,20 +311,14 @@ namespace HyperMTG.ViewModel
 									{
 										byte[] data = _imageParse.Download(id);
 										if (data != null && _compressor != null)
-											lock (Locker)
-											{
-												_dbWriter.Insert(id, data, _compressor);
-											}
+											_dbWriter.Insert(id, data, _compressor);
 									}
 									if (tmpCards[i].zID != null)
 										foreach (string id in tmpCards[i].zID.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries))
 										{
 											byte[] data = _imageParse.Download(id);
 											if (data != null && _compressor != null)
-												lock (Locker)
-												{
-													_dbWriter.Insert(id, data, _compressor);
-												}
+												_dbWriter.Insert(id, data, _compressor);
 										}
 
 									_dispatcher.Invoke(new Action(() => { Cards.Add(tmpCards[i]); }));
@@ -340,11 +329,8 @@ namespace HyperMTG.ViewModel
 
 							if (!cts.Token.IsCancellationRequested)
 							{
-								lock (Locker)
-								{
-									//Save Data
-									_dbWriter.Insert(tmpCards);
-								}
+								//Save Data
+								_dbWriter.Insert(tmpCards);
 							}
 
 							//Set the current thread state as finished
@@ -353,7 +339,7 @@ namespace HyperMTG.ViewModel
 
 						#endregion
 
-						var waitHandles = new WaitHandle[MaxThread];
+						WaitHandle[] waitHandles = new WaitHandle[MaxThread];
 						//Start a thread pool for updating
 						for (int i = 0; i < MaxThread; i++)
 						{
@@ -368,10 +354,7 @@ namespace HyperMTG.ViewModel
 						{
 							checkSetItem.IsLocal = true;
 							checkSetItem.IsChecked = false;
-							lock (Locker)
-							{
-								_dbWriter.Update(checkSetItem.Content);
-							}
+							_dbWriter.Update(checkSetItem.Content);
 						}
 						checkSetItem.IsProcessing = false;
 						Info = "Done!";

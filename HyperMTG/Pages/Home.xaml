@@ -7,6 +7,8 @@
              mc:Ignorable="d">
 
     <Grid Style="{StaticResource ContentRoot}">
-        <ScrollViewer />
+        <ScrollViewer>
+            <Path Style="{StaticResource PathUB}" />
+        </ScrollViewer>
     </Grid>
 </UserControl>

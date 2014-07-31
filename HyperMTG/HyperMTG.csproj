@@ -76,8 +76,6 @@
     <Compile Include="Helper\DataContextProxy.cs" />
     <Compile Include="Helper\DelegateCommand.cs" />
     <Compile Include="Helper\ImageHelper.cs" />
-    <Compile Include="Helper\ManaDataConverter.cs" />
-    <Compile Include="Helper\MutiColorConverter.cs" />
     <Compile Include="Helper\TooltipConverter.cs" />
     <Compile Include="Helper\TriggerConverter.cs" />
     <Compile Include="Helper\VisibaleConverter.cs" />
@@ -168,7 +166,35 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Resources\MTGIcons.xaml">
+    <Page Include="Resources\MagicStyles\ManaBrushes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\MagicStyles\ManaSymbolGeometries.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\MagicStyles\RarityBrushes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\MagicStyles\SetSymbolGeometries.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\MagicStyles\TypeSymbolGeometries.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\MagicStyles\ManaSymbolStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\MagicStyles\SetSymbolStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\MagicStyles\TypeSymbolStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

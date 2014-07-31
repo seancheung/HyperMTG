@@ -152,5 +152,16 @@ namespace HyperKore.Utilities
 
 			return sb.ToString();
 		}
+
+		/// <summary>
+		/// Split input string by mana symbols
+		/// </summary>
+		/// <param name="input"></param>
+		/// <returns></returns>
+		public static IEnumerable<string> ManaSplit(this string input)
+		{
+			//return Regex.Split(input, "(?<=})|(?={)").Where(s => s != "");
+			return Regex.Split(input, "(?<=})|(?!^)(?={)");
+		}
 	}
 }

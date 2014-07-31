@@ -1,0 +1,28 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--  Rarity Brushes  -->
+
+    <SolidColorBrush x:Key="CommonBrush" Color="Black" />
+
+    <LinearGradientBrush x:Key="UnCommonBrush">
+        <GradientStop Offset="0.0" Color="#FF707F88" />
+        <GradientStop Offset="0.25" Color="#FFA6BDCA" />
+        <GradientStop Offset="0.55" Color="#FFAEC7D5" />
+        <GradientStop Offset="1.0" Color="#FF68757F" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="RareBrush">
+        <GradientStop Offset="0.0" Color="#FF977E38" />
+        <GradientStop Offset="0.25" Color="#FFB39A54" />
+        <GradientStop Offset="0.55" Color="#FFD6BC73" />
+        <GradientStop Offset="1.0" Color="#FF917833" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="MythicBrush">
+        <GradientStop Offset="0.0" Color="#FFC43F25" />
+        <GradientStop Offset="0.25" Color="#FFD76623" />
+        <GradientStop Offset="0.55" Color="#FFF6971D" />
+        <GradientStop Offset="1.0" Color="#FFC03625" />
+    </LinearGradientBrush>
+
+</ResourceDictionary>

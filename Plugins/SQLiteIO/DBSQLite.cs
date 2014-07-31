@@ -18,14 +18,14 @@ namespace SQLiteIO
 		/// <summary>
 		///     Single instance of SQLiteConnection
 		/// </summary>
-		private static readonly SQLiteConnection Conn = new SQLiteConnection();
+		private readonly SQLiteConnection conn = new SQLiteConnection();
 
 		/// <summary>
 		///     Initializes a new instance of the SQLiteIO class.
 		/// </summary>
 		public DBSQLite()
 		{
-			Conn.ConnectionString = ConnString;
+			conn.ConnectionString = ConnString;
 			Create();
 		}
 
@@ -48,35 +48,45 @@ namespace SQLiteIO
 
 		public IEnumerable<Card> LoadCards()
 		{
-			using (var datacontext = new DataContext(Conn))
+			//use lock(this) for singleton class
+			lock (this)
 			{
-				Table<Card> tab = datacontext.GetTable<Card>();
-				return tab.ToList();
+				using (var datacontext = new DataContext(conn))
+				{
+					Table<Card> tab = datacontext.GetTable<Card>();
+					return tab.ToList();
+				}
 			}
 		}
 
 		public byte[] LoadFile(string id, ICompressor compressor)
 		{
-			using (var datacontext = new DataContext(Conn))
+			lock (this)
 			{
-				Table<Bin> tab = datacontext.GetTable<Bin>();
-				Bin[] datas = tab.Where(i => i.ID == id).ToArray();
-
-				if (datas.Count() != 1)
+				using (var datacontext = new DataContext(conn))
 				{
-					return null;
-				}
+					Table<Bin> tab = datacontext.GetTable<Bin>();
+					Bin[] datas = tab.Where(i => i.ID == id).ToArray();
 
-				return compressor == null ? datas[0].Data : compressor.Decompress(datas[0].Data, datas[0].Length);
+					if (datas.Count() != 1)
+					{
+						return null;
+					}
+
+					return compressor == null ? datas[0].Data : compressor.Decompress(datas[0].Data, datas[0].Length);
+				}
 			}
 		}
 
 		public IEnumerable<Set> LoadSets()
 		{
-			using (var datacontext = new DataContext(Conn))
+			lock (this)
 			{
-				Table<Set> tab = datacontext.GetTable<Set>();
-				return tab.ToList();
+				using (var datacontext = new DataContext(conn))
+				{
+					Table<Set> tab = datacontext.GetTable<Set>();
+					return tab.ToList();
+				}
 			}
 		}
 
@@ -86,74 +96,57 @@ namespace SQLiteIO
 
 		public bool Delete(Card card)
 		{
-			using (var datacontext = new DataContext(Conn))
+			lock (this)
 			{
-				Table<Card> tab = datacontext.GetTable<Card>();
-				IQueryable<Card> que = tab.Where(c => c.ID == card.ID);
-
-				if (!que.Any())
+				using (var datacontext = new DataContext(conn))
 				{
-					return false;
+					Table<Card> tab = datacontext.GetTable<Card>();
+					IQueryable<Card> que = tab.Where(c => c.ID == card.ID);
+
+					if (!que.Any())
+					{
+						return false;
+					}
+
+					tab.DeleteAllOnSubmit(que);
+					datacontext.SubmitChanges();
+
+					return true;
 				}
-
-				tab.DeleteAllOnSubmit(que);
-				datacontext.SubmitChanges();
-
-				return true;
 			}
 		}
 
 		public bool Delete(string id)
 		{
-			using (var datacontext = new DataContext(Conn))
+			lock (this)
 			{
-				Table<Bin> tab = datacontext.GetTable<Bin>();
-				IQueryable<Bin> que = tab.Where(i => i.ID == id);
-
-				if (!que.Any())
+				using (var datacontext = new DataContext(conn))
 				{
-					return false;
+					Table<Bin> tab = datacontext.GetTable<Bin>();
+					IQueryable<Bin> que = tab.Where(i => i.ID == id);
+
+					if (!que.Any())
+					{
+						return false;
+					}
+
+					tab.DeleteAllOnSubmit(que);
+					datacontext.SubmitChanges();
+
+					return true;
 				}
-
-				tab.DeleteAllOnSubmit(que);
-				datacontext.SubmitChanges();
-
-				return true;
 			}
 		}
 
 		public bool Insert(Card card)
 		{
-			using (var datacontext = new DataContext(Conn))
+			lock (this)
 			{
-				Table<Card> tab = datacontext.GetTable<Card>();
-				IQueryable<Card> que = tab.Where(c => c.ID == card.ID);
-
-				if (que.Any())
+				using (var datacontext = new DataContext(conn))
 				{
-					foreach (Card item in que)
-					{
-						item.CopyFrom(card);
-					}
-				}
-				else
-				{
-					tab.InsertOnSubmit(card);
-				}
-				datacontext.SubmitChanges();
-				return true;
-			}
-		}
-
-		public void Insert(IEnumerable<Card> cards)
-		{
-			using (var datacontext = new DataContext(Conn))
-			{
-				Table<Card> tab = datacontext.GetTable<Card>();
-
-				foreach (Card card in cards)
-				{
+					Table<Card> tab = datacontext.GetTable<Card>();
 					IQueryable<Card> que = tab.Where(c => c.ID == card.ID);
+
 					if (que.Any())
 					{
 						foreach (Card item in que)
@@ -165,110 +158,154 @@ namespace SQLiteIO
 					{
 						tab.InsertOnSubmit(card);
 					}
+					datacontext.SubmitChanges();
+					return true;
 				}
+			}
+		}
 
-				datacontext.SubmitChanges();
+		public void Insert(IEnumerable<Card> cards)
+		{
+			lock (this)
+			{
+				using (var datacontext = new DataContext(conn))
+				{
+					Table<Card> tab = datacontext.GetTable<Card>();
+
+					foreach (Card card in cards)
+					{
+						IQueryable<Card> que = tab.Where(c => c.ID == card.ID);
+						if (que.Any())
+						{
+							foreach (Card item in que)
+							{
+								item.CopyFrom(card);
+							}
+						}
+						else
+						{
+							tab.InsertOnSubmit(card);
+						}
+					}
+
+					datacontext.SubmitChanges();
+				}
 			}
 		}
 
 		public void Insert(IEnumerable<Set> sets)
 		{
-			using (var datacontext = new DataContext(Conn))
+			lock (this)
 			{
-				Table<Set> tab = datacontext.GetTable<Set>();
-				foreach (Set set in sets)
+				using (var datacontext = new DataContext(conn))
 				{
-					if (!tab.Any(s => s.SetName == set.SetName))
+					Table<Set> tab = datacontext.GetTable<Set>();
+					foreach (Set set in sets)
 					{
-						tab.InsertOnSubmit(set);
+						if (!tab.Any(s => s.SetName == set.SetName))
+						{
+							tab.InsertOnSubmit(set);
+						}
 					}
+					datacontext.SubmitChanges();
 				}
-				datacontext.SubmitChanges();
 			}
 		}
 
 		public bool Insert(string id, byte[] data, ICompressor compressor)
 		{
-			using (var datacontext = new DataContext(Conn))
+			lock (this)
 			{
-				Table<Bin> tab = datacontext.GetTable<Bin>();
-				byte[] compdata = compressor == null ? data : compressor.Compress(data);
-
-				if (tab.Any(i => i.ID == id))
+				using (var datacontext = new DataContext(conn))
 				{
-					return Update(id, data, compressor);
-				}
+					Table<Bin> tab = datacontext.GetTable<Bin>();
+					byte[] compdata = compressor == null ? data : compressor.Compress(data);
 
-				tab.InsertOnSubmit(new Bin(compdata, id, data.Length));
-				datacontext.SubmitChanges();
-				return true;
+					if (tab.Any(i => i.ID == id))
+					{
+						return Update(id, data, compressor);
+					}
+
+					tab.InsertOnSubmit(new Bin(compdata, id, data.Length));
+					datacontext.SubmitChanges();
+					return true;
+				}
 			}
 		}
 
 		public bool Update(Card card)
 		{
-			using (var datacontext = new DataContext(Conn))
+			lock (this)
 			{
-				Table<Card> tab = datacontext.GetTable<Card>();
-				IQueryable<Card> que = tab.Where(c => c.ID == card.ID);
-
-				if (!que.Any())
+				using (var datacontext = new DataContext(conn))
 				{
-					return false;
-				}
+					Table<Card> tab = datacontext.GetTable<Card>();
+					IQueryable<Card> que = tab.Where(c => c.ID == card.ID);
 
-				foreach (Card item in que)
-				{
-					item.CopyFrom(card);
+					if (!que.Any())
+					{
+						return false;
+					}
+
+					foreach (Card item in que)
+					{
+						item.CopyFrom(card);
+					}
+					datacontext.SubmitChanges();
+					return true;
 				}
-				datacontext.SubmitChanges();
-				return true;
 			}
 		}
 
 		public bool Update(string id, byte[] data, ICompressor compressor)
 		{
-			using (var datacontext = new DataContext(Conn))
+			lock (this)
 			{
-				Table<Bin> tab = datacontext.GetTable<Bin>();
-				byte[] compdata = compressor == null ? data : compressor.Compress(data);
-				IQueryable<Bin> que = tab.Where(i => i.ID == id);
-
-				if (!que.Any())
+				using (var datacontext = new DataContext(conn))
 				{
-					return false;
-				}
+					Table<Bin> tab = datacontext.GetTable<Bin>();
+					byte[] compdata = compressor == null ? data : compressor.Compress(data);
+					IQueryable<Bin> que = tab.Where(i => i.ID == id);
 
-				foreach (Bin item in que)
-				{
-					item.Data = compdata;
-					item.Length = data.Length;
+					if (!que.Any())
+					{
+						return false;
+					}
+
+					foreach (Bin item in que)
+					{
+						item.Data = compdata;
+						item.Length = data.Length;
+					}
+					datacontext.SubmitChanges();
+					return true;
 				}
-				datacontext.SubmitChanges();
-				return true;
 			}
 		}
 
 		public bool Update(Set set)
 		{
-			using (var datacontext = new DataContext(Conn))
+			lock (this)
 			{
-				Table<Set> tab = datacontext.GetTable<Set>();
-				IQueryable<Set> que = tab.Where(c => c.SetName == set.SetName);
-
-				if (!que.Any())
+				using (var datacontext = new DataContext(conn))
 				{
-					return false;
-				}
+					Table<Set> tab = datacontext.GetTable<Set>();
+					IQueryable<Set> que = tab.Where(c => c.SetName == set.SetName);
 
-				foreach (Set item in que)
-				{
-					item.SetCode = set.SetCode;
-					item.LastUpdate = set.LastUpdate;
-					item.Local = set.Local;
+					if (!que.Any())
+					{
+						return false;
+					}
+
+					foreach (Set item in que)
+					{
+						item.SetCode = set.SetCode;
+						item.LastUpdate = set.LastUpdate;
+						item.Local = set.Local;
+					}
+					datacontext.SubmitChanges();
+					return true;
 				}
-				datacontext.SubmitChanges();
-				return true;
 			}
 		}
 
@@ -276,23 +313,29 @@ namespace SQLiteIO
 
 		public void Reset(IEnumerable<Set> sets)
 		{
-			using (var datacontext = new DataContext(Conn))
+			lock (this)
 			{
-				Table<Set> tab = datacontext.GetTable<Set>();
-				if (tab.Any())
+				using (var datacontext = new DataContext(conn))
 				{
-					tab.DeleteAllOnSubmit(tab);
-					tab.InsertAllOnSubmit(sets);
-					datacontext.SubmitChanges();
+					Table<Set> tab = datacontext.GetTable<Set>();
+					if (tab.Any())
+					{
+						tab.DeleteAllOnSubmit(tab);
+						tab.InsertAllOnSubmit(sets);
+						datacontext.SubmitChanges();
+					}
 				}
 			}
 		}
 
 		private void Create()
 		{
-			using (var datacontext = new DataContext(Conn))
+			lock (this)
 			{
-				datacontext.ExecuteCommand(BuildCmd);
+				using (var datacontext = new DataContext(conn))
+				{
+					datacontext.ExecuteCommand(BuildCmd);
+				}
 			}
 		}
 	}

@@ -1,8 +1,6 @@
 ﻿using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using HyperKore.Common;
 using HyperMTG.Helper;
@@ -12,11 +10,6 @@ namespace HyperMTG.ViewModel
 {
 	internal class DeckBuiderViewModel : ObservableObject
 	{
-		/// <summary>
-		///     Thread Lock
-		/// </summary>
-		private static readonly object Lock = new object();
-
 		private readonly ICompressor _compressor;
 
 		private readonly IDBReader _dbReader;
@@ -194,8 +187,6 @@ namespace HyperMTG.ViewModel
 		private readonly IDBReader _dbReader;
 		private Card _card;
 
-		private static readonly object Locker = new object();
-
 		public ExCard(IDBReader dbReader, ICompressor compressor)
 		{
 			_dbReader = dbReader;
@@ -224,10 +215,7 @@ namespace HyperMTG.ViewModel
 		{
 			get
 			{
-				lock (Locker)
-				{
-					return Card != null && _dbReader != null && _compressor != null ? _dbReader.LoadFile(IDA, _compressor) : null;
-				}
+				return Card != null && _dbReader != null && _compressor != null ? _dbReader.LoadFile(IDA, _compressor) : null;
 			}
 		}
 
@@ -235,10 +223,7 @@ namespace HyperMTG.ViewModel
 		{
 			get
 			{
-				lock (Locker)
-				{
-					return Card != null && _dbReader != null && _compressor != null ? _dbReader.LoadFile(IDB, _compressor) : null;
-				}
+				return Card != null && _dbReader != null && _compressor != null ? _dbReader.LoadFile(IDB, _compressor) : null;
 			}
 		}
 
