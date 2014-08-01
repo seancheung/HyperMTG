@@ -26,10 +26,31 @@
             <StackPanel Grid.Row="0" Grid.ColumnSpan="3"
                         Orientation="Horizontal">
                 <!--  <mui:ModernButton Command="{Binding LoadSetsCommand}" Content="Load Sets" />  -->
-                <mui:ModernButton Command="{Binding UpdateSetsCommand}" Content="Update Sets" />
-                <mui:ModernButton Command="{Binding UpdateCardsCommand}" Content="Update Checked Cards" />
-                <mui:ModernButton Command="{Binding LoadCardsCommand}" Content="Load Cards" />
-                <mui:ModernButton Command="{Binding CancelCommand}" Content="Cancel" />
+                <mui:ModernButton Margin="2,0"
+                                  Command="{Binding UpdateSetsCommand}"
+                                  Content="Update Sets" />
+                <Border Margin="2,0"
+                        BorderBrush="{DynamicResource ItemBorder}"
+                        BorderThickness="1" CornerRadius="4">
+                    <StackPanel Orientation="Horizontal">
+                        <mui:ModernButton Margin="2,0"
+                                          Command="{Binding UpdateCardsCommand}"
+                                          Content="Update Cards"
+                                          ToolTip="Update Checked Cards" />
+                        <CheckBox Margin="2,0" Content="Image"
+                                  IsChecked="{Binding DoImage}"
+                                  ToolTip="Download Original English Image" />
+                        <CheckBox Margin="2,0" Content="zImage"
+                                  IsChecked="{Binding DozImage}"
+                                  ToolTip="Download Custom Language Image" />
+                    </StackPanel>
+                </Border>
+                <mui:ModernButton Margin="2,0"
+                                  Command="{Binding LoadCardsCommand}"
+                                  Content="Load Cards" />
+                <mui:ModernButton Margin="2,0"
+                                  Command="{Binding CancelCommand}"
+                                  Content="Cancel" />
             </StackPanel>
             <ListBox Grid.Row="1" Grid.Column="0"
                      ItemsSource="{Binding Sets}">

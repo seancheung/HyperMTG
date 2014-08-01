@@ -1,11 +1,13 @@
-﻿using HyperKore.Common;
+﻿using System;
+using System.Globalization;
+using HyperKore.Common;
 
 namespace HyperKore.Utilities
 {
 	public static class LanguageTool
 	{
 		/// <summary>
-		///     Get language code
+		///     Get language code ISO-6391
 		/// </summary>
 		/// <param name="lang"></param>
 		/// <returns></returns>

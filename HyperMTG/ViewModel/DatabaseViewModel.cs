@@ -38,13 +38,14 @@ namespace HyperMTG.ViewModel
 
 		private ObservableCollection<Card> _cards;
 		private int _currentPage;
-		private bool _downloadingImage;
 
 		private string _info;
 		private int _pageSize;
 
 		private volatile int _processCount;
 		private int _recordSize;
+		private bool doImage;
+		private bool dozImage;
 
 		public DatabaseViewModel()
 		{
@@ -66,13 +67,23 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
-		public bool DownloadingImage
+		public bool DoImage
 		{
-			get { return _downloadingImage; }
+			get { return doImage; }
 			set
 			{
-				_downloadingImage = value;
-				RaisePropertyChanged("DownloadingImage");
+				doImage = value;
+				RaisePropertyChanged("DoImage");
+			}
+		}
+
+		public bool DozImage
+		{
+			get { return dozImage; }
+			set
+			{
+				dozImage = value;
+				RaisePropertyChanged("DozImage");
 			}
 		}
 
@@ -184,7 +195,7 @@ namespace HyperMTG.ViewModel
 		private void PageExecute(object next)
 		{
 			_processCount++;
-			var td = new Thread(() =>
+			Thread td = new Thread(() =>
 			{
 				Info = "Loading";
 				IEnumerable<Card> cards = _dbReader.LoadCards();
@@ -207,9 +218,9 @@ namespace HyperMTG.ViewModel
 		private void LoadSetsExecute()
 		{
 			_processCount++;
-			var td = new Thread(() =>
+			Thread td = new Thread(() =>
 			{
-				var sets = new ObservableCollection<Set>(_dbReader.LoadSets());
+				ObservableCollection<Set> sets = new ObservableCollection<Set>(_dbReader.LoadSets());
 				_dispatcher.Invoke(new Action(() =>
 				{
 					Sets.Clear();
@@ -226,7 +237,7 @@ namespace HyperMTG.ViewModel
 		private void LoadCardsExecute()
 		{
 			_processCount++;
-			var td = new Thread(() =>
+			Thread td = new Thread(() =>
 			{
 				Info = "Loading";
 				IEnumerable<Card> cards = _dbReader.LoadCards();
@@ -249,7 +260,7 @@ namespace HyperMTG.ViewModel
 		{
 			_processCount++;
 			Info = "Waiting...Grabbing Source";
-			var td = new Thread(() =>
+			Thread td = new Thread(() =>
 			{
 				IEnumerable<Set> sets = _dataParse.ParSetWithCode();
 				IList<Set> enumerable = sets as IList<Set> ?? sets.ToList();
@@ -276,7 +287,7 @@ namespace HyperMTG.ViewModel
 			{
 				if (checkSetItem.IsChecked)
 				{
-					var td = new Thread(() =>
+					Thread td = new Thread(() =>
 					{
 						_processCount++;
 						checkSetItem.IsProcessing = true;
@@ -287,7 +298,7 @@ namespace HyperMTG.ViewModel
 						checkSetItem.Prog = 0;
 
 						//Split the full card list into several parts
-						var cardsThread = new List<List<Card>>();
+						List<List<Card>> cardsThread = new List<List<Card>>();
 						for (int i = 0; i < MaxThread - 1; i++)
 						{
 							cardsThread.Add(enumerable.GetRange(enumerable.Count/MaxThread*i, enumerable.Count/MaxThread));
@@ -299,13 +310,13 @@ namespace HyperMTG.ViewModel
 
 						WaitCallback waitCallback = param =>
 						{
-							var parameres = param as object[];
+							object[] parameres = param as object[];
 							if (parameres == null || parameres.Length != 2)
 								return;
-							var tmpCards = parameres[0] as IList<Card>;
+							IList<Card> tmpCards = parameres[0] as IList<Card>;
 							if (tmpCards == null)
 								return;
-							var waitHandle = parameres[1] as AutoResetEvent;
+							AutoResetEvent waitHandle = parameres[1] as AutoResetEvent;
 							if (waitHandle == null)
 								return;
 
@@ -320,25 +331,22 @@ namespace HyperMTG.ViewModel
 								{
 									#region Images
 
-									if (DownloadingImage)
-									{
+									if (DoImage)
 										foreach (string id in tmpCards[i].ID.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries))
 										{
 											byte[] data = _imageParse.Download(id);
 											if (data != null && _compressor != null)
 												_dbWriter.Insert(id, data, _compressor);
 										}
-										if (tmpCards[i].zID != null)
-											foreach (string id in tmpCards[i].zID.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries))
-											{
-												byte[] data = _imageParse.Download(id);
-												if (data != null && _compressor != null)
-													_dbWriter.Insert(id, data, _compressor);
-											}
-									}
+									if (DozImage && tmpCards[i].zID != null)
+										foreach (string id in tmpCards[i].zID.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries))
+										{
+											byte[] data = _imageParse.Download(id);
+											if (data != null && _compressor != null)
+												_dbWriter.Insert(id, data, _compressor);
+										}
 
 									#endregion
-
 
 									_dispatcher.Invoke(new Action(() => { Cards.Add(tmpCards[i]); }));
 								}
@@ -358,7 +366,7 @@ namespace HyperMTG.ViewModel
 
 						#endregion
 
-						var waitHandles = new WaitHandle[MaxThread];
+						WaitHandle[] waitHandles = new WaitHandle[MaxThread];
 						//Start a thread pool for updating
 						for (int i = 0; i < MaxThread; i++)
 						{

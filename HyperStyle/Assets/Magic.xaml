@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Magic/ManaBrushes.xaml" />
+        <ResourceDictionary Source="Magic/ManaSymbolGeometries.xaml" />
+        <ResourceDictionary Source="Magic/ManaSymbolStyle.xaml" />
+        <ResourceDictionary Source="Magic/SetSymbolGeometries.xaml" />
+        <ResourceDictionary Source="Magic/RarityBrushes.xaml" />
+        <ResourceDictionary Source="Magic/SetSymbolStyle.xaml" />
+        <ResourceDictionary Source="Magic/TypeSymbolGeometries.xaml" />
+        <ResourceDictionary Source="Magic/TypeSymbolStyle.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>
