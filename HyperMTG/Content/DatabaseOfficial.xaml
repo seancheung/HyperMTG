@@ -28,29 +28,34 @@
                 <!--  <mui:ModernButton Command="{Binding LoadSetsCommand}" Content="Load Sets" />  -->
                 <mui:ModernButton Margin="2,0"
                                   Command="{Binding UpdateSetsCommand}"
-                                  Content="Update Sets" />
+                                  Content="{DynamicResource dbo_01}"
+                                  ToolTip="{DynamicResource dbo_01_t}" />
                 <Border Margin="2,0"
                         BorderBrush="{DynamicResource ItemBorder}"
                         BorderThickness="1" CornerRadius="4">
                     <StackPanel Orientation="Horizontal">
                         <mui:ModernButton Margin="2,0"
                                           Command="{Binding UpdateCardsCommand}"
-                                          Content="Update Cards"
-                                          ToolTip="Update Checked Cards" />
-                        <CheckBox Margin="2,0" Content="Image"
+                                          Content="{DynamicResource dbo_02}"
+                                          ToolTip="{DynamicResource dbo_02_t}" />
+                        <CheckBox Margin="2,0"
+                                  Content="{DynamicResource dbo_03}"
                                   IsChecked="{Binding DoImage}"
-                                  ToolTip="Download Original English Image" />
-                        <CheckBox Margin="2,0" Content="zImage"
+                                  ToolTip="{DynamicResource dbo_03_t}" />
+                        <CheckBox Margin="2,0"
+                                  Content="{DynamicResource dbo_04}"
                                   IsChecked="{Binding DozImage}"
-                                  ToolTip="Download Custom Language Image" />
+                                  ToolTip="{DynamicResource dbo_04_t}" />
                     </StackPanel>
                 </Border>
                 <mui:ModernButton Margin="2,0"
                                   Command="{Binding LoadCardsCommand}"
-                                  Content="Load Cards" />
+                                  Content="{DynamicResource dbo_05}"
+                                  ToolTip="{DynamicResource dbo_05_t}" />
                 <mui:ModernButton Margin="2,0"
                                   Command="{Binding CancelCommand}"
-                                  Content="Cancel" />
+                                  Content="{DynamicResource dbo_06}"
+                                  ToolTip="{DynamicResource dbo_06_t}" />
             </StackPanel>
             <ListBox Grid.Row="1" Grid.Column="0"
                      ItemsSource="{Binding Sets}">

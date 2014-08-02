@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -19,13 +20,21 @@ namespace HyperMTG.Cultures
 		private const string CulturePostfix = "xaml";
 
 		private const string CultureFolder = "Cultures";
-		public static readonly CultureManager Instance = new CultureManager();
 
 		private static bool isFound;
 
-		private CultureManager()
+		public static bool IsInDesignMode
 		{
-			if (!isFound)
+			get
+			{
+				return (bool)DesignerProperties.IsInDesignModeProperty
+							.GetMetadata(typeof(DependencyObject)).DefaultValue;
+			}
+		}
+
+		public CultureManager()
+		{
+			if (!isFound && !IsInDesignMode)
 			{
 				string pattern = string.Format(@"(?<={0}\.)[a-z]{{2}}(?=\.{1})", CulturePrefix, CulturePostfix);
 
@@ -68,10 +77,12 @@ namespace HyperMTG.Cultures
 				{
 					ResourceDictionary dict = XamlReader.Load(fs) as ResourceDictionary;
 
-					Application.Current.Resources.MergedDictionaries.Add(dict);
+					Application.Current.Resources.MergedDictionaries[0] = dict;
+					
 
 					Settings.Default.DefaultCulture = culture;
 					Settings.Default.Save();
+				
 				}
 			}
 		}

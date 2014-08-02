@@ -160,11 +160,13 @@
                            MaxHeight="310"
                            Source="{Binding SelectedCard.ImageB,
                                             IsAsync=True}" />
-                    <mui:BBCodeBlock Grid.Row="2"
+                    <mui:BBCodeBlock Grid.Row="2" Margin="0,4"
                                      BBCode="{Binding SelectedCard.Card.Text,
                                                       NotifyOnTargetUpdated=True}"
                                      TargetUpdated="FrameworkElement_OnTargetUpdated" />
-                    <mui:BBCodeBlock Grid.Row="3" BBCode="{Binding SelectedCard.Card.Flavor, StringFormat='[i]{0}[/i]'}" />
+                    <mui:BBCodeBlock Grid.Row="3" Margin="0,4"
+                                     BBCode="{Binding SelectedCard.Card.Flavor,
+                                                      StringFormat='[i]{0}[/i]'}" />
                 </Grid>
             </ScrollViewer>
             <GridSplitter Grid.Row="0" Grid.RowSpan="2"
@@ -222,8 +224,10 @@
                                             <Expander Focusable="False" Template="{StaticResource SimpleExpanderTemp}">
                                                 <Expander.Header>
                                                     <StackPanel Orientation="Horizontal">
-                                                        <mui:BBCodeBlock Margin="0,0,5,0" BBCode="{Binding ItemCount}" />
-                                                        <mui:BBCodeBlock BBCode="{Binding Name}" />
+                                                        <mui:BBCodeBlock Margin="0,0,5,0"
+                                                                         BBCode="{Binding ItemCount}"
+                                                                         Foreground="{DynamicResource ItemText}" />
+                                                        <mui:BBCodeBlock BBCode="{Binding Name}" Foreground="{DynamicResource ItemText}" />
                                                     </StackPanel>
                                                 </Expander.Header>
                                                 <Expander.Content>
@@ -307,8 +311,10 @@
                                             <Expander Focusable="False" Template="{StaticResource SimpleExpanderTemp}">
                                                 <Expander.Header>
                                                     <StackPanel Orientation="Horizontal">
-                                                        <mui:BBCodeBlock Margin="0,0,5,0" BBCode="{Binding ItemCount}" />
-                                                        <mui:BBCodeBlock BBCode="{Binding Name}" />
+                                                        <mui:BBCodeBlock Margin="0,0,5,0"
+                                                                         BBCode="{Binding ItemCount}"
+                                                                         Foreground="{DynamicResource ItemText}" />
+                                                        <mui:BBCodeBlock BBCode="{Binding Name}" Foreground="{DynamicResource ItemText}" />
                                                     </StackPanel>
                                                 </Expander.Header>
                                                 <Expander.Content>

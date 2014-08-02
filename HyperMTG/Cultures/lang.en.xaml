@@ -1,5 +1,17 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
-  <sys:String x:Key="AssemblyMissing">Assembly Missing</sys:String>
+    <sys:String x:Key="info_01">Assembly Missing</sys:String>
+    <sys:String x:Key="dbo_01">Update Ses</sys:String>
+    <sys:String x:Key="dbo_01_t">Update Available Set List</sys:String>
+    <sys:String x:Key="dbo_02">Update Cards</sys:String>
+    <sys:String x:Key="dbo_02_t">Update Checked Cards</sys:String>
+    <sys:String x:Key="dbo_03">Image</sys:String>
+    <sys:String x:Key="dbo_03_t">Download Original English Image</sys:String>
+    <sys:String x:Key="dbo_04">zImage</sys:String>
+    <sys:String x:Key="dbo_04_t">Download Custom Language Image</sys:String>
+    <sys:String x:Key="dbo_05">Load Cards</sys:String>
+    <sys:String x:Key="dbo_05_t">Load All Local Cards</sys:String>
+    <sys:String x:Key="dbo_06">Cancel</sys:String>
+    <sys:String x:Key="dbo_06_t">Cancel Current Processing</sys:String>
 </ResourceDictionary>
