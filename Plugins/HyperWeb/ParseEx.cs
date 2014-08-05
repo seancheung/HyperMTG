@@ -14,7 +14,7 @@ namespace HyperPlugin.Web
 			ParseMana(card);
 			ParseColor(card);
 			ParseType(card);
-			//ParseRarity(card);
+			ParseRarity(card);
 			ParseCharacters(card);
 			RemoveEmptyProp(card);
 		}
@@ -71,14 +71,14 @@ namespace HyperPlugin.Web
 			{
 				card.RarityCode = "R";
 			}
-			else if (card.Rarity.Contains("Special"))
-			{
-				card.RarityCode = "S";
-			}
-			else if (card.Rarity.Contains("Basic"))
-			{
-				card.RarityCode = "B";
-			}
+			//else if (card.Rarity.Contains("Special"))
+			//{
+			//	card.RarityCode = "S";
+			//}
+			//else if (card.Rarity.Contains("Basic"))
+			//{
+			//	card.RarityCode = "B";
+			//}
 		}
 
 		private void ParseType(Card card)

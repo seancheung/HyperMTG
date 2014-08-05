@@ -56,6 +56,17 @@
                                   Command="{Binding CancelCommand}"
                                   Content="{DynamicResource dbo_06}"
                                   ToolTip="{DynamicResource dbo_06_t}" />
+                <Border>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox Name="TestTextBox" MinWidth="100"
+                                 Margin="2,0" />
+                        <Button Margin="2,0"
+                                Command="{Binding TestCommand}"
+                                CommandParameter="{Binding ElementName=TestTextBox,
+                                                           Path=Text}"
+                                Content="Test" />
+                    </StackPanel>
+                </Border>
             </StackPanel>
             <ListBox Grid.Row="1" Grid.Column="0"
                      ItemsSource="{Binding Sets}">

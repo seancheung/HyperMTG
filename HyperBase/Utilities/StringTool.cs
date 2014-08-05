@@ -146,7 +146,7 @@ namespace HyperKore.Utilities
 			text = Regex.Replace(text, @"(?<={)Red|Red(?=})", "R", RegexOptions.IgnoreCase);
 			text = Regex.Replace(text, @"(?<={)White|White(?=})", "W", RegexOptions.IgnoreCase);
 			text = Regex.Replace(text, @"(?<={)Tap|Tap(?=})", "T", RegexOptions.IgnoreCase);
-			text = Regex.Replace(text, @"(?<={[^}]*)\s*or\s*(?=[^{]*})|/|\|", "", RegexOptions.IgnoreCase);
+			text = Regex.Replace(text, @"(?<={[^}]*)\s+or\s+|/|\|(?=[^{]*})", "", RegexOptions.IgnoreCase);
 
 			return text;
 		}

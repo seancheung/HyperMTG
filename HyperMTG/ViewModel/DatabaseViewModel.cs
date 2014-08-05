@@ -183,9 +183,19 @@ namespace HyperMTG.ViewModel
 			get { return new RelayCommand(LoadCardsExecute, CanExecuteLoadCards); }
 		}
 
+		public ICommand TestCommand
+		{
+			get { return new RelayCommand<string>(TestExecute, CanExecuteTest); }
+		}
+
 		#endregion
 
 		#region Execute
+
+		private void TestExecute(string id)
+		{
+			_dataParse.Process(new Card {ID = id,Set = "DarkAscen",SetCode = "DKA"}, LANGUAGE.ChineseSimplified);
+		}
 
 		private void CancelExecute()
 		{
@@ -400,6 +410,11 @@ namespace HyperMTG.ViewModel
 		#endregion
 
 		#region CanExecute
+
+		private bool CanExecuteTest(string id)
+		{
+			return !string.IsNullOrWhiteSpace(id) && _processCount == 0;
+		}
 
 		private bool CanExecuteCancel()
 		{
