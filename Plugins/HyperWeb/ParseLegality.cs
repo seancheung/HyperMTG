@@ -19,7 +19,7 @@ namespace HyperPlugin.Web
 
 		#region ICardParse Members
 
-		public void Parse(Card card, LANGUAGE lang)
+		public void Parse(ref Card card, LANGUAGE lang)
 		{
 			string webdata = request.GetWebData(BuildURL(card.ID));
 

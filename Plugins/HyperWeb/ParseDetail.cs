@@ -21,7 +21,7 @@ namespace HyperPlugin.Web
 
 		#region ICardParse Members
 
-		public void Parse(Card card, LANGUAGE lang)
+		public void Parse(ref Card card, LANGUAGE lang)
 		{
 			string webdata = request.GetWebData(BuildURL(card.ID));
 
@@ -84,6 +84,7 @@ namespace HyperPlugin.Web
 						webdata.IndexOf("multiverseid=", webdata.LastIndexOf("<img src=\"../../Handlers/Image.ashx?multiverseid=")) + 13;
 					int num26 = webdata.IndexOf("&amp", num25);
 					string text4 = webdata.Substring(num25, num26 - num25).Trim();
+
 					if (text4 == card.ID)
 					{
 						card = null;

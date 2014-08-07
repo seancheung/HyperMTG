@@ -145,7 +145,7 @@ namespace HyperPlugin.Web
 		{
 			foreach (ICardParse p in parse)
 			{
-				p.Parse(card, lang);
+				p.Parse(ref card, lang);
 				if (card == null) return false;
 			}
 

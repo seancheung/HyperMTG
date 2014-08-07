@@ -9,6 +9,6 @@ namespace HyperPlugin.Web
 		/// </summary>
 		/// <param name="card"></param>
 		/// <param name="lang"></param>
-		void Parse(Card card, LANGUAGE lang);
+		void Parse(ref Card card, LANGUAGE lang);
 	}
 }
