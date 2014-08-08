@@ -11,10 +11,10 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Resources/3D/MeshGeometry3DResources.xaml" />
-                <ResourceDictionary Source="../Resources/3D/Transform3DResources.xaml" />
-                <ResourceDictionary Source="../Resources/3D/MaterialResources.xaml" />
-                <ResourceDictionary Source="../Resources/3D/Other3DResources.xaml" />
+                <ResourceDictionary Source="/Resources/3D/MeshGeometry3DResources.xaml" />
+                <ResourceDictionary Source="/Resources/3D/Transform3DResources.xaml" />
+                <ResourceDictionary Source="/Resources/3D/MaterialResources.xaml" />
+                <ResourceDictionary Source="/Resources/3D/Other3DResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>

@@ -22,7 +22,7 @@
         </mui:LinkGroup>
         <mui:LinkGroup DisplayName="{StaticResource mw_03}">
             <mui:LinkGroup.Links>
-                <mui:Link DisplayName="{StaticResource mw_03_01}" Source="/Pages/Gallary.xaml" />
+                <mui:Link DisplayName="{StaticResource mw_03_01}" Source="/Pages/Collection/Gallary.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
         <mui:LinkGroup DisplayName="{StaticResource mw_04}">
@@ -36,7 +36,7 @@
 
     <mui:ModernWindow.TitleLinks>
         <mui:Link DisplayName="{StaticResource mw_05}" Source="/Pages/Settings/Settings.xaml" />
-        <mui:Link DisplayName="{StaticResource mw_06}" Source="/Pages/Help.xaml" />
+        <mui:Link DisplayName="{StaticResource mw_06}" Source="/Pages/Help/Help.xaml" />
     </mui:ModernWindow.TitleLinks>
 
 </mui:ModernWindow>

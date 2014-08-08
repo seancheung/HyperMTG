@@ -172,11 +172,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\Gallary.xaml">
+    <Page Include="Pages\Collection\Gallary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\Help.xaml">
+    <Page Include="Pages\Help\Help.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -194,10 +194,10 @@
     <Compile Include="Pages\DeckBuilder\Filter.xaml.cs">
       <DependentUpon>Filter.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Gallary.xaml.cs">
+    <Compile Include="Pages\Collection\Gallary.xaml.cs">
       <DependentUpon>Gallary.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Help.xaml.cs">
+    <Compile Include="Pages\Help\Help.xaml.cs">
       <DependentUpon>Help.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Home.xaml.cs">

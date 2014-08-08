@@ -18,10 +18,11 @@
                               Cursor="Hand" IsCancel="True" />
         </Canvas>
         <mui:ModernTab Grid.Row="1" Layout="List"
-                       SelectedSource="SettingsAppearance.xaml">
+                       SelectedSource="/Pages/Settings/About.xaml">
             <mui:ModernTab.Links>
-                <mui:Link DisplayName="appearance" Source="SettingsAppearance.xaml" />
-                <mui:Link DisplayName="about" Source="About.xaml" />
+                <mui:Link DisplayName="appearance" Source="/Pages/Settings/SettingsAppearance.xaml" />
+                <mui:Link DisplayName="language" />
+                <mui:Link DisplayName="about" Source="/Pages/Settings/About.xaml" />
             </mui:ModernTab.Links>
         </mui:ModernTab>
 
