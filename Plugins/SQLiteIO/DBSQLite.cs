@@ -17,27 +17,44 @@ namespace SQLiteIO
 			"CREATE TABLE IF NOT EXISTS 'Set'('SetName' TEXT NOT NULL,'SetCode' TEXT,'LastUpdate' TEXT,'Local' INTEGER,PRIMARY KEY('SetName'));" +
 			"CREATE TABLE IF NOT EXISTS 'File'('id' TEXT NOT NULL,'data' BLOB,'length' INTEGER,PRIMARY KEY('id'))";
 
-		private const string ConnString = "data source=DATA.db;password=5AEB55D5-F169-4EB2-A768-B20EBD20151E";
+		private readonly SQLiteConnectionStringBuilder _connectionStringBuilder = new SQLiteConnectionStringBuilder();
+		//private const string ConnString = "data source=DATA.db;password=5AEB55D5-F169-4EB2-A768-B20EBD20151E";
 
 		/// <summary>
 		///     Single instance of SQLiteConnection
 		/// </summary>
-		private readonly SQLiteConnection conn = new SQLiteConnection();
+		private readonly SQLiteConnection _conn = new SQLiteConnection();
 
-		/// <summary>
-		///     Initializes a new instance of the SQLiteIO class.
-		/// </summary>
 		public DBSQLite()
 		{
-			conn.ConnectionString = ConnString;
 			Create();
 		}
+
+		private LANGUAGE _language;
 
 		#region IDBReader Members
 
 		public string DBType
 		{
 			get { return "SQLite"; }
+		}
+
+		/// <summary>
+		/// Language of the database
+		/// </summary>
+		public LANGUAGE Language
+		{
+			get { return _language; }
+			set
+			{
+				//If language is changed, switch database
+				if (_language != value)
+				{
+					_language = value;
+					Create();
+				}
+				
+			}
 		}
 
 		public string Description
@@ -55,7 +72,7 @@ namespace SQLiteIO
 			//use lock(this) for singleton class
 			lock (this)
 			{
-				using (var datacontext = new DataContext(conn))
+				using (var datacontext = new DataContext(_conn))
 				{
 					Table<Card> tab = datacontext.GetTable<Card>();
 					return tab.ToList();
@@ -67,7 +84,7 @@ namespace SQLiteIO
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(conn))
+				using (var datacontext = new DataContext(_conn))
 				{
 					Table<Bin> tab = datacontext.GetTable<Bin>();
 					Bin[] datas = tab.Where(i => i.ID == id).ToArray();
@@ -86,7 +103,7 @@ namespace SQLiteIO
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(conn))
+				using (var datacontext = new DataContext(_conn))
 				{
 					Table<Set> tab = datacontext.GetTable<Set>();
 					return tab.ToList();
@@ -102,7 +119,7 @@ namespace SQLiteIO
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(conn))
+				using (var datacontext = new DataContext(_conn))
 				{
 					Table<Card> tab = datacontext.GetTable<Card>();
 					IQueryable<Card> que = tab.Where(c => c.ID == card.ID);
@@ -124,7 +141,7 @@ namespace SQLiteIO
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(conn))
+				using (var datacontext = new DataContext(_conn))
 				{
 					Table<Bin> tab = datacontext.GetTable<Bin>();
 					IQueryable<Bin> que = tab.Where(i => i.ID == id);
@@ -146,7 +163,7 @@ namespace SQLiteIO
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(conn))
+				using (var datacontext = new DataContext(_conn))
 				{
 					Table<Card> tab = datacontext.GetTable<Card>();
 					IQueryable<Card> que = tab.Where(c => c.ID == card.ID);
@@ -172,7 +189,7 @@ namespace SQLiteIO
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(conn))
+				using (var datacontext = new DataContext(_conn))
 				{
 					Table<Card> tab = datacontext.GetTable<Card>();
 
@@ -201,7 +218,7 @@ namespace SQLiteIO
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(conn))
+				using (var datacontext = new DataContext(_conn))
 				{
 					Table<Set> tab = datacontext.GetTable<Set>();
 					foreach (Set set in sets)
@@ -220,7 +237,7 @@ namespace SQLiteIO
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(conn))
+				using (var datacontext = new DataContext(_conn))
 				{
 					Table<Bin> tab = datacontext.GetTable<Bin>();
 					byte[] compdata = compressor == null ? data : compressor.Compress(data);
@@ -241,7 +258,7 @@ namespace SQLiteIO
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(conn))
+				using (var datacontext = new DataContext(_conn))
 				{
 					Table<Card> tab = datacontext.GetTable<Card>();
 					IQueryable<Card> que = tab.Where(c => c.ID == card.ID);
@@ -265,7 +282,7 @@ namespace SQLiteIO
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(conn))
+				using (var datacontext = new DataContext(_conn))
 				{
 					Table<Bin> tab = datacontext.GetTable<Bin>();
 					byte[] compdata = compressor == null ? data : compressor.Compress(data);
@@ -291,7 +308,7 @@ namespace SQLiteIO
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(conn))
+				using (var datacontext = new DataContext(_conn))
 				{
 					Table<Set> tab = datacontext.GetTable<Set>();
 					IQueryable<Set> que = tab.Where(c => c.SetName == set.SetName);
@@ -319,7 +336,7 @@ namespace SQLiteIO
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(conn))
+				using (var datacontext = new DataContext(_conn))
 				{
 					Table<Set> tab = datacontext.GetTable<Set>();
 					if (tab.Any())
@@ -336,7 +353,11 @@ namespace SQLiteIO
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(conn))
+				_connectionStringBuilder.DataSource = string.Format("datasource.{0}.db", Language.GetLangCode());
+				_connectionStringBuilder.Password = "5AEB55D5-F169-4EB2-A768-B20EBD20151E";
+				_conn.ConnectionString = _connectionStringBuilder.ConnectionString;
+
+				using (var datacontext = new DataContext(_conn))
 				{
 					datacontext.ExecuteCommand(BuildCmd);
 				}

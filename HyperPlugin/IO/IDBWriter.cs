@@ -11,6 +11,11 @@ namespace HyperPlugin
 		string DBType { get; }
 
 		/// <summary>
+		/// Language of the database
+		/// </summary>
+		LANGUAGE Language { get; set; }
+
+		/// <summary>
 		///     Dlete card
 		/// </summary>
 		/// <param name="card"></param>

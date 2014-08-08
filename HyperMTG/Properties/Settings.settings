@@ -2,8 +2,8 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="HyperMTG.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="DefaultCulture" Type="System.Globalization.CultureInfo" Scope="User">
-      <Value Profile="(Default)">en-US</Value>
+    <Setting Name="Language" Type="HyperKore.Common.LANGUAGE" Scope="User">
+      <Value Profile="(Default)">ChineseSimplified</Value>
     </Setting>
   </Settings>
 </SettingsFile>

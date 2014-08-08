@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Media3D;
@@ -8,12 +7,12 @@ using System.Windows.Media.Media3D;
 namespace HyperMTG.Pages
 {
 	/// <summary>
-	/// Interaction logic for Gallary.xaml
+	///     Interaction logic for Gallary.xaml
 	/// </summary>
 	public partial class Gallary
 	{
 		/// <summary>
-		/// Represents whether the book is open or not.
+		///     Represents whether the book is open or not.
 		/// </summary>
 		private bool IsBookOpen;
 
@@ -23,14 +22,14 @@ namespace HyperMTG.Pages
 		}
 
 		/// <summary>
-		/// Opens the 3D book.
+		///     Opens the 3D book.
 		/// </summary>
 		/// <param name="durationSeconds">Time in seconds that the animation will take.</param>
 		private void OpenBook(double durationSeconds)
 		{
 			// Transform3D_LeftRotation
-			RotateTransform3D rot = (RotateTransform3D) TryFindResource("Transform3D_LeftRotation");
-			DoubleAnimation da = new DoubleAnimation(15, new Duration(TimeSpan.FromSeconds(durationSeconds)));
+			var rot = (RotateTransform3D) TryFindResource("Transform3D_LeftRotation");
+			var da = new DoubleAnimation(15, new Duration(TimeSpan.FromSeconds(durationSeconds)));
 			da.DecelerationRatio = 1;
 			rot.Rotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, da);
 
@@ -45,12 +44,12 @@ namespace HyperMTG.Pages
 			rot.Rotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, da);
 
 			// Transform3D_SpineCoverTranslation
-			TranslateTransform3D trans = (TranslateTransform3D) TryFindResource("Transform3D_SpineCoverTranslation");
+			var trans = (TranslateTransform3D) TryFindResource("Transform3D_SpineCoverTranslation");
 			da = new DoubleAnimation(0, new Duration(TimeSpan.FromSeconds(0.8333*durationSeconds)));
 			trans.BeginAnimation(TranslateTransform3D.OffsetXProperty, da);
 
 			// _Main3D.Camera
-			Point3DAnimation pa = new Point3DAnimation(new Point3D(0, -2.5, 6.5),
+			var pa = new Point3DAnimation(new Point3D(0, -2.5, 6.5),
 				new Duration(TimeSpan.FromSeconds(durationSeconds)));
 			pa.AccelerationRatio = 0.5;
 			pa.DecelerationRatio = 0.5;
@@ -61,14 +60,14 @@ namespace HyperMTG.Pages
 		}
 
 		/// <summary>
-		/// Closes the 3D book.
+		///     Closes the 3D book.
 		/// </summary>
 		/// <param name="durationSeconds">Time in seconds that the animation will take.</param>
 		private void CloseBook(double durationSeconds)
 		{
 			// Transform3D_LeftRotation
-			RotateTransform3D rot = (RotateTransform3D) TryFindResource("Transform3D_LeftRotation");
-			DoubleAnimation da = new DoubleAnimation(180, new Duration(TimeSpan.FromSeconds(durationSeconds)));
+			var rot = (RotateTransform3D) TryFindResource("Transform3D_LeftRotation");
+			var da = new DoubleAnimation(180, new Duration(TimeSpan.FromSeconds(durationSeconds)));
 			da.DecelerationRatio = 1;
 			rot.Rotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, da);
 
@@ -83,12 +82,12 @@ namespace HyperMTG.Pages
 			rot.Rotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, da);
 
 			// Transform3D_SpineCoverTranslation
-			TranslateTransform3D trans = (TranslateTransform3D) TryFindResource("Transform3D_SpineCoverTranslation");
+			var trans = (TranslateTransform3D) TryFindResource("Transform3D_SpineCoverTranslation");
 			da = new DoubleAnimation(-0.125, new Duration(TimeSpan.FromSeconds(0.8333*durationSeconds)));
 			trans.BeginAnimation(TranslateTransform3D.OffsetXProperty, da);
 
 			// _Main3D.Camera
-			Point3DAnimation pa = new Point3DAnimation(new Point3D(0.72, -2.5, 6.5),
+			var pa = new Point3DAnimation(new Point3D(0.72, -2.5, 6.5),
 				new Duration(TimeSpan.FromSeconds(durationSeconds)));
 			pa.AccelerationRatio = 0.5;
 			pa.DecelerationRatio = 0.5;
@@ -103,7 +102,7 @@ namespace HyperMTG.Pages
 			CloseBook(0); // Book starts closed
 
 			// Make book fade in
-			DoubleAnimation da = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromSeconds(2)));
+			var da = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromSeconds(2)));
 			da.DecelerationRatio = 1;
 			_Main3D.BeginAnimation(OpacityProperty, da);
 		}

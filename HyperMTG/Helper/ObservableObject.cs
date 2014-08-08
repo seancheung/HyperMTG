@@ -16,7 +16,7 @@ namespace HyperMTG.Helper
 
 		protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
 		{
-			var handler = this.PropertyChanged;
+			var handler = PropertyChanged;
 			if (handler != null)
 			{
 				handler(this, e);
@@ -27,7 +27,7 @@ namespace HyperMTG.Helper
 		protected void RaisePropertyChanged<T>(Expression<Func<T>> propertyExpresssion)
 		{
 			var propertyName = PropertySupport.ExtractPropertyName(propertyExpresssion);
-			this.RaisePropertyChanged(propertyName);
+			RaisePropertyChanged(propertyName);
 		}
 
 		protected void RaisePropertyChanged(string propertyName)

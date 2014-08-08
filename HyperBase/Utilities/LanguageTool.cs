@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using HyperKore.Common;
+﻿using HyperKore.Common;
 
 namespace HyperKore.Utilities
 {
@@ -60,6 +58,45 @@ namespace HyperKore.Utilities
 					return "Chinese Traditional";
 				default:
 					return lang.ToString();
+			}
+		}
+
+		public static LANGUAGE GetLangugeByCode(string code)
+		{
+			switch (code)
+			{
+				case "cn":
+					return LANGUAGE.ChineseSimplified;
+
+				case "tw":
+					return LANGUAGE.ChineseTraditional;
+
+				case "ge":
+					return LANGUAGE.German;
+
+				case "fr":
+					return LANGUAGE.French;
+
+				case "it":
+					return LANGUAGE.Italian;
+
+				case "jp":
+					return LANGUAGE.Japanese;
+
+				case "ko":
+					return LANGUAGE.Korean;
+
+				case "pt":
+					return LANGUAGE.Portuguese;
+
+				case "ru":
+					return LANGUAGE.Russian;
+
+				case "sp":
+					return LANGUAGE.Spanish;
+
+				default:
+					return LANGUAGE.English;
 			}
 		}
 	}

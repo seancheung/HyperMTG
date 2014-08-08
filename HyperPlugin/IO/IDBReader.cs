@@ -11,6 +11,11 @@ namespace HyperPlugin
 		string DBType { get; }
 
 		/// <summary>
+		/// Language of the database
+		/// </summary>
+		LANGUAGE Language { get; set; }
+
+		/// <summary>
 		///     Load cards
 		/// </summary>
 		/// <returns></returns>

@@ -76,7 +76,10 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Image Margin="10" Source="{Binding Image, IsAsync=True}" />
+                                            <Image Margin="10"
+                                                   Source="{Binding Image,
+                                                                    IsAsync=True}"
+                                                   ToolTip="{Binding Card.Name}" />
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>

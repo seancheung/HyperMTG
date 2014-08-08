@@ -25,6 +25,7 @@
 
 	public enum LANGUAGE
 	{
+		English,
 		ChineseSimplified,
 		ChineseTraditional,
 		German,
@@ -34,8 +35,7 @@
 		Korean,
 		Portuguese,
 		Russian,
-		Spanish,
-		English
+		Spanish
 	}
 
 	public enum MODE

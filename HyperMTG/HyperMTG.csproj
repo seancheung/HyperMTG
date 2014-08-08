@@ -87,7 +87,7 @@
     <Compile Include="Content\DatabaseOfficial.xaml.cs">
       <DependentUpon>DatabaseOfficial.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Cultures\CultureManager.cs" />
+    <Compile Include="Langs\LanguageManager.cs" />
     <Compile Include="Helper\FontConverter.cs" />
     <Compile Include="Helper\ColumnObject.cs" />
     <Compile Include="Helper\CommandReference.cs" />
@@ -218,7 +218,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Content Include="Cultures\lang.en.xaml">
+    <Content Include="Langs\lang.en.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

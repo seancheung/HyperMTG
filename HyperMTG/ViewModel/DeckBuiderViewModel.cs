@@ -4,6 +4,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using HyperKore.Common;
 using HyperMTG.Helper;
+using HyperMTG.Properties;
 using HyperPlugin;
 
 namespace HyperMTG.ViewModel
@@ -19,6 +20,8 @@ namespace HyperMTG.ViewModel
 		///     UI dispatcher(to handle ObservableCollection)
 		/// </summary>
 		private readonly Dispatcher _dispatcher;
+
+		private readonly IImageParse _imageParse;
 
 		private ExCard _card;
 
@@ -37,13 +40,20 @@ namespace HyperMTG.ViewModel
 			_dbReader = PluginManager.Instance.GetPlugin<IDBReader>();
 			_dbWriter = PluginManager.Instance.GetPlugin<IDBWriter>();
 			_compressor = PluginManager.Instance.GetPlugin<ICompressor>();
+			_imageParse = PluginManager.Instance.GetPlugin<IImageParse>();
+
+			if (_dbWriter != null && _dbReader != null)
+			{
+				_dbWriter.Language = Settings.Default.Language;
+				_dbReader.Language = Settings.Default.Language;
+			}
 
 			_dispatcher = Application.Current.Dispatcher;
 
 			if (_dbReader != null) Cards = new ObservableCollection<Card>(_dbReader.LoadCards());
 			else Info = "Assemblly Missing";
 
-			SelectedCard = new ExCard(_dbReader, _compressor);
+			SelectedCard = new ExCard(_dbReader, _compressor, _dbWriter, _imageParse);
 		}
 
 		public ExCard SelectedCard
@@ -185,18 +195,24 @@ namespace HyperMTG.ViewModel
 	{
 		private readonly ICompressor _compressor;
 		private readonly IDBReader _dbReader;
+		private readonly IDBWriter _dbWriter;
+		private readonly IImageParse _imageParse;
 		private Card _card;
 
-		public ExCard(IDBReader dbReader, ICompressor compressor)
+		public ExCard(IDBReader dbReader, ICompressor compressor, IDBWriter dbWriter, IImageParse imageParse)
 		{
 			_dbReader = dbReader;
 			_compressor = compressor;
+			_dbWriter = dbWriter;
+			_imageParse = imageParse;
 		}
 
-		public ExCard(ICompressor compressor, IDBReader dbReader, Card card)
+		public ExCard(ICompressor compressor, IDBReader dbReader, Card card, IDBWriter dbWriter, IImageParse imageParse)
 		{
 			_compressor = compressor;
 			_dbReader = dbReader;
+			_dbWriter = dbWriter;
+			_imageParse = imageParse;
 			_card = card;
 		}
 
@@ -219,9 +235,23 @@ namespace HyperMTG.ViewModel
 		{
 			get
 			{
-				return Card != null && _dbReader != null && _compressor != null ? _dbReader.LoadFile(Card.ID, _compressor) : null;
+				if (Card == null || _compressor == null || _dbReader == null)
+					return null;
+				byte[] data = _dbReader.LoadFile(Card.ID, _compressor);
+				if (data != null)
+					return data;
+
+				if (_dbWriter == null || _imageParse == null) return null;
+
+				lock (Card)
+				{
+					data = _imageParse.Download(Card, Settings.Default.Language);
+					if (data != null)
+						_dbWriter.Insert(Card.ID, data, _compressor);
+				}
+
+				return data;
 			}
 		}
-
 	}
 }

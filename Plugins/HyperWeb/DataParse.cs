@@ -124,7 +124,7 @@ namespace HyperPlugin.Web
 				HtmlNode[] spans = td.CssSelect("span").ToArray();
 				card.Name = spans[0].InnerText.Trim();
 				var id = spans[0].CssSelect("a").First().Attributes["href"].Value.Replace(".html", "");
-				card.ID = Regex.Replace(id, @"^/|\.html$", "",RegexOptions.IgnoreCase);
+				id = Regex.Replace(id, @"^/|\.html$", "",RegexOptions.IgnoreCase);
 
 				HtmlNode[] ps = td.CssSelect("p").ToArray();
 				card.Rarity = ps[0].InnerText.Split(',')[1].Trim();
@@ -155,7 +155,9 @@ namespace HyperPlugin.Web
 				card.Text = ps[2].InnerHtml.RemoveHtmlTag();
 				card.Flavor = ps[3].InnerHtml.RemoveHtmlTag();
 				card.Artist = ps[4].InnerText.Trim();
-				card.Number = Regex.Match(card.ID, @"(?<=/)\w+\z").Value;
+				card.Number = Regex.Match(id, @"(?<=/)\w+\z").Value;
+
+				card.ID = string.Format("{0}#{1}", card.SetCode, card.Number);
 
 				yield return card;
 			}

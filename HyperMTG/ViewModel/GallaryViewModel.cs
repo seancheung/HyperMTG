@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using HyperMTG.Helper;
+using HyperMTG.Properties;
 using HyperPlugin;
 
 namespace HyperMTG.ViewModel
@@ -12,6 +13,8 @@ namespace HyperMTG.ViewModel
 	{
 		private readonly ICompressor _compressor;
 		private readonly IDBReader _dbReader;
+		private readonly IDBWriter _dbWriter;
+		private readonly IImageParse _imageParse;
 		private ObservableCollection<ExCard> cards;
 		private PageSize size;
 		/// <summary>
@@ -23,7 +26,16 @@ namespace HyperMTG.ViewModel
 		{
 			_dbReader = PluginManager.Instance.GetPlugin<IDBReader>();
 			_compressor = PluginManager.Instance.GetPlugin<ICompressor>();
+			_dbWriter = PluginManager.Instance.GetPlugin<IDBWriter>();
+			_imageParse = PluginManager.Instance.GetPlugin<IImageParse>();
+			if (_dbWriter != null && _dbReader != null)
+			{
+				_dbWriter.Language = Settings.Default.Language;
+				_dbReader.Language = Settings.Default.Language;
+			}
+
 			_dispatcher = Application.Current.Dispatcher;
+
 			Size = new PageSize();
 			Size.SetRatio(0.5);
 
@@ -35,7 +47,7 @@ namespace HyperMTG.ViewModel
 			Cards = new ObservableCollection<ExCard>();
 			foreach (var card in _dbReader.LoadCards().Take(10))
 			{
-				Cards.Add(new ExCard(_compressor, _dbReader, card));
+				Cards.Add(new ExCard(_compressor, _dbReader, card,_dbWriter, _imageParse));
 			}
 		}
 
