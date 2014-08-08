@@ -1,22 +1,135 @@
-﻿using HyperPlugin;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
+using System.Windows.Threading;
+using HyperMTG.Helper;
+using HyperPlugin;
 
 namespace HyperMTG.ViewModel
 {
-	public class GallaryViewModel
+	public class GallaryViewModel : ObservableObject
 	{
 		private readonly ICompressor _compressor;
-
 		private readonly IDBReader _dbReader;
+		private ObservableCollection<ExCard> cards;
+		private PageSize size;
+		/// <summary>
+		///     UI dispatcher(to handle ObservableCollection)
+		/// </summary>
+		private readonly Dispatcher _dispatcher;
 
 		public GallaryViewModel()
 		{
 			_dbReader = PluginManager.Instance.GetPlugin<IDBReader>();
 			_compressor = PluginManager.Instance.GetPlugin<ICompressor>();
+			_dispatcher = Application.Current.Dispatcher;
+			Size = new PageSize();
+			Size.SetRatio(0.5);
+
+			_dispatcher.BeginInvoke(new Action(LoadData));
 		}
 
-		public byte[] Image
+		private void LoadData()
 		{
-			get { return _dbReader != null && _compressor != null ? _dbReader.LoadFile("jou/en/1", _compressor) : null; }
+			Cards = new ObservableCollection<ExCard>();
+			foreach (var card in _dbReader.LoadCards().Take(10))
+			{
+				Cards.Add(new ExCard(_compressor, _dbReader, card));
+			}
+		}
+
+		public PageSize Size
+		{
+			get { return size; }
+			set
+			{
+				size = value;
+				RaisePropertyChanged("Size");
+			}
+		}
+
+		public ObservableCollection<ExCard> Cards
+		{
+			get { return cards; }
+			set
+			{
+				cards = value;
+				RaisePropertyChanged("Cards");
+			}
+		}
+	}
+
+	public class PageSize : ObservableObject
+	{
+		private double itemHeight;
+		private double itemWidth;
+		private double pageHeight;
+		private double pageWidth;
+
+		public PageSize()
+		{
+			ItemWidth = 312;
+			ItemHeight = 445;
+			PageWidth = 936;
+			PageHeight = 1335;
+		}
+
+		public double ItemWidth
+		{
+			get { return itemWidth; }
+			set
+			{
+				itemWidth = value;
+				RaisePropertyChanged("ItemWidth");
+			}
+		}
+
+		public double ItemHeight
+		{
+			get { return itemHeight; }
+			set
+			{
+				itemHeight = value;
+				RaisePropertyChanged("ItemHeight");
+			}
+		}
+
+		public double PageWidth
+		{
+			get { return pageWidth; }
+			set
+			{
+				pageWidth = value;
+				RaisePropertyChanged("PageWidth");
+			}
+		}
+
+		public double PageHeight
+		{
+			get { return pageHeight; }
+			set
+			{
+				pageHeight = value;
+				RaisePropertyChanged("PageHeight");
+			}
+		}
+
+		/// <summary>
+		/// Set display ratio (0.0 ~ 1.0)
+		/// </summary>
+		/// <param name="ratio"></param>
+		public void SetRatio(double ratio)
+		{
+			if (ratio < 0 || ratio > 1)
+			{
+				return;
+			}
+
+			ItemHeight *= ratio;
+			ItemWidth *= ratio;
+			PageHeight *= ratio;
+			PageWidth *= ratio;
 		}
 	}
 }

@@ -181,7 +181,7 @@ namespace HyperMTG.ViewModel
 		#endregion
 	}
 
-	internal class ExCard : ObservableObject
+	public class ExCard : ObservableObject
 	{
 		private readonly ICompressor _compressor;
 		private readonly IDBReader _dbReader;
@@ -191,6 +191,13 @@ namespace HyperMTG.ViewModel
 		{
 			_dbReader = dbReader;
 			_compressor = compressor;
+		}
+
+		public ExCard(ICompressor compressor, IDBReader dbReader, Card card)
+		{
+			_compressor = compressor;
+			_dbReader = dbReader;
+			_card = card;
 		}
 
 		public ExCard()

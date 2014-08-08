@@ -4,75 +4,116 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             xmlns:tools="clr-namespace:_3DTools;assembly=3DTools"
              xmlns:vm="clr-namespace:HyperMTG.ViewModel"
-             d:DesignHeight="300" d:DesignWidth="300"
-             mc:Ignorable="d">
+             Loaded="Gallary_OnLoaded" d:DesignHeight="300"
+             d:DesignWidth="300" mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/3D/MeshGeometry3DResources.xaml" />
+                <ResourceDictionary Source="../Resources/3D/Transform3DResources.xaml" />
+                <ResourceDictionary Source="../Resources/3D/MaterialResources.xaml" />
+                <ResourceDictionary Source="../Resources/3D/Other3DResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <UserControl.DataContext>
         <vm:GallaryViewModel />
     </UserControl.DataContext>
     <Grid Style="{StaticResource ContentRoot}">
-        <Viewport3D ClipToBounds="True">
-            <Viewport3D.Camera>
-                <PerspectiveCamera FieldOfView="90" LookDirection="0,0,-1"
-                                   Position="0,0,3" />
-            </Viewport3D.Camera>
-            <Viewport3D.Children>
-                <ModelVisual3D>
-                    <ModelVisual3D.Content>
-                        <DirectionalLight Direction="-0.612372,-0.5,-0.612372" Color="White" />
-                    </ModelVisual3D.Content>
-                </ModelVisual3D>
-                <ModelVisual3D>
-                    <ModelVisual3D.Content>
-                        <GeometryModel3D>
-                            <GeometryModel3D.Material>
-                                <DiffuseMaterial>
-                                    <DiffuseMaterial.Brush>
-                                        <ImageBrush ImageSource="{Binding Image, IsAsync=True}" />
-                                    </DiffuseMaterial.Brush>
-                                </DiffuseMaterial>
-                            </GeometryModel3D.Material>
-                            <GeometryModel3D.Geometry>
-                                <MeshGeometry3D Positions="-1,1.4,0 -1,-1.4,0 1,-1.4,0 1,1.4,0"
-                                                TextureCoordinates="0,0 0,1 1,1 1,0"
-                                                TriangleIndices="0 1 2, 0 2 3" />
-                            </GeometryModel3D.Geometry>
-                        </GeometryModel3D>
-                    </ModelVisual3D.Content>
-                    <ModelVisual3D.Transform>
-                        <RotateTransform3D>
-                            <RotateTransform3D.Rotation>
-                                <AxisAngleRotation3D Angle="30" Axis="0 1 0" />
-                            </RotateTransform3D.Rotation>
-                        </RotateTransform3D>
-                    </ModelVisual3D.Transform>
-                </ModelVisual3D>
-                <ModelVisual3D>
-                    <ModelVisual3D.Content>
-                        <GeometryModel3D>
-                            <GeometryModel3D.Material>
-                                <DiffuseMaterial>
-                                    <DiffuseMaterial.Brush>
-                                        <ImageBrush ImageSource="{Binding Image, IsAsync=True}" />
-                                    </DiffuseMaterial.Brush>
-                                </DiffuseMaterial>
-                            </GeometryModel3D.Material>
-                            <GeometryModel3D.Geometry>
-                                <MeshGeometry3D Positions="0,1.4,0 0,-1.4,0 2,-1.4,0 2,1.4,0"
-                                                TextureCoordinates="0,0 0,1 1,1 1,0"
-                                                TriangleIndices="0 1 2, 0 2 3" />
-                            </GeometryModel3D.Geometry>
-                        </GeometryModel3D>
-                    </ModelVisual3D.Content>
-                    <ModelVisual3D.Transform>
-                        <RotateTransform3D>
-                            <RotateTransform3D.Rotation>
-                                <AxisAngleRotation3D Angle="20" Axis="0 1 0" />
-                            </RotateTransform3D.Rotation>
-                        </RotateTransform3D>
-                    </ModelVisual3D.Transform>
-                </ModelVisual3D>
-            </Viewport3D.Children>
-        </Viewport3D>
+        <ScrollViewer>
+            <tools:TrackballDecorator>
+                <Viewport3D x:Name="_Main3D"
+                            Camera="{StaticResource Other3D_MainCamera}"
+                            ClipToBounds="False">
+                    <StaticResource ResourceKey="Other3D_Lights" />
+                    <ModelUIElement3D MouseDown="UIElement3D_OnMouseDown">
+                        <ModelUIElement3D.Model>
+                            <Model3DGroup>
+                                <GeometryModel3D x:Name="_FrontCover"
+                                                 Geometry="{StaticResource MeshGeometry3D_Cover}"
+                                                 Material="{StaticResource Material_FrontCover}"
+                                                 Transform="{StaticResource Transform3D_FrontCover}" />
+                                <GeometryModel3D x:Name="_BackCover"
+                                                 Geometry="{StaticResource MeshGeometry3D_Cover}"
+                                                 Material="{StaticResource Material_Cover}"
+                                                 Transform="{StaticResource Transform3D_BackCover}" />
+                                <GeometryModel3D x:Name="_SpineCover"
+                                                 Geometry="{StaticResource MeshGeometry3D_Cover}"
+                                                 Material="{StaticResource Material_Cover}"
+                                                 Transform="{StaticResource Transform3D_SpineCover}" />
+                                <GeometryModel3D x:Name="_LeftEdge"
+                                                 Geometry="{StaticResource MeshGeometry3D_Edge}"
+                                                 Material="{StaticResource Material_Edge}"
+                                                 Transform="{StaticResource Transform3D_Left}" />
+                                <GeometryModel3D x:Name="_RightEdge"
+                                                 Geometry="{StaticResource MeshGeometry3D_Edge}"
+                                                 Material="{StaticResource Material_Edge}"
+                                                 Transform="{StaticResource Transform3D_Right}" />
+                            </Model3DGroup>
+                        </ModelUIElement3D.Model>
+                    </ModelUIElement3D>
+
+                    <Viewport2DVisual3D x:Name="_LeftPage"
+                                        Geometry="{StaticResource MeshGeometry3D_Plane}"
+                                        Transform="{StaticResource Transform3D_Left}">
+                        <Viewport2DVisual3D.Material>
+                            <DiffuseMaterial Viewport2DVisual3D.IsVisualHostMaterial="True" />
+                        </Viewport2DVisual3D.Material>
+                        <Viewport2DVisual3D.Visual>
+                            <Viewbox>
+                                <ItemsControl ItemsSource="{Binding Cards}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Width="{Binding Size.PageWidth}"
+                                                       Height="{Binding Size.PageHeight}"
+                                                       Background="Bisque"
+                                                       ItemHeight="{Binding Size.ItemHeight}"
+                                                       ItemWidth="{Binding Size.ItemWidth}"
+                                                       Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Image Margin="10" Source="{Binding Image, IsAsync=True}" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Viewbox>
+                        </Viewport2DVisual3D.Visual>
+                    </Viewport2DVisual3D>
+
+                    <Viewport2DVisual3D x:Name="_RightPage"
+                                        Geometry="{StaticResource MeshGeometry3D_Plane}"
+                                        Transform="{StaticResource Transform3D_Right}">
+                        <Viewport2DVisual3D.Material>
+                            <DiffuseMaterial Viewport2DVisual3D.IsVisualHostMaterial="True" />
+                        </Viewport2DVisual3D.Material>
+                        <Viewport2DVisual3D.Visual>
+                            <Viewbox>
+                                <ItemsControl ItemsSource="{Binding Cards}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Width="{Binding Size.PageWidth}"
+                                                       Height="{Binding Size.PageHeight}"
+                                                       Background="Bisque"
+                                                       ItemHeight="{Binding Size.ItemHeight}"
+                                                       ItemWidth="{Binding Size.ItemWidth}"
+                                                       Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Image Margin="10" Source="{Binding Image, IsAsync=True}" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Viewbox>
+                        </Viewport2DVisual3D.Visual>
+                    </Viewport2DVisual3D>
+                </Viewport3D>
+            </tools:TrackballDecorator>
+        </ScrollViewer>
     </Grid>
 </UserControl>
