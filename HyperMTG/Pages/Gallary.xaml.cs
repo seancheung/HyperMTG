@@ -14,7 +14,7 @@ namespace HyperMTG.Pages
 		/// <summary>
 		///     Represents whether the book is open or not.
 		/// </summary>
-		private bool IsBookOpen;
+		private bool _isBookOpen;
 
 		public Gallary()
 		{
@@ -56,7 +56,7 @@ namespace HyperMTG.Pages
 			_Main3D.Camera.BeginAnimation(ProjectionCamera.PositionProperty, pa);
 
 			// Now the book is open.
-			IsBookOpen = true;
+			_isBookOpen = true;
 		}
 
 		/// <summary>
@@ -94,7 +94,7 @@ namespace HyperMTG.Pages
 			_Main3D.Camera.BeginAnimation(ProjectionCamera.PositionProperty, pa);
 
 			// Now the book is closed.
-			IsBookOpen = false;
+			_isBookOpen = false;
 		}
 
 		private void Gallary_OnLoaded(object sender, RoutedEventArgs e)
@@ -109,7 +109,7 @@ namespace HyperMTG.Pages
 
 		private void UIElement3D_OnMouseDown(object sender, MouseButtonEventArgs e)
 		{
-			if (IsBookOpen)
+			if (_isBookOpen)
 				CloseBook(1.5);
 			else
 				OpenBook(1.5);

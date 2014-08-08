@@ -1,6 +1,4 @@
-﻿using System.Windows.Controls;
-
-namespace HyperMTG.Pages
+﻿namespace HyperMTG.Pages
 {
 	/// <summary>
 	///     Interaction logic for Filter.xaml

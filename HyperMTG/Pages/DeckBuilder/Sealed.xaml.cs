@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace HyperMTG.Content
+namespace HyperMTG.Pages
 {
 	/// <summary>
-	/// Interaction logic for SettingsAppearance.xaml
+	/// Interaction logic for Sealed.xaml
 	/// </summary>
-	public partial class SettingsAppearance : UserControl
+	public partial class Sealed : UserControl
 	{
-		public SettingsAppearance()
+		public Sealed()
 		{
 			InitializeComponent();
 		}

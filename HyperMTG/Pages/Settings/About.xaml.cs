@@ -1,11 +1,11 @@
 ﻿namespace HyperMTG.Pages
 {
 	/// <summary>
-	///     Interaction logic for Help.xaml
+	///     Interaction logic for About.xaml
 	/// </summary>
-	public partial class Help
+	public partial class About
 	{
-		public Help()
+		public About()
 		{
 			InitializeComponent();
 		}

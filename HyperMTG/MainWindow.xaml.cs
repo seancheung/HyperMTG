@@ -1,4 +1,6 @@
-﻿namespace HyperMTG
+﻿using HyperMTG.Langs;
+
+namespace HyperMTG
 {
 	/// <summary>
 	///     Interaction logic for MainWindow.xaml
@@ -7,6 +9,7 @@
 	{
 		public MainWindow()
 		{
+			App.LanguageManager = new LanguageManager();
 			InitializeComponent();
 		}
 	}

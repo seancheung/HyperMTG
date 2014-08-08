@@ -7,33 +7,36 @@
                   LogoData="{StaticResource PlaneswalkerGeometry}">
 
     <mui:ModernWindow.MenuLinkGroups>
-        <mui:LinkGroup DisplayName="home">
+        <mui:LinkGroup DisplayName="{StaticResource mw_01}">
             <mui:LinkGroup.Links>
                 <mui:Link Source="/Pages/Home.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
-        <mui:LinkGroup DisplayName="deck">
+        <mui:LinkGroup DisplayName="{StaticResource mw_02}">
             <mui:LinkGroup.Links>
-                <mui:Link DisplayName="deck builder" Source="/Pages/DeckBuilder.xaml" />
-                <mui:Link DisplayName="filter" Source="/Pages/Filter.xaml" />
+                <mui:Link DisplayName="{StaticResource mw_02_01}" Source="/Pages/DeckBuilder/Constructed.xaml" />
+                <mui:Link DisplayName="{StaticResource mw_02_02}" Source="/Pages/DeckBuilder/Sealed.xaml" />
+                <mui:Link DisplayName="{StaticResource mw_02_03}" Source="/Pages/DeckBuilder/Draft.xaml" />
+                <mui:Link DisplayName="{StaticResource mw_02_04}" Source="/Pages/DeckBuilder/Filter.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
-        <mui:LinkGroup DisplayName="gallary">
+        <mui:LinkGroup DisplayName="{StaticResource mw_03}">
             <mui:LinkGroup.Links>
-                <mui:Link Source="/Pages/Gallary.xaml" />
+                <mui:Link DisplayName="{StaticResource mw_03_01}" Source="/Pages/Gallary.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
-        <mui:LinkGroup DisplayName="database">
+        <mui:LinkGroup DisplayName="{StaticResource mw_04}">
             <mui:LinkGroup.Links>
-                <mui:Link Source="/Pages/Database.xaml" />
+                <mui:Link DisplayName="{StaticResource mw_04_01}" Source="/Pages/Database/DatabaseOfficial.xaml" />
+                <mui:Link DisplayName="{StaticResource mw_04_02}" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
     </mui:ModernWindow.MenuLinkGroups>
 
 
     <mui:ModernWindow.TitleLinks>
-        <mui:Link DisplayName="settings" Source="/Pages/Settings.xaml" />
-        <mui:Link DisplayName="help" Source="/Pages/Help.xaml" />
+        <mui:Link DisplayName="{StaticResource mw_05}" Source="/Pages/Settings/Settings.xaml" />
+        <mui:Link DisplayName="{StaticResource mw_06}" Source="/Pages/Help.xaml" />
     </mui:ModernWindow.TitleLinks>
 
 </mui:ModernWindow>

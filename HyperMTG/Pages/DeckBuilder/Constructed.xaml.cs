@@ -10,11 +10,11 @@ using HyperKore.Utilities;
 namespace HyperMTG.Pages
 {
 	/// <summary>
-	///     Interaction logic for DeckBuilder.xaml
+	///     Interaction logic for Constructed.xaml
 	/// </summary>
-	public partial class DeckBuilder
+	public partial class Constructed
 	{
-		public DeckBuilder()
+		public Constructed()
 		{
 			InitializeComponent();
 		}

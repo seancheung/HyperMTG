@@ -26,6 +26,8 @@ namespace HyperMTG.Langs
 
 		public LanguageManager()
 		{
+			Languages = new List<LANGUAGE>();
+
 			if (!isFound && !IsInDesignMode)
 			{
 				string pattern = string.Format(@"(?<={0}\.)[a-z]{{2}}(?=\.{1})", LangPrefix, LangPostfix);

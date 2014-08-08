@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using HyperMTG.Helper;
+using HyperMTG.Model;
 using HyperMTG.Properties;
 using HyperPlugin;
 
@@ -15,8 +16,8 @@ namespace HyperMTG.ViewModel
 		private readonly IDBReader _dbReader;
 		private readonly IDBWriter _dbWriter;
 		private readonly IImageParse _imageParse;
-		private ObservableCollection<ExCard> cards;
-		private PageSize size;
+		private ObservableCollection<ExCard> _cards;
+		private PageSize _size;
 		/// <summary>
 		///     UI dispatcher(to handle ObservableCollection)
 		/// </summary>
@@ -53,95 +54,22 @@ namespace HyperMTG.ViewModel
 
 		public PageSize Size
 		{
-			get { return size; }
+			get { return _size; }
 			set
 			{
-				size = value;
+				_size = value;
 				RaisePropertyChanged("Size");
 			}
 		}
 
 		public ObservableCollection<ExCard> Cards
 		{
-			get { return cards; }
+			get { return _cards; }
 			set
 			{
-				cards = value;
+				_cards = value;
 				RaisePropertyChanged("Cards");
 			}
-		}
-	}
-
-	public class PageSize : ObservableObject
-	{
-		private double itemHeight;
-		private double itemWidth;
-		private double pageHeight;
-		private double pageWidth;
-
-		public PageSize()
-		{
-			ItemWidth = 312;
-			ItemHeight = 445;
-			PageWidth = 936;
-			PageHeight = 1335;
-		}
-
-		public double ItemWidth
-		{
-			get { return itemWidth; }
-			set
-			{
-				itemWidth = value;
-				RaisePropertyChanged("ItemWidth");
-			}
-		}
-
-		public double ItemHeight
-		{
-			get { return itemHeight; }
-			set
-			{
-				itemHeight = value;
-				RaisePropertyChanged("ItemHeight");
-			}
-		}
-
-		public double PageWidth
-		{
-			get { return pageWidth; }
-			set
-			{
-				pageWidth = value;
-				RaisePropertyChanged("PageWidth");
-			}
-		}
-
-		public double PageHeight
-		{
-			get { return pageHeight; }
-			set
-			{
-				pageHeight = value;
-				RaisePropertyChanged("PageHeight");
-			}
-		}
-
-		/// <summary>
-		/// Set display ratio (0.0 ~ 1.0)
-		/// </summary>
-		/// <param name="ratio"></param>
-		public void SetRatio(double ratio)
-		{
-			if (ratio < 0 || ratio > 1)
-			{
-				return;
-			}
-
-			ItemHeight *= ratio;
-			ItemWidth *= ratio;
-			PageHeight *= ratio;
-			PageWidth *= ratio;
 		}
 	}
 }

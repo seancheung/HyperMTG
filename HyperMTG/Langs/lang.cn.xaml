@@ -18,17 +18,17 @@
     <sys:String x:Key="dbo_06_t">Cancel Current Processing</sys:String>
 
     <!--  main window  -->
-    <sys:String x:Key="mw_01">home</sys:String>
-    <sys:String x:Key="mw_02">deck</sys:String>
-    <sys:String x:Key="mw_02_01">constructed</sys:String>
-    <sys:String x:Key="mw_02_02">sealed</sys:String>
-    <sys:String x:Key="mw_02_03">draft</sys:String>
-    <sys:String x:Key="mw_02_04">filter</sys:String>
-    <sys:String x:Key="mw_03">collection</sys:String>
-    <sys:String x:Key="mw_03_01">gallary</sys:String>
-    <sys:String x:Key="mw_04">database</sys:String>
-    <sys:String x:Key="mw_04_01">official</sys:String>
-    <sys:String x:Key="mw_04_02">custom</sys:String>
-    <sys:String x:Key="mw_05">settings</sys:String>
-    <sys:String x:Key="mw_06">help</sys:String>
+    <sys:String x:Key="mw_01">主页</sys:String>
+    <sys:String x:Key="mw_02">套牌</sys:String>
+    <sys:String x:Key="mw_02_01">构筑</sys:String>
+    <sys:String x:Key="mw_02_02">现开</sys:String>
+    <sys:String x:Key="mw_02_03">轮抓</sys:String>
+    <sys:String x:Key="mw_02_04">筛选</sys:String>
+    <sys:String x:Key="mw_03">收藏</sys:String>
+    <sys:String x:Key="mw_03_01">画廊</sys:String>
+    <sys:String x:Key="mw_04">数据</sys:String>
+    <sys:String x:Key="mw_04_01">官方</sys:String>
+    <sys:String x:Key="mw_04_02">用户</sys:String>
+    <sys:String x:Key="mw_05">设定</sys:String>
+    <sys:String x:Key="mw_06">帮助</sys:String>
 </ResourceDictionary>

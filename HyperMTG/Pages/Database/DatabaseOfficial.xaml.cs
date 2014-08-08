@@ -1,4 +1,4 @@
-﻿namespace HyperMTG.Content
+﻿namespace HyperMTG.Pages
 {
 	/// <summary>
 	/// Interaction logic for DatabaseOfficial.xaml

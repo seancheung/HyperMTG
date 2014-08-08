@@ -84,7 +84,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Content\DatabaseOfficial.xaml.cs">
+    <Compile Include="Pages\Database\DatabaseOfficial.xaml.cs">
       <DependentUpon>DatabaseOfficial.xaml</DependentUpon>
     </Compile>
     <Compile Include="Langs\LanguageManager.cs" />
@@ -97,6 +97,12 @@
     <Compile Include="Helper\TooltipConverter.cs" />
     <Compile Include="Helper\TriggerConverter.cs" />
     <Compile Include="Helper\VisibaleConverter.cs" />
+    <Compile Include="Pages\DeckBuilder\Draft.xaml.cs">
+      <DependentUpon>Draft.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\DeckBuilder\Sealed.xaml.cs">
+      <DependentUpon>Sealed.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -107,11 +113,20 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Model\CheckSetItem.cs" />
+    <Compile Include="Model\CheckItem.cs" />
     <Compile Include="ViewModel\DatabaseViewModel.cs" />
     <Compile Include="ViewModel\DeckBuiderViewModel.cs" />
+    <Compile Include="Model\ExCard.cs" />
     <Compile Include="ViewModel\FilterViewModel.cs" />
     <Compile Include="ViewModel\GallaryViewModel.cs" />
-    <Page Include="Content\DatabaseOfficial.xaml">
+    <Compile Include="Model\PageSize.cs" />
+    <Content Include="Langs\lang.cn.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Page Include="Pages\Database\DatabaseOfficial.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -126,30 +141,34 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Content\About.xaml">
+    <Page Include="Pages\DeckBuilder\Draft.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="Content\About.xaml.cs">
+    <Page Include="Pages\DeckBuilder\Sealed.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Settings\About.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="Pages\Settings\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
-    <Page Include="Content\SettingsAppearance.xaml">
+    <Page Include="Pages\Settings\SettingsAppearance.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="Content\SettingsAppearance.xaml.cs">
+    <Compile Include="Pages\Settings\SettingsAppearance.xaml.cs">
       <DependentUpon>SettingsAppearance.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Content\SettingsAppearanceViewModel.cs" />
-    <Page Include="Pages\Database.xaml">
+    <Compile Include="ViewModel\SettingsAppearanceViewModel.cs" />
+    <Page Include="Pages\DeckBuilder\Constructed.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\DeckBuilder.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\Filter.xaml">
+    <Page Include="Pages\DeckBuilder\Filter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -165,17 +184,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\Settings.xaml">
+    <Page Include="Pages\Settings\Settings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="Pages\Database.xaml.cs">
-      <DependentUpon>Database.xaml</DependentUpon>
+    <Compile Include="Pages\DeckBuilder\Constructed.xaml.cs">
+      <DependentUpon>Constructed.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\DeckBuilder.xaml.cs">
-      <DependentUpon>DeckBuilder.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\Filter.xaml.cs">
+    <Compile Include="Pages\DeckBuilder\Filter.xaml.cs">
       <DependentUpon>Filter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Gallary.xaml.cs">
@@ -187,7 +203,7 @@
     <Compile Include="Pages\Home.xaml.cs">
       <DependentUpon>Home.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Settings.xaml.cs">
+    <Compile Include="Pages\Settings\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -267,6 +283,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

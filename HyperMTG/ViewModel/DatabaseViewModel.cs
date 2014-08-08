@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using HyperKore.Common;
 using HyperMTG.Helper;
+using HyperMTG.Model;
 using HyperMTG.Properties;
 using HyperPlugin;
 
@@ -35,7 +36,7 @@ namespace HyperMTG.ViewModel
 		/// <summary>
 		///     Thread Canceling
 		/// </summary>
-		private readonly CancellationTokenSource cts = new CancellationTokenSource();
+		private readonly CancellationTokenSource _cts = new CancellationTokenSource();
 
 		private ObservableCollection<Card> _cards;
 		private int _currentPage;
@@ -45,8 +46,7 @@ namespace HyperMTG.ViewModel
 
 		private volatile int _processCount;
 		private int _recordSize;
-		private bool doImage;
-		private bool dozImage;
+		private bool _doImage;
 
 		public DatabaseViewModel()
 		{
@@ -76,21 +76,11 @@ namespace HyperMTG.ViewModel
 
 		public bool DoImage
 		{
-			get { return doImage; }
+			get { return _doImage; }
 			set
 			{
-				doImage = value;
+				_doImage = value;
 				RaisePropertyChanged("DoImage");
-			}
-		}
-
-		public bool DozImage
-		{
-			get { return dozImage; }
-			set
-			{
-				dozImage = value;
-				RaisePropertyChanged("DozImage");
 			}
 		}
 
@@ -206,7 +196,7 @@ namespace HyperMTG.ViewModel
 
 		private void CancelExecute()
 		{
-			cts.Cancel();
+			_cts.Cancel();
 		}
 
 		private void PageExecute(object next)
@@ -337,7 +327,7 @@ namespace HyperMTG.ViewModel
 							if (waitHandle == null)
 								return;
 
-							if (!cts.Token.IsCancellationRequested)
+							if (!_cts.Token.IsCancellationRequested)
 							{
 								//Save Data
 								_dbWriter.Insert(tmpCards);
@@ -346,7 +336,7 @@ namespace HyperMTG.ViewModel
 							if (DoImage)
 							{
 								//If action is cancelled, break
-								for (int i = 0; i < tmpCards.Count && !cts.Token.IsCancellationRequested; i++)
+								for (int i = 0; i < tmpCards.Count && !_cts.Token.IsCancellationRequested; i++)
 								{
 									Info = string.Format("Downloading image{0}: {1}", enumerable.Count, tmpCards[i].ID);
 
@@ -386,7 +376,7 @@ namespace HyperMTG.ViewModel
 						//Wait for all downloading threads to finish
 						WaitHandle.WaitAll(waitHandles);
 
-						if (!cts.IsCancellationRequested)
+						if (!_cts.IsCancellationRequested)
 						{
 							checkSetItem.IsLocal = true;
 							checkSetItem.IsChecked = false;
@@ -448,72 +438,5 @@ namespace HyperMTG.ViewModel
 		}
 
 		#endregion
-	}
-
-	internal class CheckSetItem : ObservableObject
-	{
-		private bool _isChecked;
-		private bool _isProcessing;
-		private int _max;
-		private int _prog;
-
-		public CheckSetItem(bool isChecked, Set content)
-		{
-			IsChecked = isChecked;
-			Content = content;
-		}
-
-		public bool IsProcessing
-		{
-			get { return _isProcessing; }
-			set
-			{
-				_isProcessing = value;
-				RaisePropertyChanged("IsProcessing");
-			}
-		}
-
-		public int Prog
-		{
-			get { return _prog; }
-			set
-			{
-				_prog = value;
-				RaisePropertyChanged("Prog");
-			}
-		}
-
-		public int Max
-		{
-			get { return _max; }
-			set
-			{
-				_max = value;
-				RaisePropertyChanged("Max");
-			}
-		}
-
-		public Set Content { get; set; }
-
-		public bool IsLocal
-		{
-			get { return Content.Local; }
-			set
-			{
-				Content.Local = value;
-				Content.LastUpdate = DateTime.Now;
-				RaisePropertyChanged("IsLocal");
-			}
-		}
-
-		public bool IsChecked
-		{
-			get { return _isChecked; }
-			set
-			{
-				_isChecked = value;
-				RaisePropertyChanged("IsChecked");
-			}
-		}
 	}
 }

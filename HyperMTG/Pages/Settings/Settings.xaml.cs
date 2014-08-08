@@ -1,11 +1,11 @@
 ﻿namespace HyperMTG.Pages
 {
 	/// <summary>
-	///     Interaction logic for Database.xaml
+	///     Interaction logic for Settings.xaml
 	/// </summary>
-	public partial class Database
+	public partial class Settings
 	{
-		public Database()
+		public Settings()
 		{
 			InitializeComponent();
 		}

@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace HyperMTG.Content
+namespace HyperMTG.Pages
 {
 	/// <summary>
-	/// Interaction logic for About.xaml
+	/// Interaction logic for Draft.xaml
 	/// </summary>
-	public partial class About : UserControl
+	public partial class Draft : UserControl
 	{
-		public About()
+		public Draft()
 		{
 			InitializeComponent();
 		}

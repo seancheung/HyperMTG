@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 using HyperKore.Common;
 using HyperMTG.Helper;
+using HyperMTG.Model;
 
 namespace HyperMTG.ViewModel
 {
@@ -62,16 +63,9 @@ namespace HyperMTG.ViewModel
 			get { return new RelayCommand<string>(CheckRarityExecute); }
 		}
 
-		private IEnumerable GetFromEnum<T>()
+		private static IEnumerable GetFromEnum<T>()
 		{
-			var list = new List<CheckItem>();
-
-			foreach (string item in Enum.GetNames(typeof (T)))
-			{
-				list.Add(new CheckItem(item, false));
-			}
-
-			return list;
+			return Enum.GetNames(typeof (T)).Select(item => new CheckItem(item, false)).ToList();
 		}
 
 		private void CheckTypeExecute(object parameter)
@@ -86,7 +80,6 @@ namespace HyperMTG.ViewModel
 
 					case "1":
 						type.IsChecked = true;
-						;
 						break;
 
 					case "2":
@@ -108,7 +101,6 @@ namespace HyperMTG.ViewModel
 
 					case "1":
 						color.IsChecked = true;
-						;
 						break;
 
 					case "2":
@@ -130,39 +122,12 @@ namespace HyperMTG.ViewModel
 
 					case "1":
 						rarity.IsChecked = true;
-						;
 						break;
 
 					case "2":
 						rarity.IsChecked = null;
 						break;
 				}
-			}
-		}
-	}
-
-	internal class CheckItem : ObservableObject
-	{
-		private bool? isChecked;
-
-		/// <summary>
-		///     Initializes a new instance of the CheckItem class.
-		/// </summary>
-		public CheckItem(string content, bool? isChecked)
-		{
-			Content = content;
-			IsChecked = isChecked;
-		}
-
-		public string Content { get; set; }
-
-		public bool? IsChecked
-		{
-			get { return isChecked; }
-			set
-			{
-				isChecked = value;
-				RaisePropertyChanged("IsChecked");
 			}
 		}
 	}
