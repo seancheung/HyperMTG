@@ -97,7 +97,7 @@ namespace HyperPlugin.IO.VirtualPlaytable
 
 		private Card Convert(VPTItem item, IEnumerable<Card> database)
 		{
-			Card res = database.FirstOrDefault(c => item.Cards.First().SetCode == c.SetCode && item.Name == c.GetLegalName());
+			Card res = database.FirstOrDefault(c => item.Cards.First().SetCode == c.SetCode && item.Name == c.Name);
 			if (res != null)
 			{
 				return res;
@@ -112,7 +112,7 @@ namespace HyperPlugin.IO.VirtualPlaytable
 			foreach (var gp in lpM)
 			{
 				Card tcard = gp.First();
-				var vcard = new VPTCard(tcard.SetCode, LANGUAGE.English.GetLangCode(), tcard.Var, gp.Count());
+				var vcard = new VPTCard(tcard.SetCode, LANGUAGE.English.GetLangCode(), "1", gp.Count());
 				var vitem = new VPTItem {Name = tcard.Name};
 				vitem.Cards.Add(vcard);
 				sectionM.Items.Add(vitem);
@@ -123,7 +123,7 @@ namespace HyperPlugin.IO.VirtualPlaytable
 			foreach (var gp in lpS)
 			{
 				Card tcard = gp.First();
-				var vcard = new VPTCard(tcard.SetCode, LANGUAGE.English.GetLangCode(), tcard.Var, gp.Count());
+				var vcard = new VPTCard(tcard.SetCode, LANGUAGE.English.GetLangCode(), "1", gp.Count());
 				var vitem = new VPTItem {Name = tcard.Name};
 				vitem.Cards.Add(vcard);
 				sectionS.Items.Add(vitem);

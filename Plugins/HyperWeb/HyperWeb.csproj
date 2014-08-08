@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0E1BB8B4-E7F6-43B2-BE69-1AB97E82ECFC}</ProjectGuid>
+    <ProjectGuid>{4308B3C1-27EC-4B3D-B197-15398A11D069}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HyperPlugin.Web</RootNamespace>
@@ -30,6 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\..\net40\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="ScrapySharp">
+      <HintPath>..\..\net40\ScrapySharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,14 +46,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataParse.cs" />
-    <Compile Include="ICardParse.cs" />
-    <Compile Include="ImageParse.cs" />
-    <Compile Include="ParseDetail.cs" />
-    <Compile Include="ParseEx.cs" />
-    <Compile Include="ParseLegality.cs" />
-    <Compile Include="ParseOther.cs" />
-    <Compile Include="ParsezDetail.cs" />
-    <Compile Include="ParsezID.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

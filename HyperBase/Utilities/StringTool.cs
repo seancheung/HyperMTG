@@ -81,7 +81,7 @@ namespace HyperKore.Utilities
 		public static string RemoveHtmlTag(this string input)
 		{
 			//Replace </div> with new line
-			string text = Regex.Replace(input, @"</div>", "\n", RegexOptions.IgnoreCase);
+			string text = Regex.Replace(input, @"</div>|<br>|<p>", "\n", RegexOptions.IgnoreCase);
 
 			//Remove <*>
 			text = Regex.Replace(text, @"<(.[^>]*)>", "", RegexOptions.IgnoreCase);
@@ -160,17 +160,13 @@ namespace HyperKore.Utilities
 		public static string ManaBuild(this string input)
 		{
 			string text = input;
-			if (!Regex.IsMatch(text, @"{|}") || Regex.IsMatch(text, @"\(\)"))
-			{
-				foreach (Match match in Regex.Matches(text, @"\d+"))
-				{
-					text = Regex.Replace(text, match.Value, "{" + match.Value + "}");
-				}
+			text = Regex.Replace(text, @"/", "");
 
+			foreach (Match match in Regex.Matches(text, @"\d+|\w|{\w+}"))
+			{
+				text = Regex.Replace(text, match.Value, "{" + match.Value + "}");
 			}
 
-			text = Regex.Replace(text, @"\(", "{");
-			text = Regex.Replace(text, @"\)", "}");
 			text = Regex.Replace(text, @"{{2,}", "{");
 			text = Regex.Replace(text, @"}{2,}", "}");
 

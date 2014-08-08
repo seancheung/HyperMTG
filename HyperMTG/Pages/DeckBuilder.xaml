@@ -138,28 +138,29 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Image Grid.Row="0" MaxWidth="223"
-                           MaxHeight="310"
-                           Source="{Binding SelectedCard.ImageA,
-                                            IsAsync=True}">
-                        <Image.OpacityMask>
+                    <Image Grid.Row="0" Source="{Binding SelectedCard.Image, IsAsync=True}">
+                        <!--
+                            <Image.OpacityMask>
                             <VisualBrush>
-                                <VisualBrush.Visual>
-                                    <Border Width="{Binding RelativeSource={RelativeSource FindAncestor,
-                                                                                           AncestorType={x:Type Image}},
-                                                            Path=ActualWidth}"
-                                            Height="{Binding RelativeSource={RelativeSource FindAncestor,
-                                                                                            AncestorType={x:Type Image}},
-                                                             Path=ActualHeight}"
-                                            Background="White" CornerRadius="10" />
-                                </VisualBrush.Visual>
+                            <VisualBrush.Visual>
+                            <Border Width="{Binding RelativeSource={RelativeSource FindAncestor,
+                            AncestorType={x:Type Image}},
+                            Path=ActualWidth}"
+                            Height="{Binding RelativeSource={RelativeSource FindAncestor,
+                            AncestorType={x:Type Image}},
+                            Path=ActualHeight}"
+                            Background="White" CornerRadius="10" />
+                            </VisualBrush.Visual>
                             </VisualBrush>
-                        </Image.OpacityMask>
+                            </Image.OpacityMask>
+                        -->
                     </Image>
-                    <Image Grid.Row="1" MaxWidth="223"
-                           MaxHeight="310"
-                           Source="{Binding SelectedCard.ImageB,
-                                            IsAsync=True}" />
+                    <!--
+                        <Image Grid.Row="1" MaxWidth="223"
+                        MaxHeight="310"
+                        Source="{Binding SelectedCard.ImageB,
+                        IsAsync=True}" />
+                    -->
                     <mui:BBCodeBlock Grid.Row="2" Margin="0,4"
                                      BBCode="{Binding SelectedCard.Card.Text,
                                                       NotifyOnTargetUpdated=True}"

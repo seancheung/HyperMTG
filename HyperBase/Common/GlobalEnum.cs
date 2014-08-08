@@ -6,7 +6,8 @@
 		Blue,
 		Green,
 		Black,
-		White
+		White,
+		Colorless
 	}
 
 	public enum FORMAT

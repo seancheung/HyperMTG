@@ -107,6 +107,7 @@
     <Compile Include="ViewModel\DatabaseViewModel.cs" />
     <Compile Include="ViewModel\DeckBuiderViewModel.cs" />
     <Compile Include="ViewModel\FilterViewModel.cs" />
+    <Compile Include="ViewModel\GallaryViewModel.cs" />
     <Page Include="Content\DatabaseOfficial.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

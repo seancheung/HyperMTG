@@ -194,7 +194,7 @@ namespace HyperMTG.ViewModel
 
 		private void TestExecute(string id)
 		{
-			_dataParse.Process(new Card {ID = id,Set = "DarkAscen",SetCode = "DKA"}, LANGUAGE.ChineseSimplified);
+			_dataParse.Process(new Card {ID = id, Set = "DarkAscen", SetCode = "DKA"}, LANGUAGE.ChineseSimplified);
 		}
 
 		private void CancelExecute()
@@ -272,7 +272,7 @@ namespace HyperMTG.ViewModel
 			Info = "Waiting...Grabbing Source";
 			Thread td = new Thread(() =>
 			{
-				IEnumerable<Set> sets = _dataParse.ParSetWithCode();
+				IEnumerable<Set> sets = _dataParse.ParseSet();
 				IList<Set> enumerable = sets as IList<Set> ?? sets.ToList();
 				_dbWriter.Insert(enumerable);
 				_dispatcher.Invoke(new Action(() =>
@@ -302,7 +302,7 @@ namespace HyperMTG.ViewModel
 						_processCount++;
 						checkSetItem.IsProcessing = true;
 						Info = "Preparing for " + checkSetItem.Content.FullName;
-						IEnumerable<Card> cards = _dataParse.Prepare(checkSetItem.Content);
+						IEnumerable<Card> cards = _dataParse.Process(checkSetItem.Content);
 						List<Card> enumerable = cards as List<Card> ?? cards.ToList();
 						checkSetItem.Max = enumerable.Count();
 						checkSetItem.Prog = 0;
@@ -320,6 +320,8 @@ namespace HyperMTG.ViewModel
 
 						WaitCallback waitCallback = param =>
 						{
+							
+							
 							object[] parameres = param as object[];
 							if (parameres == null || parameres.Length != 2)
 								return;
@@ -330,46 +332,33 @@ namespace HyperMTG.ViewModel
 							if (waitHandle == null)
 								return;
 
-							//If action is cancelled, break
-							for (int i = 0; i < tmpCards.Count && !cts.Token.IsCancellationRequested; i++)
-							{
-								Info = enumerable.Count + ": " + tmpCards[i].ID;
-								bool result = _dataParse.Process(tmpCards[i], LANGUAGE.ChineseSimplified);
-								if (!result)
-									tmpCards.RemoveAt(i);
-								else
-								{
-									#region Images
-
-									if (DoImage)
-										foreach (string id in tmpCards[i].ID.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries))
-										{
-											byte[] data = _imageParse.Download(id);
-											if (data != null && _compressor != null)
-												_dbWriter.Insert(id, data, _compressor);
-										}
-									if (DozImage && tmpCards[i].zID != null)
-										foreach (string id in tmpCards[i].zID.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries))
-										{
-											byte[] data = _imageParse.Download(id);
-											if (data != null && _compressor != null)
-												_dbWriter.Insert(id, data, _compressor);
-										}
-
-									#endregion
-
-									_dispatcher.Invoke(new Action(() => { Cards.Add(tmpCards[i]); }));
-								}
-
-								checkSetItem.Prog++;
-							}
-
 							if (!cts.Token.IsCancellationRequested)
 							{
 								//Save Data
 								_dbWriter.Insert(tmpCards);
 							}
 
+							if (DoImage)
+							{
+								//If action is cancelled, break
+								for (int i = 0; i < tmpCards.Count && !cts.Token.IsCancellationRequested; i++)
+								{
+									Info = string.Format("Downloading image{0}: {1}", enumerable.Count, tmpCards[i].ID);
+
+									#region Images
+
+									byte[] data = _imageParse.Download(tmpCards[i]);
+									if (data != null && _compressor != null)
+										_dbWriter.Insert(tmpCards[i].ID, data, _compressor);
+
+									#endregion
+
+									_dispatcher.Invoke(new Action(() => { Cards.Add(tmpCards[i]); }));
+
+									checkSetItem.Prog++;
+								}
+							}
+							
 							//Set the current thread state as finished
 							waitHandle.Set();
 						};

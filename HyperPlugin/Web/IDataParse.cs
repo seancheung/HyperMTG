@@ -5,36 +5,12 @@ namespace HyperPlugin
 {
 	public interface IDataParse : IPlugin
 	{
-		/// <summary>
-		///     Get format list
-		/// </summary>
-		/// <returns></returns>
-		IEnumerable<string> ParseFormat();
 
 		/// <summary>
 		///     Get set list in string format
 		/// </summary>
 		/// <returns></returns>
-		IEnumerable<string> ParseSet();
-
-		/// <summary>
-		///     Get set list
-		/// </summary>
-		/// <returns></returns>
-		IEnumerable<Set> ParSetWithCode();
-
-		/// <summary>
-		///     Get type list
-		/// </summary>
-		/// <returns></returns>
-		IEnumerable<string> ParseType();
-
-		/// <summary>
-		///     Get a list of cards with ID property filled
-		/// </summary>
-		/// <param name="set"></param>
-		/// <returns></returns>
-		IEnumerable<Card> Prepare(Set set);
+		IEnumerable<Set> ParseSet();
 
 		/// <summary>
 		///     Get a list of cards with all properties filled
@@ -42,7 +18,7 @@ namespace HyperPlugin
 		/// <param name="set"></param>
 		/// <param name="lang"></param>
 		/// <returns></returns>
-		IEnumerable<Card> PrepareAndProcess(Set set, LANGUAGE lang);
+		IEnumerable<Card> Process(Set set, LANGUAGE lang = LANGUAGE.English);
 
 		/// <summary>
 		///     Fill card properties

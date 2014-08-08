@@ -203,64 +203,18 @@ namespace HyperMTG.ViewModel
 			set
 			{
 				_card = value;
-				RaisePropertyChanged("ImageA");
-				RaisePropertyChanged("ImageB");
-				RaisePropertyChanged("zImageA");
-				RaisePropertyChanged("zImageB");
+				RaisePropertyChanged("Image");
 				RaisePropertyChanged("Card");
 			}
 		}
 
-		public byte[] ImageA
+		public byte[] Image
 		{
 			get
 			{
-				return Card != null && _dbReader != null && _compressor != null ? _dbReader.LoadFile(IDA, _compressor) : null;
+				return Card != null && _dbReader != null && _compressor != null ? _dbReader.LoadFile(Card.ID, _compressor) : null;
 			}
 		}
 
-		public byte[] ImageB
-		{
-			get
-			{
-				return Card != null && _dbReader != null && _compressor != null ? _dbReader.LoadFile(IDB, _compressor) : null;
-			}
-		}
-
-		public byte[] zImageA
-		{
-			get
-			{
-				return Card != null && _dbReader != null && _compressor != null ? _dbReader.LoadFile(zIDA, _compressor) : null;
-			}
-		}
-
-		public byte[] zImageB
-		{
-			get
-			{
-				return Card != null && _dbReader != null && _compressor != null ? _dbReader.LoadFile(zIDB, _compressor) : null;
-			}
-		}
-
-		public string IDA
-		{
-			get { return Card != null ? Card.ID.Contains("|") ? Card.ID.Split('|')[0] : Card.ID : null; }
-		}
-
-		public string IDB
-		{
-			get { return Card != null ? Card.ID.Contains("|") ? Card.ID.Split('|')[1] : null : null; }
-		}
-
-		public string zIDA
-		{
-			get { return Card != null && Card.zID != null ? Card.zID.Contains("|") ? Card.zID.Split('|')[0] : Card.zID : null; }
-		}
-
-		public string zIDB
-		{
-			get { return Card != null && Card.zID != null ? Card.zID.Contains("|") ? Card.zID.Split('|')[1] : null : null; }
-		}
 	}
 }

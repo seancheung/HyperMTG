@@ -80,7 +80,7 @@ namespace HyperPlugin.IO.MagicOnline
 
 		private Card Convert(MOCard card, IEnumerable<Card> database)
 		{
-			Card res = database.FirstOrDefault(c => card.Name == c.GetLegalName());
+			Card res = database.FirstOrDefault(c => card.Name == c.Name);
 			if (res != null)
 			{
 				return res;

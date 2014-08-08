@@ -4,14 +4,75 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             xmlns:vm="clr-namespace:HyperMTG.ViewModel"
              d:DesignHeight="300" d:DesignWidth="300"
              mc:Ignorable="d">
+    <UserControl.DataContext>
+        <vm:GallaryViewModel />
+    </UserControl.DataContext>
     <Grid Style="{StaticResource ContentRoot}">
-        <ScrollViewer>
-            <StackPanel MinWidth="200">
-                <TextBlock Style="{StaticResource Heading2}" Text="BASIC PAGE" />
-                <TextBlock Text="Content goes here" />
-            </StackPanel>
-        </ScrollViewer>
+        <Viewport3D ClipToBounds="True">
+            <Viewport3D.Camera>
+                <PerspectiveCamera FieldOfView="90" LookDirection="0,0,-1"
+                                   Position="0,0,3" />
+            </Viewport3D.Camera>
+            <Viewport3D.Children>
+                <ModelVisual3D>
+                    <ModelVisual3D.Content>
+                        <DirectionalLight Direction="-0.612372,-0.5,-0.612372" Color="White" />
+                    </ModelVisual3D.Content>
+                </ModelVisual3D>
+                <ModelVisual3D>
+                    <ModelVisual3D.Content>
+                        <GeometryModel3D>
+                            <GeometryModel3D.Material>
+                                <DiffuseMaterial>
+                                    <DiffuseMaterial.Brush>
+                                        <ImageBrush ImageSource="{Binding Image, IsAsync=True}" />
+                                    </DiffuseMaterial.Brush>
+                                </DiffuseMaterial>
+                            </GeometryModel3D.Material>
+                            <GeometryModel3D.Geometry>
+                                <MeshGeometry3D Positions="-1,1.4,0 -1,-1.4,0 1,-1.4,0 1,1.4,0"
+                                                TextureCoordinates="0,0 0,1 1,1 1,0"
+                                                TriangleIndices="0 1 2, 0 2 3" />
+                            </GeometryModel3D.Geometry>
+                        </GeometryModel3D>
+                    </ModelVisual3D.Content>
+                    <ModelVisual3D.Transform>
+                        <RotateTransform3D>
+                            <RotateTransform3D.Rotation>
+                                <AxisAngleRotation3D Angle="30" Axis="0 1 0" />
+                            </RotateTransform3D.Rotation>
+                        </RotateTransform3D>
+                    </ModelVisual3D.Transform>
+                </ModelVisual3D>
+                <ModelVisual3D>
+                    <ModelVisual3D.Content>
+                        <GeometryModel3D>
+                            <GeometryModel3D.Material>
+                                <DiffuseMaterial>
+                                    <DiffuseMaterial.Brush>
+                                        <ImageBrush ImageSource="{Binding Image, IsAsync=True}" />
+                                    </DiffuseMaterial.Brush>
+                                </DiffuseMaterial>
+                            </GeometryModel3D.Material>
+                            <GeometryModel3D.Geometry>
+                                <MeshGeometry3D Positions="0,1.4,0 0,-1.4,0 2,-1.4,0 2,1.4,0"
+                                                TextureCoordinates="0,0 0,1 1,1 1,0"
+                                                TriangleIndices="0 1 2, 0 2 3" />
+                            </GeometryModel3D.Geometry>
+                        </GeometryModel3D>
+                    </ModelVisual3D.Content>
+                    <ModelVisual3D.Transform>
+                        <RotateTransform3D>
+                            <RotateTransform3D.Rotation>
+                                <AxisAngleRotation3D Angle="20" Axis="0 1 0" />
+                            </RotateTransform3D.Rotation>
+                        </RotateTransform3D>
+                    </ModelVisual3D.Transform>
+                </ModelVisual3D>
+            </Viewport3D.Children>
+        </Viewport3D>
     </Grid>
 </UserControl>

@@ -87,7 +87,7 @@ namespace HyperPlugin.IO.MagicWorkstation
 
 		private Card Convert(MWSCard card, IEnumerable<Card> database)
 		{
-			Card res = database.FirstOrDefault(c => card.SetCode == c.SetCode && card.Name == c.GetLegalName());
+			Card res = database.FirstOrDefault(c => card.SetCode == c.SetCode && card.Name == c.Name);
 			if (res != null)
 			{
 				return res;
@@ -102,8 +102,8 @@ namespace HyperPlugin.IO.MagicWorkstation
 			foreach (var gp in lpM)
 			{
 				Card tcard = gp.First();
-				var mcard = new MWSCard {Name = tcard.Name, SetCode = tcard.SetCode, Var = tcard.Var, Count = gp.Count()};
-				if (tcard.TypeCode.Contains("L"))
+				var mcard = new MWSCard {Name = tcard.Name, SetCode = tcard.SetCode, Var = "1", Count = gp.Count()};
+				if (tcard.Type.Contains("Land"))
 				{
 					mdeck.MainBoardLands.Add(mcard);
 				}
@@ -117,7 +117,7 @@ namespace HyperPlugin.IO.MagicWorkstation
 			foreach (var gp in lpS)
 			{
 				Card tcard = gp.First();
-				var mcard = new MWSCard {Name = tcard.Name, SetCode = tcard.SetCode, Var = tcard.Var, Count = gp.Count()};
+				var mcard = new MWSCard {Name = tcard.Name, SetCode = tcard.SetCode, Var = "1", Count = gp.Count()};
 				mdeck.SideBoard.Add(mcard);
 			}
 

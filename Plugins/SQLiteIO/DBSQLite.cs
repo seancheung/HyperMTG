@@ -11,7 +11,11 @@ namespace SQLiteIO
 	public class DBSQLite : IDBReader, IDBWriter
 	{
 		private const string BuildCmd =
-			"CREATE TABLE IF NOT EXISTS 'Card'('id' TEXT NOT NULL,'zid' TEXT,'var' TEXT,'name' TEXT NOT NULL,'zname' TEXT,'set' TEXT NOT NULL,'setcode' TEXT NOT NULL,'color' TEXT,'colorcode' TEXT,'cost' TEXT,'cmc' TEXT,'type' TEXT NOT NULL,'ztype' TEXT,'typecode' TEXT NOT NULL,'pow' TEXT,'tgh' TEXT,'loyalty' TEXT,'text' TEXT,'ztext' TEXT,'flavor' TEXT,'zflavor' TEXT,'artist' TEXT,'rarity' TEXT NOT NULL,'raritycode' TEXT NOT NULL,'number' TEXT NOT NULL,'rulings' TEXT,'legality' TEXT,'rating' TEXT,PRIMARY KEY('id'));CREATE TABLE IF NOT EXISTS 'Set'('SetName' TEXT NOT NULL,'SetCode' TEXT,'LastUpdate' TEXT,'Local' INTEGER,PRIMARY KEY('SetName'));CREATE TABLE IF NOT EXISTS 'File'('id' TEXT NOT NULL,'data' BLOB,'length' INTEGER,PRIMARY KEY('id'))";
+			"CREATE TABLE IF NOT EXISTS 'Card'('id' TEXT NOT NULL,'name' TEXT NOT NULL,'set' TEXT NOT NULL,'setcode' TEXT NOT NULL," +
+			"'cost' TEXT,'cmc' TEXT,'type' TEXT NOT NULL,'pow' TEXT,'tgh' TEXT,'loyalty' TEXT,'text' TEXT," +
+			"'flavor' TEXT,'artist' TEXT,'rarity' TEXT NOT NULL,'number' TEXT NOT NULL,PRIMARY KEY('id'));" +
+			"CREATE TABLE IF NOT EXISTS 'Set'('SetName' TEXT NOT NULL,'SetCode' TEXT,'LastUpdate' TEXT,'Local' INTEGER,PRIMARY KEY('SetName'));" +
+			"CREATE TABLE IF NOT EXISTS 'File'('id' TEXT NOT NULL,'data' BLOB,'length' INTEGER,PRIMARY KEY('id'))";
 
 		private const string ConnString = "data source=DATA.db;password=5AEB55D5-F169-4EB2-A768-B20EBD20151E";
 

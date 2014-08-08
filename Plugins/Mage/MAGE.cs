@@ -80,7 +80,7 @@ namespace HyperPlugin.IO.Mage
 
 		private Card Convert(MAGECard card, IEnumerable<Card> database)
 		{
-			Card res = database.FirstOrDefault(c => card.SetCode == c.SetCode && card.Name == c.GetLegalName());
+			Card res = database.FirstOrDefault(c => card.SetCode == c.SetCode && card.Name == c.Name);
 			if (res != null)
 			{
 				return res;
