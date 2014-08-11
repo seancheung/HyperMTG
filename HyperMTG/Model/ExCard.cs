@@ -57,15 +57,18 @@ namespace HyperMTG.Model
 
 				if (_dbWriter == null || _imageParse == null) return null;
 
-				lock (Card)
-				{
-					data = _imageParse.Download(Card, Settings.Default.Language);
-					if (data != null)
-						_dbWriter.Insert(Card.ID, data, _compressor);
-				}
+				data = UpdateData(Card);
 
 				return data;
 			}
+		}
+
+		private byte[] UpdateData(Card card)
+		{
+			var data = _imageParse.Download(card, Settings.Default.Language);
+			if (data != null)
+				_dbWriter.Insert(card.ID, data, _compressor);
+			return data;
 		}
 	}
 }
