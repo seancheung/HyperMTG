@@ -14,7 +14,7 @@
             <StackPanel x:Name="Panel" MinWidth="150">
                 <TextBlock Margin="0,0,0,8"
                            Style="{StaticResource Heading2}"
-                           Text="APPEARANCE" />
+                           Text="{DynamicResource sts_01}" />
 
                 <ListBox Margin="0,0,0,16"
                          ItemsSource="{Binding AccentColors}"
@@ -48,7 +48,7 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock Margin="0,0,16,4" VerticalAlignment="Center"
-                               Text="Theme:" />
+                               Text="{DynamicResource sts_05}" />
                     <ComboBox Grid.Column="1" Margin="0,0,0,4"
                               VerticalAlignment="Center"
                               DisplayMemberPath="DisplayName"
@@ -57,7 +57,8 @@
                                                      Mode=TwoWay}" />
 
                     <TextBlock Grid.Row="1" Margin="0,0,16,0"
-                               VerticalAlignment="Center" Text="Font size:" />
+                               VerticalAlignment="Center"
+                               Text="{DynamicResource sts_06}" />
                     <ComboBox Grid.Row="1" Grid.Column="1"
                               VerticalAlignment="Center"
                               ItemsSource="{Binding FontSizes}"

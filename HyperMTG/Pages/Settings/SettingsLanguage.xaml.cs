@@ -1,9 +1,7 @@
-﻿using System.Windows.Controls;
-
-namespace HyperMTG.Pages
+﻿namespace HyperMTG.Pages
 {
 	/// <summary>
-	/// Interaction logic for SettingsLanguage.xaml
+	///     Interaction logic for SettingsLanguage.xaml
 	/// </summary>
 	public partial class SettingsLanguage
 	{

@@ -9,7 +9,22 @@
         </DiffuseMaterial>
     </MaterialGroup>
 
-    <DiffuseMaterial x:Key="Material_FrontCover" Brush="{StaticResource IslandSwampBrush}" />
+    <DiffuseMaterial x:Key="Material_FrontCover" Color="SteelBlue">
+        <DiffuseMaterial.Brush>
+            <VisualBrush>
+                <VisualBrush.Visual>
+                    <Viewbox>
+                        <Border Background="{StaticResource IslandSwampBrush}">
+                            <Path Margin="10"
+                                  Data="{DynamicResource JOUGeometry}"
+                                  Stretch="UniformToFill"
+                                  Style="{DynamicResource PathMythic}" />
+                        </Border>
+                    </Viewbox>
+                </VisualBrush.Visual>
+            </VisualBrush>
+        </DiffuseMaterial.Brush>
+    </DiffuseMaterial>
 
     <DiffuseMaterial x:Key="Material_Cover" Brush="{StaticResource IslandSwampBrush}" />
 </ResourceDictionary>

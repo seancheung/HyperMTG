@@ -16,6 +16,7 @@ namespace HyperMTG.Langs
 {
 	public class LanguageManager
 	{
+
 		private const string LangPrefix = "lang";
 
 		private const string LangPostfix = "xaml";
@@ -25,7 +26,7 @@ namespace HyperMTG.Langs
 		private static bool isFound;
 		private static List<Language> languages = new List<Language>();
 
-		public LanguageManager()
+		public static void Initial()
 		{
 			if (!isFound && !IsInDesignMode)
 			{
@@ -53,7 +54,7 @@ namespace HyperMTG.Langs
 			}
 		}
 
-		public static int CurrentIndex
+		public int CurrentIndex
 		{
 			get { return Languages.IndexOf(Settings.Default.Language); }
 			set { ChangeLang(Languages[value]); }
@@ -73,7 +74,11 @@ namespace HyperMTG.Langs
 			get { return languages; }
 		}
 
-
+		public object this[string key]
+		{
+			get { return Application.Current.Resources.MergedDictionaries[0][key]; }
+		}
+		
 		private static void ChangeLang(Language lang)
 		{
 			if (Languages.Contains(lang))

@@ -13,13 +13,13 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <mui:BBCodeBlock Height="30" Margin="0,0,0,8"
-                         BBCode="All changes will be saved automatically" />
+                         BBCode="{DynamicResource sts_04}" />
         <mui:ModernTab Grid.Row="1" Layout="List"
                        SelectedSource="/Pages/Settings/About.xaml">
             <mui:ModernTab.Links>
-                <mui:Link DisplayName="appearance" Source="/Pages/Settings/SettingsAppearance.xaml" />
-                <mui:Link DisplayName="language" Source="/Pages/Settings/SettingsLanguage.xaml" />
-                <mui:Link DisplayName="about" Source="/Pages/Settings/About.xaml" />
+                <mui:Link DisplayName="{StaticResource sts_01}" Source="/Pages/Settings/SettingsAppearance.xaml" />
+                <mui:Link DisplayName="{StaticResource sts_02}" Source="/Pages/Settings/SettingsLanguage.xaml" />
+                <mui:Link DisplayName="{StaticResource sts_03}" Source="/Pages/Settings/About.xaml" />
             </mui:ModernTab.Links>
         </mui:ModernTab>
 

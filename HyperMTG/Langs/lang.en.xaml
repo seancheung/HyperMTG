@@ -9,9 +9,7 @@
     <sys:String x:Key="dbo_02">Update Cards</sys:String>
     <sys:String x:Key="dbo_02_t">Update Checked Cards</sys:String>
     <sys:String x:Key="dbo_03">Image</sys:String>
-    <sys:String x:Key="dbo_03_t">Download Original English Image</sys:String>
-    <sys:String x:Key="dbo_04">zImage</sys:String>
-    <sys:String x:Key="dbo_04_t">Download Custom Language Image</sys:String>
+    <sys:String x:Key="dbo_03_t">Download Original Image</sys:String>
     <sys:String x:Key="dbo_05">Load Cards</sys:String>
     <sys:String x:Key="dbo_05_t">Load All Local Cards</sys:String>
     <sys:String x:Key="dbo_06">Cancel</sys:String>
@@ -31,4 +29,18 @@
     <sys:String x:Key="mw_04_02">custom</sys:String>
     <sys:String x:Key="mw_05">settings</sys:String>
     <sys:String x:Key="mw_06">help</sys:String>
+
+    <!--  deck builder  -->
+    <sys:String x:Key="cns_01">open</sys:String>
+    <sys:String x:Key="cns_02">save</sys:String>
+    <sys:String x:Key="cns_03">new</sys:String>
+
+    <!--  settings  -->
+    <sys:String x:Key="sts_01">appearance</sys:String>
+    <sys:String x:Key="sts_02">language</sys:String>
+    <sys:String x:Key="sts_03">about</sys:String>
+    <sys:String x:Key="sts_04">All changes will be saved automatically</sys:String>
+    <sys:String x:Key="sts_05">Theme:</sys:String>
+    <sys:String x:Key="sts_06">Font size:</sys:String>
+    <sys:String x:Key="sts_07">Restart to take effect</sys:String>
 </ResourceDictionary>

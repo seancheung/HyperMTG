@@ -1,15 +1,10 @@
 ﻿<mui:ModernWindow x:Class="HyperMTG.MainWindow"
                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                  xmlns:lg="clr-namespace:HyperMTG.Langs"
                   xmlns:mui="http://firstfloorsoftware.com/ModernUI"
                   Title="hyper mtg" ContentSource="/Pages/Home.xaml"
                   IsTitleVisible="True"
                   LogoData="{StaticResource PlaneswalkerGeometry}">
-    <!--  Initialize the language manager  -->
-    <mui:ModernWindow.DataContext>
-        <lg:LanguageManager />
-    </mui:ModernWindow.DataContext>
 
     <mui:ModernWindow.MenuLinkGroups>
         <mui:LinkGroup DisplayName="{StaticResource mw_01}">

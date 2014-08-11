@@ -18,7 +18,7 @@
                                                 Source={StaticResource LanguageManager}}"
                           SelectedIndex="{Binding CurrentIndex,
                                                   Source={StaticResource LanguageManager}}" />
-                <mui:BBCodeBlock Canvas.Bottom="10" BBCode="Restart to take effect" />
+                <mui:BBCodeBlock Canvas.Bottom="10" BBCode="{DynamicResource sts_07}" />
             </Canvas>
         </ScrollViewer>
     </Grid>

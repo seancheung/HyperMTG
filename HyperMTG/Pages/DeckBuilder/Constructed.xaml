@@ -374,13 +374,13 @@
                         Orientation="Horizontal">
                 <mui:ModernButton Margin="4,0"
                                   Command="{Binding OpenDeckCommand}"
-                                  Content="Open" />
+                                  Content="{DynamicResource cns_01}" />
                 <mui:ModernButton Margin="4,0"
                                   Command="{Binding SaveDeckCommand}"
-                                  Content="Save" />
+                                  Content="{DynamicResource cns_02}" />
                 <mui:ModernButton Margin="4,0"
                                   Command="{Binding NewDeckCommand}"
-                                  Content="New" />
+                                  Content="{DynamicResource cns_03}" />
 
             </StackPanel>
             <StackPanel Grid.Row="2" Grid.Column="3"

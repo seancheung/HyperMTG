@@ -3,19 +3,17 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <!--  database official  -->
-    <sys:String x:Key="info_01">Assembly Missing</sys:String>
-    <sys:String x:Key="dbo_01">Update Ses</sys:String>
-    <sys:String x:Key="dbo_01_t">Update Available Set List</sys:String>
-    <sys:String x:Key="dbo_02">Update Cards</sys:String>
-    <sys:String x:Key="dbo_02_t">Update Checked Cards</sys:String>
-    <sys:String x:Key="dbo_03">Image</sys:String>
-    <sys:String x:Key="dbo_03_t">Download Original English Image</sys:String>
-    <sys:String x:Key="dbo_04">zImage</sys:String>
-    <sys:String x:Key="dbo_04_t">Download Custom Language Image</sys:String>
-    <sys:String x:Key="dbo_05">Load Cards</sys:String>
-    <sys:String x:Key="dbo_05_t">Load All Local Cards</sys:String>
-    <sys:String x:Key="dbo_06">Cancel</sys:String>
-    <sys:String x:Key="dbo_06_t">Cancel Current Processing</sys:String>
+    <sys:String x:Key="info_01">组件丢失</sys:String>
+    <sys:String x:Key="dbo_01">更新系列</sys:String>
+    <sys:String x:Key="dbo_01_t">更新可用系列列表</sys:String>
+    <sys:String x:Key="dbo_02">更新卡牌</sys:String>
+    <sys:String x:Key="dbo_02_t">更新勾选系列的卡牌</sys:String>
+    <sys:String x:Key="dbo_03">图</sys:String>
+    <sys:String x:Key="dbo_03_t">下载原图</sys:String>
+    <sys:String x:Key="dbo_05">加载牌库</sys:String>
+    <sys:String x:Key="dbo_05_t">加载所有本地牌数据</sys:String>
+    <sys:String x:Key="dbo_06">取消</sys:String>
+    <sys:String x:Key="dbo_06_t">取消当前操作</sys:String>
 
     <!--  main window  -->
     <sys:String x:Key="mw_01">主页</sys:String>
@@ -31,4 +29,18 @@
     <sys:String x:Key="mw_04_02">用户</sys:String>
     <sys:String x:Key="mw_05">设定</sys:String>
     <sys:String x:Key="mw_06">帮助</sys:String>
+
+    <!--  deck builder  -->
+    <sys:String x:Key="cns_01">打开</sys:String>
+    <sys:String x:Key="cns_02">保存</sys:String>
+    <sys:String x:Key="cns_03">新建</sys:String>
+
+    <!--  settings  -->
+    <sys:String x:Key="sts_01">外观</sys:String>
+    <sys:String x:Key="sts_02">语言</sys:String>
+    <sys:String x:Key="sts_03">关于</sys:String>
+    <sys:String x:Key="sts_04">所有修改将自动保存</sys:String>
+    <sys:String x:Key="sts_05">主题:</sys:String>
+    <sys:String x:Key="sts_06">字体大小:</sys:String>
+    <sys:String x:Key="sts_07">重启后生效</sys:String>
 </ResourceDictionary>
