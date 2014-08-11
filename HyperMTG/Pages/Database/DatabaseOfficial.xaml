@@ -65,6 +65,7 @@
                 </Border>
             </StackPanel>
             <ListBox Grid.Row="1" Grid.Column="0"
+                     FontSize="{DynamicResource DefaultFontSize}"
                      ItemsSource="{Binding Sets}">
                 <ListBox.Resources>
                     <hp:VisibaleConverter x:Key="VisibaleConverter" />
@@ -106,6 +107,7 @@
                 </Grid.RowDefinitions>
 
                 <DataGrid Name="DataGrid" Grid.Row="0"
+                          FontSize="{DynamicResource DefaultFontSize}"
                           IsReadOnly="True"
                           ItemsSource="{Binding Cards}">
 
@@ -144,7 +146,8 @@
                         Grid.ColumnSpan="3">
                 <Label HorizontalAlignment="Right"
                        Background="Transparent"
-                       Content="{Binding Info}" />
+                       Content="{Binding Info}"
+                       FontSize="{DynamicResource DefaultFontSize}" />
             </StackPanel>
         </Grid>
     </Grid>

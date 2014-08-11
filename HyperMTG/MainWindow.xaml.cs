@@ -1,4 +1,5 @@
-﻿using HyperMTG.Langs;
+﻿using FirstFloor.ModernUI.Presentation;
+using HyperMTG.Properties;
 
 namespace HyperMTG
 {
@@ -9,7 +10,11 @@ namespace HyperMTG
 	{
 		public MainWindow()
 		{
-			App.LanguageManager = new LanguageManager();
+			//Load theme setting
+			AppearanceManager.Current.AccentColor = Settings.Default.AccentColor;
+			AppearanceManager.Current.FontSize = Settings.Default.FontSize;
+			AppearanceManager.Current.ThemeSource = Settings.Default.Theme;
+
 			InitializeComponent();
 		}
 	}

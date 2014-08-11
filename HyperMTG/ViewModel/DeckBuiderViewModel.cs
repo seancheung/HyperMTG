@@ -1,4 +1,6 @@
 ﻿using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -7,6 +9,7 @@ using HyperMTG.Helper;
 using HyperMTG.Model;
 using HyperMTG.Properties;
 using HyperPlugin;
+using Microsoft.Win32;
 
 namespace HyperMTG.ViewModel
 {
@@ -16,6 +19,8 @@ namespace HyperMTG.ViewModel
 
 		private readonly IDBReader _dbReader;
 		private readonly IDBWriter _dbWriter;
+		private readonly IDeckWriter[] _deckWriters;
+		private readonly IDeckReader[] _deckReaders;
 
 		/// <summary>
 		///     UI dispatcher(to handle ObservableCollection)
@@ -42,6 +47,8 @@ namespace HyperMTG.ViewModel
 			_dbWriter = PluginManager.Instance.GetPlugin<IDBWriter>();
 			_compressor = PluginManager.Instance.GetPlugin<ICompressor>();
 			_imageParse = PluginManager.Instance.GetPlugin<IImageParse>();
+			_deckWriters = PluginManager.Instance.GetPlugins<IDeckWriter>().ToArray();
+			_deckReaders = PluginManager.Instance.GetPlugins<IDeckReader>().ToArray();
 
 			if (_dbWriter != null && _dbReader != null)
 			{
@@ -99,6 +106,21 @@ namespace HyperMTG.ViewModel
 
 		#region Command
 
+		public ICommand NewDeckCommand
+		{
+			get { return new RelayCommand(NewDeckExecute, CanExecuteNewDeck); }
+		}
+
+		public ICommand OpenDeckCommand
+		{
+			get { return new RelayCommand(OpenDeckExecute, CanExecuteOpenDeck); }
+		}
+
+		public ICommand SaveDeckCommand
+		{
+			get { return new RelayCommand(SaveDeckExecute, CanExecuteSaveDeck); }
+		}
+
 		public ICommand MoveToSideCommand
 		{
 			get { return new RelayCommand<Card>(MoveToSideExecute, CanExecuteDeleteCardMain); }
@@ -132,6 +154,47 @@ namespace HyperMTG.ViewModel
 		#endregion
 
 		#region Execute
+
+		private void NewDeckExecute()
+		{
+			Deck = new Deck();
+		}
+
+		private void OpenDeckExecute()
+		{
+			OpenFileDialog dlg = new OpenFileDialog();
+
+			dlg.Filter = _deckReaders.Aggregate("", (current, deckWriter) => current + string.Format("|{0}(*.{1})|*.{2}", deckWriter.DeckType, deckWriter.FileExt, deckWriter.FileExt)).Remove(0, 1);
+			dlg.RestoreDirectory = true;
+
+			if (dlg.ShowDialog() == true)
+			{
+				IDeckReader deckReader = _deckReaders[dlg.FilterIndex - 1];
+				using (FileStream fs = (FileStream)dlg.OpenFile())
+				{
+					Deck = deckReader.Read(fs, Cards);
+				}
+			}
+		}
+
+		private void SaveDeckExecute()
+		{
+			SaveFileDialog dlg = new SaveFileDialog();
+
+			dlg.Filter = _deckWriters.Aggregate("", (current, deckWriter) => current + string.Format("|{0}(*.{1})|*.{2}", deckWriter.DeckType, deckWriter.FileExt, deckWriter.FileExt)).Remove(0, 1);
+			dlg.RestoreDirectory = true;
+
+			if (dlg.ShowDialog() == true)
+			{
+				IDeckWriter deckWriter = _deckWriters[dlg.FilterIndex - 1];
+				using (FileStream fs = (FileStream)dlg.OpenFile())
+				{
+					deckWriter.Write(Deck, fs);
+				}
+
+				Info = "File successfully saved";
+			}
+		}
 
 		private void AddCardMainExecute(Card card)
 		{
@@ -168,6 +231,21 @@ namespace HyperMTG.ViewModel
 		#endregion
 
 		#region CanExecute
+
+		private bool CanExecuteNewDeck()
+		{
+			return Deck.MainBoard.Count > 0 || Deck.SideBoard.Count > 0;
+		}
+
+		private bool CanExecuteOpenDeck()
+		{
+			return _deckReaders != null && _deckReaders.Length > 0 && Cards.Count > 0;
+		}
+
+		private bool CanExecuteSaveDeck()
+		{
+			return _deckWriters != null && _deckWriters.Length > 0 && (Deck.MainBoard.Count > 0 || Deck.SideBoard.Count > 0);
+		}
 
 		private bool CanExecuteDeleteCardMain(Card card)
 		{

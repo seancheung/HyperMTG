@@ -73,9 +73,14 @@
                 </ListBox>
                 </Expander>
             -->
-            <mui:BBCodeBlock HorizontalAlignment="Center" BBCode="{Binding ElementName=ListView, Path=Items.Count, StringFormat='[i]Total Cards:[/i] [b]{0}[/b]'}" />
+            <mui:BBCodeBlock HorizontalAlignment="Center"
+                             BBCode="{Binding ElementName=ListView,
+                                              Path=Items.Count,
+                                              StringFormat='[i]Total Cards:[/i] [b]{0}[/b]'}"
+                             FontSize="{DynamicResource DefaultFontSize}" />
             <ListView x:Name="ListView" Grid.Row="1"
                       Grid.Column="0"
+                      FontSize="{DynamicResource DefaultFontSize}"
                       ItemsSource="{Binding Cards}"
                       SelectedValue="{Binding SelectedCard.Card,
                                               Mode=OneWayToSource}">
@@ -164,10 +169,12 @@
                     <mui:BBCodeBlock Grid.Row="2" Margin="0,4"
                                      BBCode="{Binding SelectedCard.Card.Text,
                                                       NotifyOnTargetUpdated=True}"
+                                     FontSize="{DynamicResource DefaultFontSize}"
                                      TargetUpdated="FrameworkElement_OnTargetUpdated" />
                     <mui:BBCodeBlock Grid.Row="3" Margin="0,4"
                                      BBCode="{Binding SelectedCard.Card.Flavor,
-                                                      StringFormat='[i]{0}[/i]'}" />
+                                                      StringFormat='[i]{0}[/i]'}"
+                                     FontSize="{DynamicResource DefaultFontSize}" />
                 </Grid>
             </ScrollViewer>
             <GridSplitter Grid.Row="0" Grid.RowSpan="2"
@@ -179,15 +186,18 @@
                              VerticalAlignment="Center"
                              BBCode="{Binding Items.Count,
                                               ElementName=Lbmain,
-                                              StringFormat='[i]Mainboard:[/i] [b]{0}[/b]'}" />
+                                              StringFormat='[i]Mainboard:[/i] [b]{0}[/b]'}"
+                             FontSize="{DynamicResource DefaultFontSize}" />
             <mui:BBCodeBlock Grid.Row="0" Grid.Column="6"
                              HorizontalAlignment="Center"
                              VerticalAlignment="Center"
                              BBCode="{Binding Items.Count,
                                               ElementName=Lbside,
-                                              StringFormat='[i]Sideboard:[/i] [b]{0}[/b]'}" />
+                                              StringFormat='[i]Sideboard:[/i] [b]{0}[/b]'}"
+                             FontSize="{DynamicResource DefaultFontSize}" />
             <ListView x:Name="Lbmain" Grid.Row="1"
                       Grid.Column="4"
+                      FontSize="{DynamicResource DefaultFontSize}"
                       ItemsSource="{Binding Source={StaticResource MainboardSource}}"
                       SelectedValue="{Binding SelectedCard.Card,
                                               Mode=OneWayToSource}">
@@ -263,9 +273,9 @@
                 </ListView.ItemContainerStyle>
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Type}" Header="Type" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Cost}" Header="Cost" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Name}" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Type}" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Cost}" />
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -275,6 +285,7 @@
                           Background="{StaticResource ItemBorder}" />
             <ListView x:Name="Lbside" Grid.Row="1"
                       Grid.Column="6" AllowDrop="True"
+                      FontSize="{DynamicResource DefaultFontSize}"
                       ItemsSource="{Binding Source={StaticResource SideboardSource}}"
                       SelectedValue="{Binding SelectedCard.Card,
                                               Mode=OneWayToSource}">
@@ -350,15 +361,31 @@
                 </ListView.ItemContainerStyle>
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Type}" Header="Type" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Cost}" Header="Cost" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Name}" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Type}" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Cost}" />
                     </GridView>
                 </ListView.View>
             </ListView>
             <StackPanel Grid.Row="2" Grid.Column="0"
-                        Grid.ColumnSpan="7" Height="20">
-                <mui:BBCodeBlock HorizontalAlignment="Right" Text="{Binding Info}" />
+                        Grid.ColumnSpan="3" Height="20"
+                        Orientation="Horizontal">
+                <mui:ModernButton Margin="4,0"
+                                  Command="{Binding OpenDeckCommand}"
+                                  Content="Open" />
+                <mui:ModernButton Margin="4,0"
+                                  Command="{Binding SaveDeckCommand}"
+                                  Content="Save" />
+                <mui:ModernButton Margin="4,0"
+                                  Command="{Binding NewDeckCommand}"
+                                  Content="New" />
+
+            </StackPanel>
+            <StackPanel Grid.Row="2" Grid.Column="3"
+                        Grid.ColumnSpan="4" Height="20">
+                <mui:BBCodeBlock HorizontalAlignment="Right"
+                                 FontSize="{DynamicResource DefaultFontSize}"
+                                 Text="{Binding Info}" />
             </StackPanel>
         </Grid>
     </Grid>

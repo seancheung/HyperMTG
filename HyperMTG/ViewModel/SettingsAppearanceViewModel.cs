@@ -2,8 +2,9 @@
 using System.Linq;
 using System.Windows.Media;
 using FirstFloor.ModernUI.Presentation;
+using HyperMTG.Properties;
 
-namespace HyperMTG.Content
+namespace HyperMTG.ViewModel
 {
 	/// <summary>
 	///     A simple view model for configuring theme, font and accent colors.
@@ -96,6 +97,9 @@ namespace HyperMTG.Content
 
 					// and update the actual theme
 					AppearanceManager.Current.ThemeSource = value.Source;
+					//Save Change
+					Settings.Default.Theme = value.Source;
+					Settings.Default.Save();
 				}
 			}
 		}
@@ -111,6 +115,9 @@ namespace HyperMTG.Content
 					OnPropertyChanged("SelectedFontSize");
 
 					AppearanceManager.Current.FontSize = value == FontLarge ? FontSize.Large : FontSize.Small;
+					//Save Change
+					Settings.Default.FontSize = AppearanceManager.Current.FontSize;
+					Settings.Default.Save();
 				}
 			}
 		}
@@ -126,6 +133,9 @@ namespace HyperMTG.Content
 					OnPropertyChanged("SelectedAccentColor");
 
 					AppearanceManager.Current.AccentColor = value;
+					//Save Change
+					Settings.Default.AccentColor = value;
+					Settings.Default.Save();
 				}
 			}
 		}

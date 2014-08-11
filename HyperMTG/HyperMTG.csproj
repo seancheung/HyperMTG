@@ -103,6 +103,9 @@
     <Compile Include="Pages\DeckBuilder\Sealed.xaml.cs">
       <DependentUpon>Sealed.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Settings\SettingsLanguage.xaml.cs">
+      <DependentUpon>SettingsLanguage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -207,6 +210,10 @@
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Page Include="Pages\Settings\SettingsLanguage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\3D\Other3DResources.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

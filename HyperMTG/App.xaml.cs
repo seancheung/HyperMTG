@@ -7,6 +7,6 @@ namespace HyperMTG
 	/// </summary>
 	public partial class App
 	{
-		public static LanguageManager LanguageManager { get; set; }
+		
 	}
 }

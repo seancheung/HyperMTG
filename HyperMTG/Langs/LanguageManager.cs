@@ -23,11 +23,10 @@ namespace HyperMTG.Langs
 		private const string LangFolder = "Langs";
 
 		private static bool isFound;
+		private static List<LANGUAGE> languages = new List<LANGUAGE>();
 
 		public LanguageManager()
 		{
-			Languages = new List<LANGUAGE>();
-
 			if (!isFound && !IsInDesignMode)
 			{
 				string pattern = string.Format(@"(?<={0}\.)[a-z]{{2}}(?=\.{1})", LangPrefix, LangPostfix);
@@ -54,6 +53,12 @@ namespace HyperMTG.Langs
 			}
 		}
 
+		public static int CurrentIndex
+		{
+			get { return Languages.IndexOf(Settings.Default.Language); }
+			set { ChangeLang(Languages[value]); }
+		}
+
 		public static bool IsInDesignMode
 		{
 			get
@@ -63,22 +68,24 @@ namespace HyperMTG.Langs
 			}
 		}
 
-		public static List<LANGUAGE> Languages { get; private set; }
+		public static List<LANGUAGE> Languages
+		{
+			get { return languages; }
+		}
 
 
-		public static void ChangeLang(LANGUAGE lang)
+		private static void ChangeLang(LANGUAGE lang)
 		{
 			if (Languages.Contains(lang))
 			{
 				string filePath = string.Format("{0}\\{1}.{2}.{3}", LangFolder, LangPrefix, lang.GetLangCode(),
 					LangPostfix);
 
-				using (var fs = new FileStream(filePath, FileMode.Open))
+				using (FileStream fs = new FileStream(filePath, FileMode.Open))
 				{
-					var dict = XamlReader.Load(fs) as ResourceDictionary;
+					ResourceDictionary dict = XamlReader.Load(fs) as ResourceDictionary;
 
 					Application.Current.Resources.MergedDictionaries[0] = dict;
-
 
 					Settings.Default.Language = lang;
 					Settings.Default.Save();

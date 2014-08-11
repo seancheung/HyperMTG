@@ -5,5 +5,14 @@
     <Setting Name="Language" Type="HyperKore.Common.LANGUAGE" Scope="User">
       <Value Profile="(Default)">ChineseSimplified</Value>
     </Setting>
+    <Setting Name="FontSize" Type="FirstFloor.ModernUI.Presentation.FontSize" Scope="User">
+      <Value Profile="(Default)">Large</Value>
+    </Setting>
+    <Setting Name="Theme" Type="System.Uri" Scope="User">
+      <Value Profile="(Default)">/FirstFloor.ModernUI;component/Assets/ModernUI.Light.xaml</Value>
+    </Setting>
+    <Setting Name="AccentColor" Type="System.Windows.Media.Color" Scope="User">
+      <Value Profile="(Default)">#FF1BA1E2</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

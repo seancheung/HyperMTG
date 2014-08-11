@@ -6,22 +6,19 @@
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
              d:DesignHeight="300" d:DesignWidth="300"
              mc:Ignorable="d">
+
     <Grid Style="{StaticResource ContentRoot}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Canvas Height="30" Margin="0,0,0,8">
-            <mui:ModernButton Canvas.Left="10" Content="save"
-                              Cursor="Hand" IsDefault="True" />
-            <mui:ModernButton Canvas.Right="10" Content="cancel"
-                              Cursor="Hand" IsCancel="True" />
-        </Canvas>
+        <mui:BBCodeBlock Height="30" Margin="0,0,0,8"
+                         BBCode="All changes will be saved automatically" />
         <mui:ModernTab Grid.Row="1" Layout="List"
                        SelectedSource="/Pages/Settings/About.xaml">
             <mui:ModernTab.Links>
                 <mui:Link DisplayName="appearance" Source="/Pages/Settings/SettingsAppearance.xaml" />
-                <mui:Link DisplayName="language" />
+                <mui:Link DisplayName="language" Source="/Pages/Settings/SettingsLanguage.xaml" />
                 <mui:Link DisplayName="about" Source="/Pages/Settings/About.xaml" />
             </mui:ModernTab.Links>
         </mui:ModernTab>
