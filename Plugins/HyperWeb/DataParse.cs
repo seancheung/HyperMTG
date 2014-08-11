@@ -30,7 +30,7 @@ namespace HyperPlugin.Web
 		/// </summary>
 		/// <param name="setcode">Full english set name</param>
 		/// <returns>the url for webrequesting</returns>
-		private string BuildURL(string setcode, LANGUAGE lang)
+		private string BuildURL(string setcode, Language lang)
 		{
 			return string.Format("http://magiccards.info/query?q=%2B%2Be%3A{0}%2F{1}&v=spoiler&s=issue", setcode.ToLower(),
 				lang.GetLangCode());
@@ -53,7 +53,7 @@ namespace HyperPlugin.Web
 		/// <param name="card"></param>
 		/// <param name="lang"></param>
 		/// <returns></returns>
-		public byte[] Download(Card card, LANGUAGE lang = LANGUAGE.English)
+		public byte[] Download(Card card, Language lang = Language.English)
 		{
 			string uri = string.Format("http://magiccards.info/scans/{0}/{1}/{2}.jpg", lang.GetLangCode(), card.SetCode.ToLower(),
 				card.Number);
@@ -104,7 +104,7 @@ namespace HyperPlugin.Web
 		/// <param name="set"></param>
 		/// <param name="lang"></param>
 		/// <returns></returns>
-		public IEnumerable<Card> Process(Set set, LANGUAGE lang = LANGUAGE.English)
+		public IEnumerable<Card> Process(Set set, Language lang = Language.English)
 		{
 			string webdata = request.GetWebData(BuildURL(set.SetCode, lang));
 			if (webdata.Contains("Your query did not match any cards"))
@@ -143,6 +143,10 @@ namespace HyperPlugin.Web
 				{
 					type = Regex.Replace(type, @"\(.*\)", "").Trim();
 				}
+				else
+				{
+					card.Loyalty = null;
+				}
 				card.Type = type;
 
 				string cost = typCos[1].Trim();
@@ -151,6 +155,11 @@ namespace HyperPlugin.Web
 					card.Cost = Regex.Split(cost, @"\s")[0].ManaBuild();
 
 					card.CMC = Regex.Match(cost, @"(?<=\()\d+(?=\))").Value.Trim();
+				}
+				else
+				{
+					card.Cost = null;
+					card.CMC = "0";
 				}
 				card.Text = ps[2].InnerHtml.RemoveHtmlTag();
 				card.Flavor = ps[3].InnerHtml.RemoveHtmlTag();
@@ -169,7 +178,7 @@ namespace HyperPlugin.Web
 		/// <param name="card"></param>
 		/// <param name="lang"></param>
 		/// <returns>If card is not found, false will be returned</returns>
-		public bool Process(Card card, LANGUAGE lang = LANGUAGE.English)
+		public bool Process(Card card, Language lang = Language.English)
 		{
 			throw new NotImplementedException();
 		}

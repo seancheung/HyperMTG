@@ -10,6 +10,6 @@ namespace HyperPlugin
 		/// <param name="card"></param>
 		/// <param name="lang"></param>
 		/// <returns></returns>
-		byte[] Download(Card card, LANGUAGE lang = LANGUAGE.English);
+		byte[] Download(Card card, Language lang = Language.English);
 	}
 }

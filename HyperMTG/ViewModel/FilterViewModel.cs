@@ -1,27 +1,46 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using HyperKore.Common;
 using HyperMTG.Helper;
 using HyperMTG.Model;
+using HyperMTG.Properties;
+using HyperPlugin;
+using Type = HyperKore.Common.Type;
 
 namespace HyperMTG.ViewModel
 {
 	internal class FilterViewModel
 	{
+		private static readonly FilterViewModel _instance = new FilterViewModel();
+		private readonly IDBReader _dbReader;
+
 		/// <summary>
 		///     Initializes a new instance of the FilterViewModel class.
 		/// </summary>
-		public FilterViewModel()
+		private FilterViewModel()
 		{
+			_dbReader = PluginManager.Instance.GetPlugin<IDBReader>();
+			if (_dbReader != null)
+			{
+				_dbReader.Language = Settings.Default.Language;
+			}
+
 			Cost = 0;
 			Power = 0;
 			Rating = 0f;
 			Toughness = 0;
-			Types = GetFromEnum<TYPE>();
-			Colors = GetFromEnum<COLOR>();
-			Rarities = GetFromEnum<RARITY>();
+			Types = GetFromEnum<Type>();
+			Colors = GetFromEnum<Color>();
+			Rarities = GetFromEnum<Rarity>();
+			Sets = LoadSets().ToArray();
+		}
+
+		public static FilterViewModel Instance
+		{
+			get { return _instance; }
 		}
 
 		public int Cost { get; set; }
@@ -32,21 +51,18 @@ namespace HyperMTG.ViewModel
 
 		public int Toughness { get; set; }
 
-		public IEnumerable Rarities { get; set; }
+		public IEnumerable<CheckItem<Rarity>> Rarities { get; set; }
 
-		public IEnumerable Colors { get; set; }
+		public IEnumerable<CheckItem<Color>> Colors { get; set; }
 
-		public IEnumerable Types { get; set; }
+		public IEnumerable<CheckItem<Type>> Types { get; set; }
 
 		public IEnumerable Formats
 		{
 			get { return null; }
 		}
 
-		public IEnumerable Sets
-		{
-			get { return null; }
-		}
+		public IEnumerable<CheckItem<Set>> Sets { get; set; }
 
 		public ICommand CheckType
 		{
@@ -63,14 +79,25 @@ namespace HyperMTG.ViewModel
 			get { return new RelayCommand<string>(CheckRarityExecute); }
 		}
 
-		private static IEnumerable GetFromEnum<T>()
+		private IEnumerable<CheckItem<Set>> LoadSets()
 		{
-			return Enum.GetNames(typeof (T)).Select(item => new CheckItem(item, false)).ToList();
+			if (_dbReader != null)
+			{
+				foreach (Set set in _dbReader.LoadSets().Where(s => s.Local))
+				{
+					yield return new CheckItem<Set>(set, false);
+				}
+			}
+		}
+
+		private static IEnumerable<CheckItem<T>> GetFromEnum<T>()
+		{
+			return Enum.GetNames(typeof (T)).Select(item => new CheckItem<T>((T) Enum.Parse(typeof (T), item), false)).ToList();
 		}
 
 		private void CheckTypeExecute(object parameter)
 		{
-			foreach (CheckItem type in Types)
+			foreach (var type in Types)
 			{
 				switch (parameter.ToString())
 				{
@@ -91,7 +118,7 @@ namespace HyperMTG.ViewModel
 
 		private void CheckColorExecute(object parameter)
 		{
-			foreach (CheckItem color in Colors)
+			foreach (var color in Colors)
 			{
 				switch (parameter.ToString())
 				{
@@ -112,7 +139,7 @@ namespace HyperMTG.ViewModel
 
 		private void CheckRarityExecute(object parameter)
 		{
-			foreach (CheckItem rarity in Rarities)
+			foreach (var rarity in Rarities)
 			{
 				switch (parameter.ToString())
 				{

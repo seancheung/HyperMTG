@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using HyperKore.Common;
+using Type = HyperKore.Common.Type;
 
 namespace HyperKore.Utilities
 {
@@ -32,26 +33,27 @@ namespace HyperKore.Utilities
 		/// </summary>
 		/// <param name="card"></param>
 		/// <returns></returns>
-		public static IEnumerable<COLOR> GetColors(this Card card)
+		public static IEnumerable<Color> GetColors(this Card card)
 		{
-			if (card == null || card.Cost == null)
+			if (card == null)
 				throw new ArgumentNullException();
 
-			if (!Regex.Match(card.Cost, @"W|B|U|R|G").Success)
+			if (card.Cost == null)
 			{
-				yield return COLOR.Colorless;
+				yield return Color.Colorless;
 				yield break;
 			}
+
 			if (card.Cost.Contains("W"))
-				yield return COLOR.White;
+				yield return Color.White;
 			if (card.Cost.Contains("B"))
-				yield return COLOR.Black;
+				yield return Color.Black;
 			if (card.Cost.Contains("U"))
-				yield return COLOR.Blue;
+				yield return Color.Blue;
 			if (card.Cost.Contains("R"))
-				yield return COLOR.Red;
+				yield return Color.Red;
 			if (card.Cost.Contains("G"))
-				yield return COLOR.Green;
+				yield return Color.Green;
 		}
 
 		/// <summary>
@@ -60,13 +62,26 @@ namespace HyperKore.Utilities
 		/// </summary>
 		/// <param name="card"></param>
 		/// <returns></returns>
-		public static IEnumerable<TYPE> GetTypes(this Card card)
+		public static IEnumerable<Type> GetTypes(this Card card)
 		{
 			if (card == null || card.Type == null)
 				throw new ArgumentNullException();
 
-			return from type in Enum.GetNames(typeof (TYPE)) where Regex.Match(card.Type, string.Format(@"\s{0}\s", type), RegexOptions.IgnoreCase).Success select (TYPE) Enum.Parse(typeof (TYPE), type);
+			return from type in Enum.GetNames(typeof (Type)) where Regex.Match(card.Type, string.Format(@"\s*{0}\s*", type), RegexOptions.IgnoreCase).Success select (Type) Enum.Parse(typeof (Type), type);
 		}
+
+		/// <summary>
+		/// Whether this card is a basic land
+		/// </summary>
+		/// <param name="card"></param>
+		/// <returns></returns>
+		public static bool IsBasicLand(this Card card)
+		{
+			if (card == null || card.Type == null)
+				throw new ArgumentNullException();
+
+			return card.GetTypes().Contains(Type.Basic) && card.GetTypes().Contains(Type.Land);
+		} 
 
 		/// <summary>
 		/// Get rarity of a card. 
@@ -75,7 +90,7 @@ namespace HyperKore.Utilities
 		/// </summary>
 		/// <param name="card"></param>
 		/// <returns></returns>
-		public static RARITY GetRarity(this Card card)
+		public static Rarity GetRarity(this Card card)
 		{
 			if (card == null || card.Type == null)
 				throw new ArgumentNullException();
@@ -86,21 +101,21 @@ namespace HyperKore.Utilities
 				case "basic":
 				case "land":
 				case "basic land":
-					return RARITY.Common;
+					return Rarity.Common;
 				case "uncommon":
-					return RARITY.Uncommon;
+					return Rarity.Uncommon;
 				case "rare":
-					return RARITY.Rare;
+					return Rarity.Rare;
 				case "mythic rare":
 				case "special":
-					return RARITY.Mythic;
+					return Rarity.Mythic;
 				default:
 					throw new ArgumentException(card.Rarity);
 			}
 		}
 
 		/// <summary>
-		/// Whether the card is multicolored
+		/// Whether this card is multicolored
 		/// </summary>
 		/// <param name="card"></param>
 		/// <returns></returns>

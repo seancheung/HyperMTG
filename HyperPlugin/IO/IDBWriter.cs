@@ -13,7 +13,7 @@ namespace HyperPlugin
 		/// <summary>
 		/// Language of the database
 		/// </summary>
-		LANGUAGE Language { get; set; }
+		Language Language { get; set; }
 
 		/// <summary>
 		///     Dlete card

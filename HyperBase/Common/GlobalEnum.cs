@@ -1,6 +1,6 @@
 ﻿namespace HyperKore.Common
 {
-	public enum COLOR
+	public enum Color
 	{
 		Red,
 		Blue,
@@ -10,7 +10,7 @@
 		Colorless
 	}
 
-	public enum FORMAT
+	public enum Format
 	{
 		Default,
 		Standard,
@@ -23,7 +23,7 @@
 		Commander
 	}
 
-	public enum LANGUAGE
+	public enum Language
 	{
 		English,
 		ChineseSimplified,
@@ -38,7 +38,7 @@
 		Spanish
 	}
 
-	public enum MODE
+	public enum Mode
 	{
 		Default,
 		Constructed,
@@ -47,7 +47,7 @@
 		Draft
 	}
 
-	public enum RARITY
+	public enum Rarity
 	{
 		Common,
 		Uncommon,
@@ -55,7 +55,7 @@
 		Mythic
 	}
 
-	public enum TYPE
+	public enum Type
 	{
 		Artifact,
 		Equipment,
@@ -79,11 +79,11 @@
 		World
 	}
 
-	public enum WEBSITE
+	public enum Website
 	{
-		gatherer,
-		magiccards,
-		magicspoiler,
-		iplaymtg
+		Gatherer,
+		Magiccards,
+		Magicspoiler,
+		Iplaymtg
 	}
 }

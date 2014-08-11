@@ -23,7 +23,7 @@ namespace HyperMTG.Langs
 		private const string LangFolder = "Langs";
 
 		private static bool isFound;
-		private static List<LANGUAGE> languages = new List<LANGUAGE>();
+		private static List<Language> languages = new List<Language>();
 
 		public LanguageManager()
 		{
@@ -36,7 +36,7 @@ namespace HyperMTG.Langs
 					try
 					{
 						string isoCode = Regex.Match(source, pattern).Value;
-						LANGUAGE lang = LanguageTool.GetLangugeByCode(isoCode);
+						Language lang = LanguageTool.GetLangugeByCode(isoCode);
 						Languages.Add(lang);
 					}
 					catch (ArgumentException)
@@ -68,13 +68,13 @@ namespace HyperMTG.Langs
 			}
 		}
 
-		public static List<LANGUAGE> Languages
+		public static List<Language> Languages
 		{
 			get { return languages; }
 		}
 
 
-		private static void ChangeLang(LANGUAGE lang)
+		private static void ChangeLang(Language lang)
 		{
 			if (Languages.Contains(lang))
 			{

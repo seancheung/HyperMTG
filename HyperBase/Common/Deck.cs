@@ -17,8 +17,8 @@ namespace HyperKore.Common
 			MainBoard = new ObservableCollection<Card>();
 			SideBoard = new ObservableCollection<Card>();
 			Comment = String.Empty;
-			Format = FORMAT.Default;
-			Mode = MODE.Default;
+			Format = Format.Default;
+			Mode = Mode.Default;
 		}
 
 		[XmlAttribute("comment")]
@@ -29,7 +29,7 @@ namespace HyperKore.Common
 		}
 
 		[XmlAttribute("format")]
-		public FORMAT Format
+		public Format Format
 		{
 			get;
 			set;
@@ -39,7 +39,7 @@ namespace HyperKore.Common
 		public ICollection<Card> MainBoard { get; set; }
 
 		[XmlAttribute("type")]
-		public MODE Mode
+		public Mode Mode
 		{
 			get;
 			set;

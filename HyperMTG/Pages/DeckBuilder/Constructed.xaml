@@ -73,11 +73,13 @@
                 </ListBox>
                 </Expander>
             -->
-            <mui:BBCodeBlock HorizontalAlignment="Center"
-                             BBCode="{Binding ElementName=ListView,
-                                              Path=Items.Count,
-                                              StringFormat='[i]Total Cards:[/i] [b]{0}[/b]'}"
-                             FontSize="{DynamicResource DefaultFontSize}" />
+            <Button Margin="2"
+                    Command="{Binding FilterCommand}"
+                    FontSize="{DynamicResource DefaultFontSize}">
+                <Button.Content>
+                    <mui:BBCodeBlock BBCode="{Binding ElementName=ListView, Path=Items.Count, StringFormat='[i]Total Cards[/i]: [b]{0}[/b]'}" TextWrapping="Wrap" />
+                </Button.Content>
+            </Button>
             <ListView x:Name="ListView" Grid.Row="1"
                       Grid.Column="0"
                       FontSize="{DynamicResource DefaultFontSize}"

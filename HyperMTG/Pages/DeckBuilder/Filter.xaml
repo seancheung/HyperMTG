@@ -4,131 +4,120 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
-             xmlns:vm="clr-namespace:HyperMTG.ViewModel"
              d:DesignHeight="320" d:DesignWidth="480"
              mc:Ignorable="d">
     <UserControl.Resources>
         <DataTemplate x:Key="CheckBoxTemplate">
-            <CheckBox Content="{Binding Content}"
+            <CheckBox Content="{Binding Name}"
                       IsChecked="{Binding IsChecked,
                                           Mode=TwoWay}"
                       IsThreeState="True" />
         </DataTemplate>
     </UserControl.Resources>
-    <UserControl.DataContext>
-        <vm:FilterViewModel />
-    </UserControl.DataContext>
     <Grid Style="{StaticResource ContentRoot}">
-        <ScrollViewer>
-            <Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" MinWidth="100" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" MinWidth="100" />
+                <ColumnDefinition Width="*" MinWidth="100" />
+            </Grid.ColumnDefinitions>
+            <ListBox Grid.Column="0"
+                     ItemTemplate="{StaticResource CheckBoxTemplate}"
+                     ItemsSource="{Binding Sets}" />
+            <ListBox Grid.Column="1"
+                     ItemTemplate="{StaticResource CheckBoxTemplate}"
+                     ItemsSource="{Binding Formats}" />
+            <ListBox Grid.Column="2"
+                     ItemTemplate="{StaticResource CheckBoxTemplate}"
+                     ItemsSource="{Binding Types}">
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding CheckType}"
+                                  CommandParameter="0" Header="Include All" />
+                        <MenuItem Command="{Binding CheckType}"
+                                  CommandParameter="2" Header="Exclude All" />
+                    </ContextMenu>
+                </ListBox.ContextMenu>
+            </ListBox>
+            <Grid Grid.Column="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto" MinWidth="100" />
-                    <ColumnDefinition Width="auto" MinWidth="100" />
-                    <ColumnDefinition Width="auto" MinWidth="100" />
-                    <ColumnDefinition Width="*" MinWidth="100" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <ListBox Grid.Column="0"
+                <TextBlock Grid.Row="0" Grid.Column="0"
+                           Margin="2" Text="Cost" />
+                <TextBlock Grid.Row="1" Grid.Column="0"
+                           Margin="2" Text="Rating" />
+                <Slider Grid.Row="0" Grid.Column="1"
+                        Margin="2" AutoToolTipPlacement="TopLeft"
+                        Cursor="Hand" IsSnapToTickEnabled="True"
+                        SmallChange="1" TickPlacement="TopLeft"
+                        Value="{Binding Cost}" />
+                <Slider Grid.Row="1" Grid.Column="1"
+                        Margin="2" AutoToolTipPlacement="TopLeft"
+                        AutoToolTipPrecision="1" Cursor="Hand"
+                        IsSnapToTickEnabled="True" Maximum="5"
+                        SmallChange="0.5" TickFrequency="0.5"
+                        TickPlacement="TopLeft"
+                        Value="{Binding Rating}" />
+                <Grid Grid.Row="2" Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Margin="2"
+                               Text="Power" />
+                    <TextBlock Grid.Column="2" Margin="2"
+                               Text="Toughness" />
+                    <Slider Grid.Column="1" Margin="2"
+                            AutoToolTipPlacement="TopLeft" Cursor="Hand"
+                            IsSnapToTickEnabled="True" SmallChange="1"
+                            TickPlacement="TopLeft"
+                            Value="{Binding Power}" />
+                    <Slider Grid.Column="3" Margin="2"
+                            AutoToolTipPlacement="TopLeft" Cursor="Hand"
+                            IsSnapToTickEnabled="True" SmallChange="1"
+                            TickPlacement="TopLeft"
+                            Value="{Binding Toughness}" />
+                </Grid>
+                <ListBox Grid.Row="3" Grid.ColumnSpan="2"
+                         Margin="2"
                          ItemTemplate="{StaticResource CheckBoxTemplate}"
-                         ItemsSource="{Binding Sets}" />
-                <ListBox Grid.Column="1"
-                         ItemTemplate="{StaticResource CheckBoxTemplate}"
-                         ItemsSource="{Binding Formats}" />
-                <ListBox Grid.Column="2"
-                         ItemTemplate="{StaticResource CheckBoxTemplate}"
-                         ItemsSource="{Binding Types}">
+                         ItemsSource="{Binding Colors}">
                     <ListBox.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Command="{Binding CheckType}"
+                            <MenuItem Command="{Binding CheckColor}"
                                       CommandParameter="0" Header="Include All" />
-                            <MenuItem Command="{Binding CheckType}"
-                                      CommandParameter="1" Header="Match All" />
-                            <MenuItem Command="{Binding CheckType}"
+                            <MenuItem Command="{Binding CheckColor}"
                                       CommandParameter="2" Header="Exclude All" />
                         </ContextMenu>
                     </ListBox.ContextMenu>
                 </ListBox>
-                <Grid Grid.Column="3">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Row="0" Grid.Column="0"
-                               Margin="2" Text="Cost" />
-                    <TextBlock Grid.Row="1" Grid.Column="0"
-                               Margin="2" Text="Rating" />
-                    <Slider Grid.Row="0" Grid.Column="1"
-                            Margin="2" AutoToolTipPlacement="TopLeft"
-                            Cursor="Hand" IsSnapToTickEnabled="True"
-                            SmallChange="1" TickPlacement="TopLeft"
-                            Value="{Binding Cost}" />
-                    <Slider Grid.Row="1" Grid.Column="1"
-                            Margin="2" AutoToolTipPlacement="TopLeft"
-                            AutoToolTipPrecision="1" Cursor="Hand"
-                            IsSnapToTickEnabled="True" Maximum="5"
-                            SmallChange="0.5" TickFrequency="0.5"
-                            TickPlacement="TopLeft"
-                            Value="{Binding Rating}" />
-                    <Grid Grid.Row="2" Grid.ColumnSpan="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Margin="2"
-                                   Text="Power" />
-                        <TextBlock Grid.Column="2" Margin="2"
-                                   Text="Toughness" />
-                        <Slider Grid.Column="1" Margin="2"
-                                AutoToolTipPlacement="TopLeft" Cursor="Hand"
-                                IsSnapToTickEnabled="True" SmallChange="1"
-                                TickPlacement="TopLeft"
-                                Value="{Binding Power}" />
-                        <Slider Grid.Column="3" Margin="2"
-                                AutoToolTipPlacement="TopLeft" Cursor="Hand"
-                                IsSnapToTickEnabled="True" SmallChange="1"
-                                TickPlacement="TopLeft"
-                                Value="{Binding Toughness}" />
-                    </Grid>
-                    <ListBox Grid.Row="3" Grid.ColumnSpan="2"
-                             Margin="2"
-                             ItemTemplate="{StaticResource CheckBoxTemplate}"
-                             ItemsSource="{Binding Colors}">
-                        <ListBox.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Command="{Binding CheckColor}"
-                                          CommandParameter="0" Header="Include All" />
-                                <MenuItem Command="{Binding CheckColor}"
-                                          CommandParameter="1" Header="Match All" />
-                                <MenuItem Command="{Binding CheckColor}"
-                                          CommandParameter="2" Header="Exclude All" />
-                            </ContextMenu>
-                        </ListBox.ContextMenu>
-                    </ListBox>
-                    <ListBox Grid.Row="4" Grid.ColumnSpan="2"
-                             Margin="2"
-                             ItemTemplate="{StaticResource CheckBoxTemplate}"
-                             ItemsSource="{Binding Rarities}">
-                        <ListBox.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Command="{Binding CheckRarity}"
-                                          CommandParameter="0" Header="Include All" />
-                                <MenuItem Command="{Binding CheckRarity}"
-                                          CommandParameter="1" Header="Match All" />
-                                <MenuItem Command="{Binding CheckRarity}"
-                                          CommandParameter="2" Header="Exclude All" />
-                            </ContextMenu>
-                        </ListBox.ContextMenu>
-                    </ListBox>
-                </Grid>
+                <ListBox Grid.Row="4" Grid.ColumnSpan="2"
+                         Margin="2"
+                         ItemTemplate="{StaticResource CheckBoxTemplate}"
+                         ItemsSource="{Binding Rarities}">
+                    <ListBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding CheckRarity}"
+                                      CommandParameter="0" Header="Include All" />
+                            <MenuItem Command="{Binding CheckRarity}"
+                                      CommandParameter="2" Header="Exclude All" />
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+                </ListBox>
             </Grid>
-        </ScrollViewer>
+        </Grid>
+
     </Grid>
 </UserControl>

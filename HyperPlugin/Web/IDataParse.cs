@@ -18,7 +18,7 @@ namespace HyperPlugin
 		/// <param name="set"></param>
 		/// <param name="lang"></param>
 		/// <returns></returns>
-		IEnumerable<Card> Process(Set set, LANGUAGE lang = LANGUAGE.English);
+		IEnumerable<Card> Process(Set set, Language lang = Language.English);
 
 		/// <summary>
 		///     Fill card properties
@@ -26,6 +26,6 @@ namespace HyperPlugin
 		/// <param name="card"></param>
 		/// <param name="lang"></param>
 		/// <returns>If card is not found, false will be returned</returns>
-		bool Process(Card card, LANGUAGE lang = LANGUAGE.English);
+		bool Process(Card card, Language lang = Language.English);
 	}
 }

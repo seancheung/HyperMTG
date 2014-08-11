@@ -26,9 +26,9 @@ namespace HyperMTG.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("ChineseSimplified")]
-        public global::HyperKore.Common.LANGUAGE Language {
+        public global::HyperKore.Common.Language Language {
             get {
-                return ((global::HyperKore.Common.LANGUAGE)(this["Language"]));
+                return ((global::HyperKore.Common.Language)(this["Language"]));
             }
             set {
                 this["Language"] = value;

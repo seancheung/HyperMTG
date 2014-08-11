@@ -9,38 +9,38 @@ namespace HyperKore.Utilities
 		/// </summary>
 		/// <param name="lang"></param>
 		/// <returns></returns>
-		public static string GetLangCode(this LANGUAGE lang)
+		public static string GetLangCode(this Language lang)
 		{
 			switch (lang)
 			{
-				case LANGUAGE.ChineseSimplified:
+				case Language.ChineseSimplified:
 					return "cn";
 
-				case LANGUAGE.ChineseTraditional:
+				case Language.ChineseTraditional:
 					return "tw";
 
-				case LANGUAGE.German:
+				case Language.German:
 					return "ge";
 
-				case LANGUAGE.French:
+				case Language.French:
 					return "fr";
 
-				case LANGUAGE.Italian:
+				case Language.Italian:
 					return "it";
 
-				case LANGUAGE.Japanese:
+				case Language.Japanese:
 					return "jp";
 
-				case LANGUAGE.Korean:
+				case Language.Korean:
 					return "ko";
 
-				case LANGUAGE.Portuguese:
+				case Language.Portuguese:
 					return "pt";
 
-				case LANGUAGE.Russian:
+				case Language.Russian:
 					return "ru";
 
-				case LANGUAGE.Spanish:
+				case Language.Spanish:
 					return "sp";
 
 				default:
@@ -48,55 +48,55 @@ namespace HyperKore.Utilities
 			}
 		}
 
-		public static string GetLangName(this LANGUAGE lang)
+		public static string GetLangName(this Language lang)
 		{
 			switch (lang)
 			{
-				case LANGUAGE.ChineseSimplified:
+				case Language.ChineseSimplified:
 					return "Chinese Simplified";
-				case LANGUAGE.ChineseTraditional:
+				case Language.ChineseTraditional:
 					return "Chinese Traditional";
 				default:
 					return lang.ToString();
 			}
 		}
 
-		public static LANGUAGE GetLangugeByCode(string code)
+		public static Language GetLangugeByCode(string code)
 		{
 			switch (code)
 			{
 				case "cn":
-					return LANGUAGE.ChineseSimplified;
+					return Language.ChineseSimplified;
 
 				case "tw":
-					return LANGUAGE.ChineseTraditional;
+					return Language.ChineseTraditional;
 
 				case "ge":
-					return LANGUAGE.German;
+					return Language.German;
 
 				case "fr":
-					return LANGUAGE.French;
+					return Language.French;
 
 				case "it":
-					return LANGUAGE.Italian;
+					return Language.Italian;
 
 				case "jp":
-					return LANGUAGE.Japanese;
+					return Language.Japanese;
 
 				case "ko":
-					return LANGUAGE.Korean;
+					return Language.Korean;
 
 				case "pt":
-					return LANGUAGE.Portuguese;
+					return Language.Portuguese;
 
 				case "ru":
-					return LANGUAGE.Russian;
+					return Language.Russian;
 
 				case "sp":
-					return LANGUAGE.Spanish;
+					return Language.Spanish;
 
 				default:
-					return LANGUAGE.English;
+					return Language.English;
 			}
 		}
 	}

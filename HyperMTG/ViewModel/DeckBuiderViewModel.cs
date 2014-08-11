@@ -1,10 +1,14 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using HyperKore.Common;
+using HyperKore.Utilities;
 using HyperMTG.Helper;
 using HyperMTG.Model;
 using HyperMTG.Properties;
@@ -27,8 +31,6 @@ namespace HyperMTG.ViewModel
 		/// </summary>
 		private readonly Dispatcher _dispatcher;
 
-		private readonly IImageParse _imageParse;
-
 		private ExCard _card;
 
 		private ObservableCollection<Card> _cards;
@@ -46,7 +48,7 @@ namespace HyperMTG.ViewModel
 			_dbReader = PluginManager.Instance.GetPlugin<IDBReader>();
 			_dbWriter = PluginManager.Instance.GetPlugin<IDBWriter>();
 			_compressor = PluginManager.Instance.GetPlugin<ICompressor>();
-			_imageParse = PluginManager.Instance.GetPlugin<IImageParse>();
+			IImageParse imageParse = PluginManager.Instance.GetPlugin<IImageParse>();
 			_deckWriters = PluginManager.Instance.GetPlugins<IDeckWriter>().ToArray();
 			_deckReaders = PluginManager.Instance.GetPlugins<IDeckReader>().ToArray();
 
@@ -61,7 +63,7 @@ namespace HyperMTG.ViewModel
 			if (_dbReader != null) Cards = new ObservableCollection<Card>(_dbReader.LoadCards());
 			else Info = "Assemblly Missing";
 
-			SelectedCard = new ExCard(_dbReader, _compressor, _dbWriter, _imageParse);
+			SelectedCard = new ExCard(_dbReader, _compressor, _dbWriter, imageParse);
 		}
 
 		public ExCard SelectedCard
@@ -105,6 +107,12 @@ namespace HyperMTG.ViewModel
 		}
 
 		#region Command
+
+		public ICommand FilterCommand
+		{
+			get { return new RelayCommand(FilterExecute, CanExecuteFilter); }
+		}
+
 
 		public ICommand NewDeckCommand
 		{
@@ -154,6 +162,59 @@ namespace HyperMTG.ViewModel
 		#endregion
 
 		#region Execute
+
+		private void FilterExecute()
+		{
+			new Thread(() =>
+			{
+				IEnumerable<Card> result = _dbReader.LoadCards();
+
+				foreach (var checkItem in FilterViewModel.Instance.Sets)
+				{
+					if (checkItem.IsChecked == true)
+					{
+						result = result.Where(c => c.SetCode == checkItem.Content.SetCode);
+					}
+					else if (checkItem.IsChecked == null)
+					{
+						result = result.Where(c => c.SetCode != checkItem.Content.SetCode);
+					}
+				}
+
+				foreach (var checkItem in FilterViewModel.Instance.Colors)
+				{
+					if (checkItem.IsChecked == true)
+					{
+						result = result.Where(c => c.GetColors().Contains(checkItem.Content));
+					}
+					else if (checkItem.IsChecked == null)
+					{
+						result = result.Where(c => !c.GetColors().Contains(checkItem.Content));
+					}
+				}
+
+				foreach (var checkItem in FilterViewModel.Instance.Types)
+				{
+					if (checkItem.IsChecked == true)
+					{
+						result = result.Where(c => c.GetTypes().Contains(checkItem.Content));
+					}
+					else if (checkItem.IsChecked == null)
+					{
+						result = result.Where(c => !c.GetTypes().Contains(checkItem.Content));
+					}
+				}
+
+				//
+				result = result.Where(c => string.CompareOrdinal(c.CMC, FilterViewModel.Instance.Cost.ToString()) >= 0);
+
+				_dispatcher.BeginInvoke(new Action(() =>
+				{
+					Cards = new ObservableCollection<Card>(result);
+				}));
+
+			}).Start();
+		}
 
 		private void NewDeckExecute()
 		{
@@ -231,6 +292,11 @@ namespace HyperMTG.ViewModel
 		#endregion
 
 		#region CanExecute
+
+		private bool CanExecuteFilter()
+		{
+			return Cards.Count > 0 && _dbReader != null;
+		}
 
 		private bool CanExecuteNewDeck()
 		{

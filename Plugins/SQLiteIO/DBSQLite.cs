@@ -30,7 +30,7 @@ namespace SQLiteIO
 			Create();
 		}
 
-		private LANGUAGE _language;
+		private Language _language;
 
 		#region IDBReader Members
 
@@ -42,7 +42,7 @@ namespace SQLiteIO
 		/// <summary>
 		/// Language of the database
 		/// </summary>
-		public LANGUAGE Language
+		public Language Language
 		{
 			get { return _language; }
 			set

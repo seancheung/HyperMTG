@@ -191,7 +191,7 @@ namespace HyperMTG.ViewModel
 
 		private void TestExecute(string id)
 		{
-			_dataParse.Process(new Card {ID = id, Set = "DarkAscen", SetCode = "DKA"}, LANGUAGE.ChineseSimplified);
+			_dataParse.Process(new Card {ID = id, Set = "DarkAscen", SetCode = "DKA"}, Language.ChineseSimplified);
 		}
 
 		private void CancelExecute()
