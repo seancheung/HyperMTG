@@ -4,7 +4,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
 using FirstFloor.ModernUI.Windows.Controls;
 using HyperKore.Utilities;
 using HyperMTG.ViewModel;

@@ -78,7 +78,7 @@ namespace HyperPlugin.Web
 				yield break;
 			}
 
-			HtmlDocument html = new HtmlDocument();
+			var html = new HtmlDocument();
 			html.LoadHtml(webdata);
 
 			string select =
@@ -112,24 +112,36 @@ namespace HyperPlugin.Web
 				yield break;
 			}
 
-			HtmlDocument html = new HtmlDocument();
+			var html = new HtmlDocument();
 			html.LoadHtml(webdata);
 
 			IEnumerable<HtmlNode> tds = html.DocumentNode.CssSelect("td").Where(t => t.Attributes["valign"] != null);
 
 			foreach (HtmlNode td in tds)
 			{
-				Card card = new Card {Set = set.SetName, SetCode = set.SetCode};
+				var card = new Card {Set = set.SetName, SetCode = set.SetCode};
 
-				HtmlNode[] spans = td.CssSelect("span").ToArray();
-				card.Name = spans[0].InnerText.Trim();
-				var id = spans[0].CssSelect("a").First().Attributes["href"].Value.Replace(".html", "");
-				id = Regex.Replace(id, @"^/|\.html$", "",RegexOptions.IgnoreCase);
+				HtmlNode span = td.CssSelect("span").FirstOrDefault();
+				if (span == null)
+				{
+					continue;
+				}
+				card.Name = span.InnerText.Trim();
+				string id = span.CssSelect("a").First().Attributes["href"].Value.Replace(".html", "");
+				id = Regex.Replace(id, @"^/|\.html$", "", RegexOptions.IgnoreCase);
 
 				HtmlNode[] ps = td.CssSelect("p").ToArray();
+				if (ps.Length != 5)
+				{
+					continue;
+				}
 				card.Rarity = ps[0].InnerText.Split(',')[1].Trim();
 
 				string[] typCos = ps[1].InnerText.Split(',');
+				if (typCos.Length < 2)
+				{
+					continue;
+				}
 				string type = typCos[0].Trim();
 				card.Loyalty = Regex.Match(type, @"(?<=\(Loyalty:\s*)(\d+)(?=\))").Value;
 				string pt = Regex.Match(type, @"(?<=\s)(\d+|\*)/(\d+|\*)").Value;

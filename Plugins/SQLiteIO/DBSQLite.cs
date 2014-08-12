@@ -17,7 +17,6 @@ namespace SQLiteIO
 			"CREATE TABLE IF NOT EXISTS 'Set'('SetName' TEXT NOT NULL,'SetCode' TEXT,'LastUpdate' TEXT,'Local' INTEGER,PRIMARY KEY('SetName'));" +
 			"CREATE TABLE IF NOT EXISTS 'File'('id' TEXT NOT NULL,'data' BLOB,'length' INTEGER,PRIMARY KEY('id'))";
 
-		private readonly SQLiteConnectionStringBuilder _connectionStringBuilder = new SQLiteConnectionStringBuilder();
 		//private const string ConnString = "data source=DATA.db;password=5AEB55D5-F169-4EB2-A768-B20EBD20151E";
 
 		/// <summary>
@@ -25,10 +24,7 @@ namespace SQLiteIO
 		/// </summary>
 		private readonly SQLiteConnection _conn = new SQLiteConnection();
 
-		public DBSQLite()
-		{
-			Create();
-		}
+		private readonly SQLiteConnectionStringBuilder _connectionStringBuilder = new SQLiteConnectionStringBuilder();
 
 		private Language _language;
 
@@ -40,7 +36,7 @@ namespace SQLiteIO
 		}
 
 		/// <summary>
-		/// Language of the database
+		///     Language of the database
 		/// </summary>
 		public Language Language
 		{
@@ -53,7 +49,6 @@ namespace SQLiteIO
 					_language = value;
 					Create();
 				}
-				
 			}
 		}
 
@@ -331,6 +326,11 @@ namespace SQLiteIO
 		}
 
 		#endregion
+
+		public DBSQLite()
+		{
+			Create();
+		}
 
 		public void Reset(IEnumerable<Set> sets)
 		{

@@ -38,42 +38,35 @@ namespace HyperPlugin.IO.VirtualPlaytable
 		public Deck Read(Stream input, IEnumerable<Card> database)
 		{
 			var deck = new Deck();
-			try
+			VPTDeck vdeck = Open(input);
+			foreach (VPTItem item in vdeck.Sections[0].Items)
 			{
-				VPTDeck vdeck = Open(input);
-				foreach (VPTItem item in vdeck.Sections[0].Items)
+				for (int i = 0; i < item.Cards.Sum(c => c.Count); i++)
 				{
-					for (int i = 0; i < item.Cards.Sum(c => c.Count); i++)
-					{
-						deck.MainBoard.Add(Convert(item, database));
-					}
+					deck.MainBoard.Add(Convert(item, database));
 				}
-				foreach (VPTItem item in vdeck.Sections[1].Items)
-				{
-					for (int i = 0; i < item.Cards.Sum(c => c.Count); i++)
-					{
-						deck.SideBoard.Add(Convert(item, database));
-					}
-				}
-
-				deck.Name = vdeck.Name;
-				Mode mode;
-				if (Enum.TryParse(vdeck.Mode, true, out mode))
-				{
-					deck.Mode = mode;
-				}
-				Format format;
-				if (Enum.TryParse(vdeck.Format, true, out format))
-				{
-					deck.Format = format;
-				}
-
-				return deck;
 			}
-			catch
+			foreach (VPTItem item in vdeck.Sections[1].Items)
 			{
-				throw;
+				for (int i = 0; i < item.Cards.Sum(c => c.Count); i++)
+				{
+					deck.SideBoard.Add(Convert(item, database));
+				}
 			}
+
+			deck.Name = vdeck.Name;
+			Mode mode;
+			if (Enum.TryParse(vdeck.Mode, true, out mode))
+			{
+				deck.Mode = mode;
+			}
+			Format format;
+			if (Enum.TryParse(vdeck.Format, true, out format))
+			{
+				deck.Format = format;
+			}
+
+			return deck;
 		}
 
 		#endregion

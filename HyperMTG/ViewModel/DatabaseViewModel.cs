@@ -292,6 +292,8 @@ namespace HyperMTG.ViewModel
 		{
 			foreach (CheckSetItem checkSetItem in Sets)
 			{
+				Cards.Clear();
+
 				if (checkSetItem.IsChecked)
 				{
 					var td = new Thread(() =>

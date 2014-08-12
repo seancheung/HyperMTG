@@ -119,7 +119,14 @@
                         </Setter>
                         <Setter Property="ToolTip">
                             <Setter.Value>
-                                <ToolTip Content="{Binding Path=Name}" />
+                                <ToolTip>
+                                    <StackPanel Orientation="Vertical">
+                                        <mui:BBCodeBlock BBCode="{Binding Path=Set}" />
+                                        <mui:BBCodeBlock BBCode="{Binding Path=SetCode, StringFormat='[b]{0}[/b]'}" />
+                                        <mui:BBCodeBlock BBCode="{Binding Path=Type}" />
+                                        <mui:BBCodeBlock BBCode="{Binding Path=Rarity, StringFormat='[b]{0}[/b]'}" />
+                                    </StackPanel>
+                                </ToolTip>
                             </Setter.Value>
                         </Setter>
                     </Style>
@@ -146,6 +153,11 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Image Grid.Row="0" Source="{Binding SelectedCard.Image, IsAsync=True}">
+                        <Image.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding CopyImageCommand}" Header="Copy Image To Clipboard" />
+                            </ContextMenu>
+                        </Image.ContextMenu>
                         <!--
                             <Image.OpacityMask>
                             <VisualBrush>
@@ -381,6 +393,9 @@
                 <mui:ModernButton Margin="4,0"
                                   Command="{Binding NewDeckCommand}"
                                   Content="{DynamicResource cns_03}" />
+                <mui:ModernButton Margin="4,0"
+                                  Command="{Binding ExportImageDocCommand}"
+                                  Content="Export deck images to rtf" />
 
             </StackPanel>
             <StackPanel Grid.Row="2" Grid.Column="3"

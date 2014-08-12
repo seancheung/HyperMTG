@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Threading;
 using HyperKore.Common;
@@ -25,13 +26,15 @@ namespace HyperMTG.ViewModel
 
 		private readonly IDBReader _dbReader;
 		private readonly IDBWriter _dbWriter;
-		private readonly IDeckWriter[] _deckWriters;
 		private readonly IDeckReader[] _deckReaders;
+		private readonly IDeckWriter[] _deckWriters;
 
 		/// <summary>
 		///     UI dispatcher(to handle ObservableCollection)
 		/// </summary>
 		private readonly Dispatcher _dispatcher;
+
+		private readonly IImageParse _imageParse;
 
 		private ExCard _card;
 
@@ -51,7 +54,7 @@ namespace HyperMTG.ViewModel
 			_dbReader = PluginManager.Instance.GetPlugin<IDBReader>();
 			_dbWriter = PluginManager.Instance.GetPlugin<IDBWriter>();
 			_compressor = PluginManager.Instance.GetPlugin<ICompressor>();
-			IImageParse imageParse = PluginManager.Instance.GetPlugin<IImageParse>();
+			_imageParse = PluginManager.Instance.GetPlugin<IImageParse>();
 			_deckWriters = PluginManager.Instance.GetPlugins<IDeckWriter>().ToArray();
 			_deckReaders = PluginManager.Instance.GetPlugins<IDeckReader>().ToArray();
 
@@ -66,7 +69,7 @@ namespace HyperMTG.ViewModel
 			if (_dbReader != null) Cards = new ObservableCollection<Card>(_dbReader.LoadCards());
 			else Info = "Assemblly Missing";
 
-			SelectedCard = new ExCard(_dbReader, _compressor, _dbWriter, imageParse);
+			SelectedCard = new ExCard(_dbReader, _compressor, _dbWriter, _imageParse);
 		}
 
 		public ExCard SelectedCard
@@ -120,6 +123,16 @@ namespace HyperMTG.ViewModel
 		}
 
 		#region Command
+
+		public ICommand ExportImageDocCommand
+		{
+			get { return new RelayCommand(ExportImagesDocExecute, CanExecuteExportImageDoc); }
+		}
+
+		public ICommand CopyImageCommand
+		{
+			get { return new RelayCommand(CopyImageExecute, CanExecuteCopyImage); }
+		}
 
 		public ICommand ClearInputCommand
 		{
@@ -181,6 +194,44 @@ namespace HyperMTG.ViewModel
 
 		#region Execute
 
+		private void ExportImagesDocExecute()
+		{
+			var document = new FlowDocument();
+
+			foreach (Card card in Deck.MainBoard)
+			{
+				var exCard = new ExCard(_compressor, _dbReader, card, _dbWriter, _imageParse);
+				byte[] img = exCard.Image;
+				if (img != null)
+				{
+					//document.Blocks.Add(new Paragraph(new Run(card.Name)));
+					document.Blocks.Add(new BlockUIContainer(new Image {Source = img.ToBitmapImage(), Width = 312, Height = 445}));
+				}
+			}
+			foreach (Card card in Deck.SideBoard)
+			{
+				var exCard = new ExCard(_compressor, _dbReader, card, _dbWriter, _imageParse);
+				byte[] img = exCard.Image;
+				if (img != null)
+				{
+					//document.Blocks.Add(new Paragraph(new Run(card.Name)));
+					document.Blocks.Add(new BlockUIContainer(new Image {Source = img.ToBitmapImage(), Width = 312, Height = 445}));
+				}
+			}
+
+			using (var fs = new FileStream(DateTime.Now.ToFileTime() + ".rtf", FileMode.Create))
+			{
+				var sw = new StreamWriter(fs);
+				sw.Write(document.ToRTF());
+				sw.Flush();
+			}
+		}
+
+		private void CopyImageExecute()
+		{
+			Clipboard.SetImage(SelectedCard.Image.ToBitmapImage());
+		}
+
 		private void ClearInputExecute()
 		{
 			Input = null;
@@ -232,11 +283,11 @@ namespace HyperMTG.ViewModel
 
 				if (!string.IsNullOrWhiteSpace(Input))
 				{
-					if (Regex.IsMatch(Input,@"@"))
+					if (Regex.IsMatch(Input, @"@"))
 					{
-						foreach (var exp in Regex.Split(Input, @"&"))
+						foreach (string exp in Regex.Split(Input, @"&"))
 						{
-							var cons = Regex.Split(Input, @"@");
+							string[] cons = Regex.Split(Input, @"@");
 							if (cons.Length == 2)
 							{
 								switch (cons[0].ToLower())
@@ -263,11 +314,7 @@ namespace HyperMTG.ViewModel
 					}
 				}
 
-				_dispatcher.BeginInvoke(new Action(() =>
-				{
-					Cards = new ObservableCollection<Card>(result);
-				}));
-
+				_dispatcher.BeginInvoke(new Action(() => { Cards = new ObservableCollection<Card>(result); }));
 			}).Start();
 		}
 
@@ -278,15 +325,19 @@ namespace HyperMTG.ViewModel
 
 		private void OpenDeckExecute()
 		{
-			OpenFileDialog dlg = new OpenFileDialog();
+			var dlg = new OpenFileDialog();
 
-			dlg.Filter = _deckReaders.Aggregate("", (current, deckWriter) => current + string.Format("|{0}(*.{1})|*.{2}", deckWriter.DeckType, deckWriter.FileExt, deckWriter.FileExt)).Remove(0, 1);
+			dlg.Filter =
+				_deckReaders.Aggregate("",
+					(current, deckWriter) =>
+						current + string.Format("|{0}(*.{1})|*.{2}", deckWriter.DeckType, deckWriter.FileExt, deckWriter.FileExt))
+					.Remove(0, 1);
 			dlg.RestoreDirectory = true;
 
 			if (dlg.ShowDialog() == true)
 			{
 				IDeckReader deckReader = _deckReaders[dlg.FilterIndex - 1];
-				using (FileStream fs = (FileStream)dlg.OpenFile())
+				using (var fs = (FileStream) dlg.OpenFile())
 				{
 					Deck = deckReader.Read(fs, Cards);
 				}
@@ -295,15 +346,19 @@ namespace HyperMTG.ViewModel
 
 		private void SaveDeckExecute()
 		{
-			SaveFileDialog dlg = new SaveFileDialog();
+			var dlg = new SaveFileDialog();
 
-			dlg.Filter = _deckWriters.Aggregate("", (current, deckWriter) => current + string.Format("|{0}(*.{1})|*.{2}", deckWriter.DeckType, deckWriter.FileExt, deckWriter.FileExt)).Remove(0, 1);
+			dlg.Filter =
+				_deckWriters.Aggregate("",
+					(current, deckWriter) =>
+						current + string.Format("|{0}(*.{1})|*.{2}", deckWriter.DeckType, deckWriter.FileExt, deckWriter.FileExt))
+					.Remove(0, 1);
 			dlg.RestoreDirectory = true;
 
 			if (dlg.ShowDialog() == true)
 			{
 				IDeckWriter deckWriter = _deckWriters[dlg.FilterIndex - 1];
-				using (FileStream fs = (FileStream)dlg.OpenFile())
+				using (var fs = (FileStream) dlg.OpenFile())
 				{
 					deckWriter.Write(Deck, fs);
 				}
@@ -347,6 +402,17 @@ namespace HyperMTG.ViewModel
 		#endregion
 
 		#region CanExecute
+
+		private bool CanExecuteExportImageDoc()
+		{
+			return Deck.MainBoard.Count + Deck.SideBoard.Count > 0 && _compressor != null && _dbReader != null &&
+			       _dbWriter != null && _imageParse != null;
+		}
+
+		private bool CanExecuteCopyImage()
+		{
+			return SelectedCard.Image != null;
+		}
 
 		private bool CanExecuteClearInput()
 		{
