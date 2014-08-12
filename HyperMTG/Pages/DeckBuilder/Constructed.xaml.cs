@@ -4,8 +4,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Input;
 using FirstFloor.ModernUI.Windows.Controls;
 using HyperKore.Utilities;
+using HyperMTG.ViewModel;
 
 namespace HyperMTG.Pages
 {
@@ -61,5 +63,14 @@ namespace HyperMTG.Pages
 			}
 		}
 
+		private void TextBoxBase_OnTextChanged(object sender, TextChangedEventArgs e)
+		{
+			var deckBuiderViewModel = DataContext as DeckBuiderViewModel;
+			if (deckBuiderViewModel == null) return;
+			if (deckBuiderViewModel.FilterCommand.CanExecute(null))
+			{
+				deckBuiderViewModel.FilterCommand.Execute(null);
+			}
+		}
 	}
 }

@@ -2,8 +2,8 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="HyperMTG.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="Language" Type="HyperKore.Common.LANGUAGE" Scope="User">
-      <Value Profile="(Default)">ChineseSimplified</Value>
+    <Setting Name="Language" Type="HyperKore.Common.Language" Scope="User">
+      <Value Profile="(Default)">English</Value>
     </Setting>
     <Setting Name="FontSize" Type="FirstFloor.ModernUI.Presentation.FontSize" Scope="User">
       <Value Profile="(Default)">Large</Value>

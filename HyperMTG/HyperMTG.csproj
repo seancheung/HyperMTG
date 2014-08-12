@@ -45,6 +45,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>HyperMTG.App</StartupObject>
@@ -118,6 +119,7 @@
     </Compile>
     <Compile Include="Model\CheckSetItem.cs" />
     <Compile Include="Model\CheckItem.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="ViewModel\DatabaseViewModel.cs" />
     <Compile Include="ViewModel\DeckBuiderViewModel.cs" />
     <Compile Include="Model\ExCard.cs" />

@@ -34,6 +34,8 @@
     <sys:String x:Key="cns_01">open</sys:String>
     <sys:String x:Key="cns_02">save</sys:String>
     <sys:String x:Key="cns_03">new</sys:String>
+    <sys:String x:Key="cns_04"><![CDATA[Search keywords in card name; Or use hyper-expression ot do advanced search: e.g. n@ajani&t@cat&x@gain control]]></sys:String>
+    <sys:String x:Key="cns_04_t">Clear input</sys:String>
 
     <!--  settings  -->
     <sys:String x:Key="sts_01">appearance</sys:String>

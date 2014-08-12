@@ -53,33 +53,33 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" MinWidth="100" />
             </Grid.ColumnDefinitions>
-            <!--
-                <Expander Grid.Row="0" Grid.Column="0"
-                Height="Auto" ExpandDirection="Down"
-                Header="Property Filter">
-                <ListBox hp:ColumnObject.ItemsSourceFromColumns="{Binding ElementName=ListView}">
-                <ListBox.ItemContainerStyle>
-                <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="ListBoxItem">
-                <Setter Property="Focusable" Value="False" />
-                </Style>
-                </ListBox.ItemContainerStyle>
-                <ListBox.ItemTemplate>
-                <DataTemplate>
-                <CheckBox Margin="2"
-                Content="{Binding Column.Header}"
-                IsChecked="{Binding IsVisible}" />
-                </DataTemplate>
-                </ListBox.ItemTemplate>
-                </ListBox>
-                </Expander>
-            -->
-            <Button Margin="2"
-                    Command="{Binding FilterCommand}"
-                    FontSize="{DynamicResource DefaultFontSize}">
-                <Button.Content>
-                    <mui:BBCodeBlock BBCode="{Binding ElementName=ListView, Path=Items.Count, StringFormat='[i]Total Cards[/i]: [b]{0}[/b]'}" TextWrapping="Wrap" />
-                </Button.Content>
-            </Button>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Button Margin="2"
+                        Command="{Binding FilterCommand}"
+                        FontSize="{DynamicResource DefaultFontSize}">
+                    <Button.Content>
+                        <mui:BBCodeBlock BBCode="{Binding ElementName=ListView, Path=Items.Count, StringFormat='[i]Total Cards[/i]: [b]{0}[/b]'}" TextWrapping="Wrap" />
+                    </Button.Content>
+                </Button>
+                <Grid Grid.Row="1" Margin="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox Text="{Binding Input,
+                                            UpdateSourceTrigger=PropertyChanged}"
+                             TextChanged="TextBoxBase_OnTextChanged"
+                             ToolTip="{DynamicResource cns_04}" />
+                    <mui:ModernButton Grid.Column="1"
+                                      Command="{Binding ClearInputCommand}"
+                                      ToolTip="{DynamicResource cns_04_t}" />
+                </Grid>
+            </Grid>
+
             <ListView x:Name="ListView" Grid.Row="1"
                       Grid.Column="0"
                       FontSize="{DynamicResource DefaultFontSize}"

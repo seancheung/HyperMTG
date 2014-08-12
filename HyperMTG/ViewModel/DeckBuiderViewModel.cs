@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
@@ -36,6 +38,7 @@ namespace HyperMTG.ViewModel
 		private ObservableCollection<Card> _cards;
 		private Deck _deck;
 		private string _info;
+		private string input;
 
 		/// <summary>
 		///     Initializes a new instance of the DeckBuiderViewModel class.
@@ -106,7 +109,22 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
+		public string Input
+		{
+			get { return input; }
+			set
+			{
+				input = value;
+				RaisePropertyChanged("Input");
+			}
+		}
+
 		#region Command
+
+		public ICommand ClearInputCommand
+		{
+			get { return new RelayCommand(ClearInputExecute, CanExecuteClearInput); }
+		}
 
 		public ICommand FilterCommand
 		{
@@ -163,6 +181,11 @@ namespace HyperMTG.ViewModel
 
 		#region Execute
 
+		private void ClearInputExecute()
+		{
+			Input = null;
+		}
+
 		private void FilterExecute()
 		{
 			new Thread(() =>
@@ -205,8 +228,40 @@ namespace HyperMTG.ViewModel
 					}
 				}
 
-				//
 				result = result.Where(c => string.CompareOrdinal(c.CMC, FilterViewModel.Instance.Cost.ToString()) >= 0);
+
+				if (!string.IsNullOrWhiteSpace(Input))
+				{
+					if (Regex.IsMatch(Input,@"@"))
+					{
+						foreach (var exp in Regex.Split(Input, @"&"))
+						{
+							var cons = Regex.Split(Input, @"@");
+							if (cons.Length == 2)
+							{
+								switch (cons[0].ToLower())
+								{
+									case "n":
+										result = result.Where(c => Regex.IsMatch(c.Name, cons[1], RegexOptions.IgnoreCase));
+										break;
+									case "t":
+										result = result.Where(c => Regex.IsMatch(c.Type, cons[1], RegexOptions.IgnoreCase));
+										break;
+									case "x":
+										result = result.Where(c => Regex.IsMatch(c.Text, cons[1], RegexOptions.IgnoreCase));
+										break;
+									case "i":
+										result = result.Where(c => Regex.IsMatch(c.ID, cons[1], RegexOptions.IgnoreCase));
+										break;
+								}
+							}
+						}
+					}
+					else
+					{
+						result = result.Where(c => Regex.IsMatch(c.Name, Input, RegexOptions.IgnoreCase));
+					}
+				}
 
 				_dispatcher.BeginInvoke(new Action(() =>
 				{
@@ -293,9 +348,14 @@ namespace HyperMTG.ViewModel
 
 		#region CanExecute
 
+		private bool CanExecuteClearInput()
+		{
+			return !string.IsNullOrWhiteSpace(Input);
+		}
+
 		private bool CanExecuteFilter()
 		{
-			return Cards.Count > 0 && _dbReader != null;
+			return _dbReader != null;
 		}
 
 		private bool CanExecuteNewDeck()
