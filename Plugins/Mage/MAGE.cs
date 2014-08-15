@@ -25,7 +25,7 @@ namespace HyperPlugin.IO.Mage
 
 		public string FileExt
 		{
-			get { return "txt"; }
+			get { return "dck"; }
 		}
 
 		public string Name
