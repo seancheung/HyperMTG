@@ -40,7 +40,7 @@
                                           ToolTip="{DynamicResource dbo_02_t}" />
                         <CheckBox Margin="2,0"
                                   Content="{DynamicResource dbo_03}"
-                                  IsChecked="{Binding DoImage}"
+                                  IsChecked="{Binding SaveImage}"
                                   ToolTip="{DynamicResource dbo_03_t}" />
                     </StackPanel>
                 </Border>

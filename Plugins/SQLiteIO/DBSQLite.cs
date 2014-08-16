@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data.Linq;
 using System.Data.SQLite;
+using System.IO;
 using System.Linq;
 using HyperKore.Common;
 using HyperKore.Utilities;
@@ -26,6 +27,11 @@ namespace HyperPlugin
 		private readonly SQLiteConnectionStringBuilder _connectionStringBuilder = new SQLiteConnectionStringBuilder();
 
 		private Language _language;
+
+		public DBSQLite()
+		{
+			Create();
+		}
 
 		#region IDBReader Members
 
@@ -326,11 +332,6 @@ namespace HyperPlugin
 
 		#endregion
 
-		public DBSQLite()
-		{
-			Create();
-		}
-
 		public void Reset(IEnumerable<Set> sets)
 		{
 			lock (this)
@@ -352,7 +353,11 @@ namespace HyperPlugin
 		{
 			lock (this)
 			{
-				_connectionStringBuilder.DataSource = string.Format("datasource.{0}.db", Language.GetLangCode());
+				if (!Directory.Exists("Data"))
+				{
+					Directory.CreateDirectory("Data");
+				}
+				_connectionStringBuilder.DataSource = string.Format("Data/datasource.{0}.db", Language.GetLangCode());
 				_connectionStringBuilder.Password = "5AEB55D5-F169-4EB2-A768-B20EBD20151E";
 				_conn.ConnectionString = _connectionStringBuilder.ConnectionString;
 

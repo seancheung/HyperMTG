@@ -1,6 +1,6 @@
 ﻿namespace HyperKore.Game.Event
 {
-	public class CommonEvent
+	public class CommonDelegate
 	{
 		#region Delegates
 

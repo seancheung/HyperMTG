@@ -11,12 +11,14 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Threading;
 using HyperKore.Common;
+using HyperKore.Logger;
 using HyperKore.Utilities;
 using HyperMTG.Helper;
 using HyperMTG.Model;
 using HyperMTG.Properties;
 using HyperPlugin;
 using Microsoft.Win32;
+using Type = HyperKore.Common.Type;
 
 namespace HyperMTG.ViewModel
 {
@@ -51,12 +53,20 @@ namespace HyperMTG.ViewModel
 			Deck = new Deck();
 			Cards = new ObservableCollection<Card>();
 
-			_dbReader = PluginManager.Instance.GetPlugin<IDBReader>();
-			_dbWriter = PluginManager.Instance.GetPlugin<IDBWriter>();
-			_compressor = PluginManager.Instance.GetPlugin<ICompressor>();
-			_imageParse = PluginManager.Instance.GetPlugin<IImageParse>();
-			_deckWriters = PluginManager.Instance.GetPlugins<IDeckWriter>().ToArray();
-			_deckReaders = PluginManager.Instance.GetPlugins<IDeckReader>().ToArray();
+			try
+			{
+				_dbReader = PluginManager.Instance.GetPlugin<IDBReader>();
+				_dbWriter = PluginManager.Instance.GetPlugin<IDBWriter>();
+				_compressor = PluginManager.Instance.GetPlugin<ICompressor>();
+				_imageParse = PluginManager.Instance.GetPlugin<IImageParse>();
+				_deckWriters = PluginManager.Instance.GetPlugins<IDeckWriter>().ToArray();
+				_deckReaders = PluginManager.Instance.GetPlugins<IDeckReader>().ToArray();
+			}
+			catch (Exception ex)
+			{
+				Logger.Log(ex, typeof (DatabaseViewModel));
+				throw;
+			}
 
 			if (_dbWriter != null && _dbReader != null)
 			{
@@ -66,7 +76,18 @@ namespace HyperMTG.ViewModel
 
 			_dispatcher = Application.Current.Dispatcher;
 
-			if (_dbReader != null) Cards = new ObservableCollection<Card>(_dbReader.LoadCards());
+			if (_dbReader != null)
+			{
+				try
+				{
+					Cards = new ObservableCollection<Card>(_dbReader.LoadCards());
+				}
+				catch (Exception ex)
+				{
+					Logger.Log(ex, typeof (DatabaseViewModel), _dbReader, Settings.Default.Language);
+					throw;
+				}
+			}
 			else Info = "Assemblly Missing";
 
 			SelectedCard = new ExCard(_dbReader, _compressor, _dbWriter, _imageParse);
@@ -196,32 +217,30 @@ namespace HyperMTG.ViewModel
 
 		private void ExportImagesDocExecute()
 		{
-			var document = new FlowDocument();
+			FlowDocument document = new FlowDocument();
 
 			foreach (Card card in Deck.MainBoard)
 			{
-				var exCard = new ExCard(_compressor, _dbReader, card, _dbWriter, _imageParse);
+				ExCard exCard = new ExCard(_compressor, _dbReader, card, _dbWriter, _imageParse);
 				byte[] img = exCard.Image;
 				if (img != null)
 				{
-					//document.Blocks.Add(new Paragraph(new Run(card.Name)));
 					document.Blocks.Add(new BlockUIContainer(new Image {Source = img.ToBitmapImage(), Width = 312, Height = 445}));
 				}
 			}
 			foreach (Card card in Deck.SideBoard)
 			{
-				var exCard = new ExCard(_compressor, _dbReader, card, _dbWriter, _imageParse);
+				ExCard exCard = new ExCard(_compressor, _dbReader, card, _dbWriter, _imageParse);
 				byte[] img = exCard.Image;
 				if (img != null)
 				{
-					//document.Blocks.Add(new Paragraph(new Run(card.Name)));
 					document.Blocks.Add(new BlockUIContainer(new Image {Source = img.ToBitmapImage(), Width = 312, Height = 445}));
 				}
 			}
 
-			using (var fs = new FileStream(DateTime.Now.ToFileTime() + ".rtf", FileMode.Create))
+			using (FileStream fs = new FileStream(DateTime.Now.ToFileTime() + ".rtf", FileMode.Create))
 			{
-				var sw = new StreamWriter(fs);
+				StreamWriter sw = new StreamWriter(fs);
 				sw.Write(document.ToRTF());
 				sw.Flush();
 			}
@@ -243,7 +262,7 @@ namespace HyperMTG.ViewModel
 			{
 				IEnumerable<Card> result = _dbReader.LoadCards();
 
-				foreach (var checkItem in FilterViewModel.Instance.Sets)
+				foreach (CheckItem<Set> checkItem in FilterViewModel.Instance.Sets)
 				{
 					if (checkItem.IsChecked == true)
 					{
@@ -255,7 +274,7 @@ namespace HyperMTG.ViewModel
 					}
 				}
 
-				foreach (var checkItem in FilterViewModel.Instance.Colors)
+				foreach (CheckItem<Color> checkItem in FilterViewModel.Instance.Colors)
 				{
 					if (checkItem.IsChecked == true)
 					{
@@ -267,7 +286,7 @@ namespace HyperMTG.ViewModel
 					}
 				}
 
-				foreach (var checkItem in FilterViewModel.Instance.Types)
+				foreach (CheckItem<Type> checkItem in FilterViewModel.Instance.Types)
 				{
 					if (checkItem.IsChecked == true)
 					{
@@ -287,7 +306,7 @@ namespace HyperMTG.ViewModel
 					{
 						foreach (string exp in Regex.Split(Input, @"&"))
 						{
-							string[] cons = Regex.Split(Input, @"@");
+							string[] cons = Regex.Split(exp, @"@");
 							if (cons.Length == 2)
 							{
 								switch (cons[0].ToLower())
@@ -325,7 +344,7 @@ namespace HyperMTG.ViewModel
 
 		private void OpenDeckExecute()
 		{
-			var dlg = new OpenFileDialog();
+			OpenFileDialog dlg = new OpenFileDialog();
 
 			dlg.Filter =
 				_deckReaders.Aggregate("",
@@ -336,17 +355,25 @@ namespace HyperMTG.ViewModel
 
 			if (dlg.ShowDialog() == true)
 			{
-				IDeckReader deckReader = _deckReaders[dlg.FilterIndex - 1];
-				using (var fs = (FileStream) dlg.OpenFile())
+				try
 				{
-					Deck = deckReader.Read(fs, Cards);
+					IDeckReader deckReader = _deckReaders[dlg.FilterIndex - 1];
+					using (FileStream fs = (FileStream) dlg.OpenFile())
+					{
+						Deck = deckReader.Read(fs, Cards);
+					}
+				}
+				catch (Exception ex)
+				{
+					Logger.Log(ex, typeof (DeckBuiderViewModel), _deckReaders[dlg.FilterIndex - 1]);
+					throw;
 				}
 			}
 		}
 
 		private void SaveDeckExecute()
 		{
-			var dlg = new SaveFileDialog();
+			SaveFileDialog dlg = new SaveFileDialog();
 
 			dlg.Filter =
 				_deckWriters.Aggregate("",
@@ -357,10 +384,18 @@ namespace HyperMTG.ViewModel
 
 			if (dlg.ShowDialog() == true)
 			{
-				IDeckWriter deckWriter = _deckWriters[dlg.FilterIndex - 1];
-				using (var fs = (FileStream) dlg.OpenFile())
+				try
 				{
-					deckWriter.Write(Deck, fs);
+					IDeckWriter deckWriter = _deckWriters[dlg.FilterIndex - 1];
+					using (FileStream fs = (FileStream)dlg.OpenFile())
+					{
+						deckWriter.Write(Deck, fs);
+					}
+				}
+				catch (Exception ex)
+				{
+					Logger.Log(ex, typeof(DeckBuiderViewModel), _deckWriters[dlg.FilterIndex - 1]);
+					throw;
 				}
 
 				Info = "File successfully saved";

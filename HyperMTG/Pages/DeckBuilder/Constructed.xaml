@@ -121,6 +121,7 @@
                             <Setter.Value>
                                 <ToolTip>
                                     <StackPanel Orientation="Vertical">
+                                        <mui:BBCodeBlock BBCode="{Binding Path=ID}" />
                                         <mui:BBCodeBlock BBCode="{Binding Path=Set}" />
                                         <mui:BBCodeBlock BBCode="{Binding Path=SetCode, StringFormat='[b]{0}[/b]'}" />
                                         <mui:BBCodeBlock BBCode="{Binding Path=Type}" />

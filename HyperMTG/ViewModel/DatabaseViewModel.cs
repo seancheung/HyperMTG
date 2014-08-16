@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using HyperKore.Common;
+using HyperKore.Logger;
 using HyperMTG.Helper;
 using HyperMTG.Model;
 using HyperMTG.Properties;
@@ -22,6 +23,12 @@ namespace HyperMTG.ViewModel
 		private const int MaxThread = 10;
 
 		private readonly ICompressor _compressor;
+
+		/// <summary>
+		///     Thread Canceling
+		/// </summary>
+		private readonly CancellationTokenSource _cts = new CancellationTokenSource();
+
 		private readonly IDataParse _dataParse;
 		private readonly IDBReader _dbReader;
 		private readonly IDBWriter _dbWriter;
@@ -33,31 +40,35 @@ namespace HyperMTG.ViewModel
 
 		private readonly IImageParse _imageParse;
 
-		/// <summary>
-		///     Thread Canceling
-		/// </summary>
-		private readonly CancellationTokenSource _cts = new CancellationTokenSource();
-
 		private ObservableCollection<Card> _cards;
 		private int _currentPage;
+		private bool _doImage;
 
 		private string _info;
 		private int _pageSize;
 
 		private volatile int _processCount;
 		private int _recordSize;
-		private bool _doImage;
 
 		public DatabaseViewModel()
 		{
 			Cards = new ObservableCollection<Card>();
 			Sets = new ObservableCollection<CheckSetItem>();
 
-			_dbReader = PluginManager.Instance.GetPlugin<IDBReader>();
-			_dbWriter = PluginManager.Instance.GetPlugin<IDBWriter>();
-			_compressor = PluginManager.Instance.GetPlugin<ICompressor>();
-			_dataParse = PluginManager.Instance.GetPlugin<IDataParse>();
-			_imageParse = PluginManager.Instance.GetPlugin<IImageParse>();
+			try
+			{
+				_dbReader = PluginManager.Instance.GetPlugin<IDBReader>();
+				_dbWriter = PluginManager.Instance.GetPlugin<IDBWriter>();
+				_compressor = PluginManager.Instance.GetPlugin<ICompressor>();
+				_dataParse = PluginManager.Instance.GetPlugin<IDataParse>();
+				_imageParse = PluginManager.Instance.GetPlugin<IImageParse>();
+			}
+			catch (Exception ex)
+			{
+				Logger.Log(ex, typeof (DatabaseViewModel));
+				throw;
+			}
+
 			if (_dbWriter != null && _dbReader != null)
 			{
 				_dbWriter.Language = Settings.Default.Language;
@@ -72,10 +83,9 @@ namespace HyperMTG.ViewModel
 			{
 				LoadSetsCommand.Execute(null);
 			}
-
 		}
 
-		public bool DoImage
+		public bool SaveImage
 		{
 			get { return _doImage; }
 			set
@@ -192,7 +202,7 @@ namespace HyperMTG.ViewModel
 
 		private void TestExecute(string id)
 		{
-			_dataParse.Process(new Card { ID = id, Set = "DarkAscen", SetCode = "DKA" }, Language.ChineseSimplified);
+			_dataParse.Process(new Card {ID = id, Set = "DarkAscen", SetCode = "DKA"}, Language.ChineseSimplified);
 		}
 
 		private void CancelExecute()
@@ -203,32 +213,53 @@ namespace HyperMTG.ViewModel
 		private void PageExecute(object next)
 		{
 			_processCount++;
-			var td = new Thread(() =>
+			Thread td = new Thread(() =>
 			{
 				Info = "Loading";
 				IEnumerable<Card> cards = _dbReader.LoadCards();
 				int count = cards.Count();
-				PageSize = count / RecordSize + (count % RecordSize == 0 ? 0 : 1);
+				PageSize = count/RecordSize + (count%RecordSize == 0 ? 0 : 1);
 				if (Convert.ToBoolean(next))
 					CurrentPage++;
 				else
 					CurrentPage--;
 
-				IEnumerable<Card> result = cards.Take(RecordSize * CurrentPage).Skip(RecordSize * (CurrentPage - 1));
+				IEnumerable<Card> result;
+				try
+				{
+					result = cards.Take(RecordSize*CurrentPage).Skip(RecordSize*(CurrentPage - 1));
+				}
+				catch (Exception ex)
+				{
+					Logger.Log(ex, typeof (DatabaseViewModel));
+					throw;
+				}
+
 				_dispatcher.Invoke(
 					new Action(() => { Cards = new ObservableCollection<Card>(result); }));
 				Info = "Done!";
 				_processCount--;
 			});
+
 			td.Start();
 		}
 
 		private void LoadSetsExecute()
 		{
 			_processCount++;
-			var td = new Thread(() =>
+			Thread td = new Thread(() =>
 			{
-				var sets = new ObservableCollection<Set>(_dbReader.LoadSets());
+				IEnumerable<Set> sets;
+				try
+				{
+					sets = _dbReader.LoadSets();
+				}
+				catch (Exception ex)
+				{
+					Logger.Log(ex, typeof (DatabaseViewModel), _dbReader);
+					throw;
+				}
+
 				_dispatcher.Invoke(new Action(() =>
 				{
 					Sets.Clear();
@@ -245,15 +276,35 @@ namespace HyperMTG.ViewModel
 		private void LoadCardsExecute()
 		{
 			_processCount++;
-			var td = new Thread(() =>
+			Thread td = new Thread(() =>
 			{
 				Info = "Loading";
-				IEnumerable<Card> cards = _dbReader.LoadCards();
+				IEnumerable<Card> cards;
+				try
+				{
+					cards = _dbReader.LoadCards();
+				}
+				catch (Exception ex)
+				{
+					Logger.Log(ex, typeof (DatabaseViewModel), _dbReader);
+					throw;
+				}
+
 				int count = cards.Count();
-				PageSize = count / RecordSize + (count % RecordSize == 0 ? 0 : 1);
+				PageSize = count/RecordSize + (count%RecordSize == 0 ? 0 : 1);
 				CurrentPage = 1;
 
-				IEnumerable<Card> result = cards.Take(RecordSize * CurrentPage).Skip(RecordSize * (CurrentPage - 1));
+				IEnumerable<Card> result;
+				try
+				{
+					result = cards.Take(RecordSize*CurrentPage).Skip(RecordSize*(CurrentPage - 1));
+				}
+				catch (Exception ex)
+				{
+					Logger.Log(ex, typeof (DatabaseViewModel));
+					throw;
+				}
+
 				_dispatcher.Invoke(
 					new Action(() => { Cards = new ObservableCollection<Card>(result); }));
 
@@ -268,15 +319,33 @@ namespace HyperMTG.ViewModel
 		{
 			_processCount++;
 			Info = "Waiting...Grabbing Source";
-			var td = new Thread(() =>
+			Thread td = new Thread(() =>
 			{
-				IEnumerable<Set> sets = _dataParse.ParseSet();
-				IList<Set> enumerable = sets as IList<Set> ?? sets.ToList();
-				_dbWriter.Insert(enumerable);
+				IEnumerable<Set> sets;
+				try
+				{
+					sets = _dataParse.ParseSet();
+				}
+				catch (Exception ex)
+				{
+					Logger.Log(ex, typeof (DatabaseViewModel), _dataParse);
+					throw;
+				}
+
+				try
+				{
+					_dbWriter.Insert(sets);
+				}
+				catch (Exception ex)
+				{
+					Logger.Log(ex, typeof (DatabaseViewModel), _dbWriter);
+					throw;
+				}
+
 				_dispatcher.Invoke(new Action(() =>
 				{
 					Sets.Clear();
-					foreach (Set set in enumerable)
+					foreach (Set set in sets)
 					{
 						Sets.Add(new CheckSetItem(false, set));
 					}
@@ -297,57 +366,84 @@ namespace HyperMTG.ViewModel
 
 				if (checkSetItem.IsChecked)
 				{
-					var td = new Thread(() =>
+					Thread td = new Thread(() =>
 					{
 						_processCount++;
 						checkSetItem.IsProcessing = true;
 						Info = "Preparing for " + checkSetItem.Content.FullName;
-						IEnumerable<Card> cards = _dataParse.Process(checkSetItem.Content, Settings.Default.Language);
-						List<Card> enumerable = cards as List<Card> ?? cards.ToList();
-						checkSetItem.Max = enumerable.Count();
+
+						List<Card> cards;
+						try
+						{
+							cards = _dataParse.Process(checkSetItem.Content, Settings.Default.Language).ToList();
+						}
+						catch (Exception ex)
+						{
+							Logger.Log(ex, typeof (DatabaseViewModel), _dataParse, checkSetItem.Content, Settings.Default.Language);
+							throw;
+						}
+
+						checkSetItem.Max = cards.Count;
 						checkSetItem.Prog = 0;
 
 						//Split the full card list into several parts
-						var cardsThread = new List<List<Card>>();
+						List<List<Card>> cardsThread = new List<List<Card>>();
 						for (int i = 0; i < MaxThread - 1; i++)
 						{
-							cardsThread.Add(enumerable.GetRange(enumerable.Count / MaxThread * i, enumerable.Count / MaxThread));
+							cardsThread.Add(cards.GetRange(cards.Count/MaxThread*i, cards.Count/MaxThread));
 						}
-						cardsThread.Add(enumerable.GetRange(enumerable.Count / MaxThread * (MaxThread - 1),
-							enumerable.Count / MaxThread + enumerable.Count % MaxThread));
+						cardsThread.Add(cards.GetRange(cards.Count/MaxThread*(MaxThread - 1),
+							cards.Count/MaxThread + cards.Count%MaxThread));
 
 						#region WaitCallback
 
 						WaitCallback waitCallback = param =>
 						{
-							var parameres = param as object[];
+							object[] parameres = param as object[];
 							if (parameres == null || parameres.Length != 2)
 								return;
-							var tmpCards = parameres[0] as IList<Card>;
+							IList<Card> tmpCards = parameres[0] as IList<Card>;
 							if (tmpCards == null)
 								return;
-							var waitHandle = parameres[1] as AutoResetEvent;
+							AutoResetEvent waitHandle = parameres[1] as AutoResetEvent;
 							if (waitHandle == null)
 								return;
 
 							if (!_cts.Token.IsCancellationRequested)
 							{
 								//Save Data
-								_dbWriter.Insert(tmpCards);
+								try
+								{
+									_dbWriter.Insert(tmpCards);
+								}
+								catch (Exception ex)
+								{
+									Logger.Log(ex, typeof (DatabaseViewModel), _dbWriter);
+									throw;
+								}
 							}
 
-							if (DoImage)
+							if (SaveImage)
 							{
 								//If action is cancelled, break
 								for (int i = 0; i < tmpCards.Count && !_cts.Token.IsCancellationRequested; i++)
 								{
-									Info = string.Format("Downloading image{0}: {1}", enumerable.Count, tmpCards[i].ID);
+									Info = string.Format("Downloading image{0}: {1}", cards.Count, tmpCards[i].ID);
 
 									#region Images
 
-									byte[] data = _imageParse.Download(tmpCards[i], Settings.Default.Language);
-									if (data != null && _compressor != null)
-										_dbWriter.Insert(tmpCards[i].ID, data, _compressor);
+									try
+									{
+										byte[] data = _imageParse.Download(tmpCards[i], Settings.Default.Language);
+										if (data != null && _compressor != null)
+											_dbWriter.Insert(tmpCards[i].ID, data, _compressor);
+									}
+									catch (Exception ex)
+									{
+										Logger.Log(ex, typeof (DatabaseViewModel), _imageParse, _compressor, _dbWriter, Settings.Default.Language,
+											tmpCards[i].ID);
+										throw;
+									}
 
 									#endregion
 
@@ -368,12 +464,12 @@ namespace HyperMTG.ViewModel
 
 						#endregion
 
-						var waitHandles = new WaitHandle[MaxThread];
+						WaitHandle[] waitHandles = new WaitHandle[MaxThread];
 						//Start a thread pool for updating
 						for (int i = 0; i < MaxThread; i++)
 						{
 							waitHandles[i] = new AutoResetEvent(false);
-							ThreadPool.QueueUserWorkItem(waitCallback, new object[] { cardsThread[i], waitHandles[i] });
+							ThreadPool.QueueUserWorkItem(waitCallback, new object[] {cardsThread[i], waitHandles[i]});
 						}
 
 						//Wait for all downloading threads to finish

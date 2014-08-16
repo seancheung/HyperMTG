@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Markup;
 using HyperKore.Common;
+using HyperKore.Logger;
 using HyperKore.Utilities;
 using HyperMTG.Properties;
 
@@ -16,41 +17,24 @@ namespace HyperMTG.Langs
 {
 	public class LanguageManager
 	{
-
 		private const string LangPrefix = "lang";
 
 		private const string LangPostfix = "xaml";
 
-		private const string LangFolder = "Langs";
-
 		private static bool isFound;
-		private static List<Language> languages = new List<Language>();
+		private static readonly List<Language> languages = new List<Language>();
 
-		public static void Initial()
+		private static ResourceDictionary defaultdict;
+
+		private static string LangFolder
 		{
-			if (!isFound && !IsInDesignMode)
+			get
 			{
-				string pattern = string.Format(@"(?<={0}\.)[a-z]{{2}}(?=\.{1})", LangPrefix, LangPostfix);
-
-				foreach (string source in Directory.GetFiles(LangFolder).Where(f => Regex.IsMatch(f, pattern)))
+				if (!Directory.Exists("Langs"))
 				{
-					try
-					{
-						string isoCode = Regex.Match(source, pattern).Value;
-						Language lang = LanguageTool.GetLangugeByCode(isoCode);
-						Languages.Add(lang);
-					}
-					catch (ArgumentException)
-					{
-					}
+					Directory.CreateDirectory("Langs");
 				}
-
-				if (Languages.Count > 0)
-				{
-					ChangeLang(Settings.Default.Language);
-				}
-
-				isFound = true;
+				return "Langs";
 			}
 		}
 
@@ -78,23 +62,69 @@ namespace HyperMTG.Langs
 		{
 			get { return Application.Current.Resources.MergedDictionaries[0][key]; }
 		}
-		
+
+		public static void Initial()
+		{
+			defaultdict = Application.Current.Resources.MergedDictionaries[0];
+			languages.Add(Language.English);
+
+			if (!isFound && !IsInDesignMode)
+			{
+				string pattern = string.Format(@"(?<={0}\.)[a-z]{{2}}(?=\.{1})", LangPrefix, LangPostfix);
+
+				foreach (string source in Directory.GetFiles(LangFolder).Where(f => Regex.IsMatch(f, pattern)))
+				{
+					try
+					{
+						string isoCode = Regex.Match(source, pattern).Value;
+						Language lang = LanguageTool.GetLangugeByCode(isoCode);
+						Languages.Add(lang);
+					}
+					catch (ArgumentException ex)
+					{
+						Logger.Log(ex, typeof (LanguageManager), source);
+					}
+				}
+
+				if (Languages.Count > 0)
+				{
+					ChangeLang(Settings.Default.Language);
+				}
+
+				isFound = true;
+			}
+		}
+
 		private static void ChangeLang(Language lang)
 		{
 			if (Languages.Contains(lang))
 			{
-				string filePath = string.Format("{0}\\{1}.{2}.{3}", LangFolder, LangPrefix, lang.GetLangCode(),
-					LangPostfix);
-
-				using (FileStream fs = new FileStream(filePath, FileMode.Open))
+				if (lang == Language.English)
 				{
-					ResourceDictionary dict = XamlReader.Load(fs) as ResourceDictionary;
-
-					Application.Current.Resources.MergedDictionaries[0] = dict;
-
-					Settings.Default.Language = lang;
-					Settings.Default.Save();
+					Application.Current.Resources.MergedDictionaries[0] = defaultdict;
 				}
+				else
+				{
+					string filePath = string.Format("{0}\\{1}.{2}.{3}", LangFolder, LangPrefix, lang.GetLangCode(),
+						LangPostfix);
+
+					try
+					{
+						using (var fs = new FileStream(filePath, FileMode.Open))
+						{
+							var dict = XamlReader.Load(fs) as ResourceDictionary;
+							Application.Current.Resources.MergedDictionaries[0] = dict;
+						}
+					}
+					catch (Exception ex)
+					{
+						Logger.Log(ex, typeof(LanguageManager), lang);
+						throw;
+					}
+				}
+
+				Settings.Default.Language = lang;
+				Settings.Default.Save();
 			}
 		}
 	}

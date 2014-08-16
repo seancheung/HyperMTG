@@ -1,4 +1,6 @@
-﻿using HyperKore.Common;
+﻿using System;
+using HyperKore.Common;
+using HyperKore.Logger;
 using HyperMTG.Helper;
 using HyperMTG.Properties;
 using HyperPlugin;
@@ -49,23 +51,31 @@ namespace HyperMTG.Model
 		{
 			get
 			{
-				if (Card == null || _compressor == null || _dbReader == null)
-					return null;
-				byte[] data = _dbReader.LoadFile(Card.ID, _compressor);
-				if (data != null)
+				try
+				{
+					if (Card == null || _compressor == null || _dbReader == null)
+						return null;
+					byte[] data = _dbReader.LoadFile(Card.ID, _compressor);
+					if (data != null)
+						return data;
+
+					if (_dbWriter == null || _imageParse == null) return null;
+
+					data = UpdateData(Card);
+
 					return data;
-
-				if (_dbWriter == null || _imageParse == null) return null;
-
-				data = UpdateData(Card);
-
-				return data;
+				}
+				catch (Exception ex)
+				{
+					Logger.Log(ex, typeof (ExCard));
+					throw;
+				}
 			}
 		}
 
 		private byte[] UpdateData(Card card)
 		{
-			var data = _imageParse.Download(card, Settings.Default.Language);
+			byte[] data = _imageParse.Download(card, Settings.Default.Language);
 			if (data != null)
 				_dbWriter.Insert(card.ID, data, _compressor);
 			return data;
