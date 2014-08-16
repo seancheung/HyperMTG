@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 using HyperKore.Exception;
 
-namespace HyperPlugin.Net
+namespace HyperPlugin
 {
 	public class Downloader : IDownloader
 	{

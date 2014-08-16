@@ -6,7 +6,7 @@ using HyperKore.Common;
 using HyperKore.Exception;
 using IOException = HyperKore.Exception.IOException;
 
-namespace HyperPlugin.IO.MagicOnline
+namespace HyperPlugin
 {
 	public class MO : IDeckReader, IDeckWriter
 	{

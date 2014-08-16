@@ -6,7 +6,7 @@ using HyperKore.Common;
 using LitJson;
 using IOException = HyperKore.Exception.IOException;
 
-namespace HyperPlugin.IO.HyperDeck
+namespace HyperPlugin
 {
 	internal class HD : IDeckReader, IDeckWriter
 	{

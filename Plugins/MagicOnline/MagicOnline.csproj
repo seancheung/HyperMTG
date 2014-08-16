@@ -7,7 +7,7 @@
     <ProjectGuid>{10FDEB2C-E172-4590-AAA6-06FBF612A4E1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HyperPlugin.IO.MagicOnline</RootNamespace>
+    <RootNamespace>HyperPlugin</RootNamespace>
     <AssemblyName>HyperPlugin.IO.MagicOnline</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

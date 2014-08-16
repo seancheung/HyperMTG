@@ -7,9 +7,8 @@ using HyperKore.Common;
 using HyperKore.Exception;
 using HyperKore.Utilities;
 using IOException = HyperKore.Exception.IOException;
-using Type = HyperKore.Common.Type;
 
-namespace HyperPlugin.IO.VirtualPlaytable
+namespace HyperPlugin
 {
 	public class VPT : IDeckReader, IDeckWriter
 	{
@@ -101,24 +100,24 @@ namespace HyperPlugin.IO.VirtualPlaytable
 
 		private VPTDeck Convert(Deck deck)
 		{
-			var sectionM = new VPTSection { ID = "main" };
+			var sectionM = new VPTSection {ID = "main"};
 			ILookup<string, Card> lpM = deck.MainBoard.ToLookup(c => c.ID);
 			foreach (var gp in lpM)
 			{
 				Card tcard = gp.First();
 				var vcard = new VPTCard(tcard.SetCode, Language.English.GetLangCode(), tcard.IsBasicLand() ? "1" : null, gp.Count());
-				var vitem = new VPTItem { Name = tcard.Name };
+				var vitem = new VPTItem {Name = tcard.Name};
 				vitem.Cards.Add(vcard);
 				sectionM.Items.Add(vitem);
 			}
 
-			var sectionS = new VPTSection { ID = "sideboard" };
+			var sectionS = new VPTSection {ID = "sideboard"};
 			ILookup<string, Card> lpS = deck.SideBoard.ToLookup(c => c.ID);
 			foreach (var gp in lpS)
 			{
 				Card tcard = gp.First();
 				var vcard = new VPTCard(tcard.SetCode, Language.English.GetLangCode(), tcard.IsBasicLand() ? "1" : null, gp.Count());
-				var vitem = new VPTItem { Name = tcard.Name };
+				var vitem = new VPTItem {Name = tcard.Name};
 				vitem.Cards.Add(vcard);
 				sectionS.Items.Add(vitem);
 			}
@@ -136,7 +135,7 @@ namespace HyperPlugin.IO.VirtualPlaytable
 		{
 			try
 			{
-				var serializer = new XmlSerializer(typeof(VPTDeck));
+				var serializer = new XmlSerializer(typeof (VPTDeck));
 				var nas = new XmlSerializerNamespaces();
 				nas.Add(string.Empty, string.Empty);
 				serializer.Serialize(output, deck, nas);
@@ -151,7 +150,7 @@ namespace HyperPlugin.IO.VirtualPlaytable
 		{
 			try
 			{
-				var serializer = new XmlSerializer(typeof(VPTDeck));
+				var serializer = new XmlSerializer(typeof (VPTDeck));
 				var data = serializer.Deserialize(input) as VPTDeck;
 				return data;
 			}

@@ -7,7 +7,7 @@
     <ProjectGuid>{53787FBC-488C-44A8-AA26-CF5CCC610B45}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HyperPlugin.IO.Mage</RootNamespace>
+    <RootNamespace>HyperPlugin</RootNamespace>
     <AssemblyName>HyperPlugin.IO.Mage</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

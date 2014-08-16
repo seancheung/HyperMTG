@@ -7,7 +7,7 @@
     <ProjectGuid>{BF270F15-DF51-4FDB-AC49-C14180ECE490}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HyperPlugin.IO.MagicWorkstation</RootNamespace>
+    <RootNamespace>HyperPlugin</RootNamespace>
     <AssemblyName>HyperPlugin.IO.MagicWorkstation</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

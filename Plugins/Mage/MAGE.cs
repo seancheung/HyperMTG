@@ -4,10 +4,9 @@ using System.IO;
 using System.Linq;
 using HyperKore.Common;
 using HyperKore.Exception;
-using HyperKore.Utilities;
 using IOException = HyperKore.Exception.IOException;
 
-namespace HyperPlugin.IO.Mage
+namespace HyperPlugin
 {
 	public sealed class MAGE : IDeckReader, IDeckWriter
 	{

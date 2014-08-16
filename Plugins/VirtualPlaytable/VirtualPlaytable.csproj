@@ -7,7 +7,7 @@
     <ProjectGuid>{991D3FD3-FC25-42FB-AC21-F31096CEE7FF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HyperPlugin.IO.VirtualPlaytable</RootNamespace>
+    <RootNamespace>HyperPlugin</RootNamespace>
     <AssemblyName>HyperPlugin.IO.VirtualPlaytable</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

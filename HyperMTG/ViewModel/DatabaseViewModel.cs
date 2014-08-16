@@ -72,6 +72,7 @@ namespace HyperMTG.ViewModel
 			{
 				LoadSetsCommand.Execute(null);
 			}
+
 		}
 
 		public bool DoImage
@@ -191,7 +192,7 @@ namespace HyperMTG.ViewModel
 
 		private void TestExecute(string id)
 		{
-			_dataParse.Process(new Card {ID = id, Set = "DarkAscen", SetCode = "DKA"}, Language.ChineseSimplified);
+			_dataParse.Process(new Card { ID = id, Set = "DarkAscen", SetCode = "DKA" }, Language.ChineseSimplified);
 		}
 
 		private void CancelExecute()
@@ -207,13 +208,13 @@ namespace HyperMTG.ViewModel
 				Info = "Loading";
 				IEnumerable<Card> cards = _dbReader.LoadCards();
 				int count = cards.Count();
-				PageSize = count/RecordSize + (count%RecordSize == 0 ? 0 : 1);
+				PageSize = count / RecordSize + (count % RecordSize == 0 ? 0 : 1);
 				if (Convert.ToBoolean(next))
 					CurrentPage++;
 				else
 					CurrentPage--;
 
-				IEnumerable<Card> result = cards.Take(RecordSize*CurrentPage).Skip(RecordSize*(CurrentPage - 1));
+				IEnumerable<Card> result = cards.Take(RecordSize * CurrentPage).Skip(RecordSize * (CurrentPage - 1));
 				_dispatcher.Invoke(
 					new Action(() => { Cards = new ObservableCollection<Card>(result); }));
 				Info = "Done!";
@@ -249,10 +250,10 @@ namespace HyperMTG.ViewModel
 				Info = "Loading";
 				IEnumerable<Card> cards = _dbReader.LoadCards();
 				int count = cards.Count();
-				PageSize = count/RecordSize + (count%RecordSize == 0 ? 0 : 1);
+				PageSize = count / RecordSize + (count % RecordSize == 0 ? 0 : 1);
 				CurrentPage = 1;
 
-				IEnumerable<Card> result = cards.Take(RecordSize*CurrentPage).Skip(RecordSize*(CurrentPage - 1));
+				IEnumerable<Card> result = cards.Take(RecordSize * CurrentPage).Skip(RecordSize * (CurrentPage - 1));
 				_dispatcher.Invoke(
 					new Action(() => { Cards = new ObservableCollection<Card>(result); }));
 
@@ -310,10 +311,10 @@ namespace HyperMTG.ViewModel
 						var cardsThread = new List<List<Card>>();
 						for (int i = 0; i < MaxThread - 1; i++)
 						{
-							cardsThread.Add(enumerable.GetRange(enumerable.Count/MaxThread*i, enumerable.Count/MaxThread));
+							cardsThread.Add(enumerable.GetRange(enumerable.Count / MaxThread * i, enumerable.Count / MaxThread));
 						}
-						cardsThread.Add(enumerable.GetRange(enumerable.Count/MaxThread*(MaxThread - 1),
-							enumerable.Count/MaxThread + enumerable.Count%MaxThread));
+						cardsThread.Add(enumerable.GetRange(enumerable.Count / MaxThread * (MaxThread - 1),
+							enumerable.Count / MaxThread + enumerable.Count % MaxThread));
 
 						#region WaitCallback
 
@@ -358,7 +359,7 @@ namespace HyperMTG.ViewModel
 							else
 							{
 								List<Card> list = tmpCards.ToList();
-								_dispatcher.Invoke(new Action(() => list.ForEach(c=>Cards.Add(c))));
+								_dispatcher.Invoke(new Action(() => list.ForEach(c => Cards.Add(c))));
 							}
 
 							//Set the current thread state as finished
@@ -372,7 +373,7 @@ namespace HyperMTG.ViewModel
 						for (int i = 0; i < MaxThread; i++)
 						{
 							waitHandles[i] = new AutoResetEvent(false);
-							ThreadPool.QueueUserWorkItem(waitCallback, new object[] {cardsThread[i], waitHandles[i]});
+							ThreadPool.QueueUserWorkItem(waitCallback, new object[] { cardsThread[i], waitHandles[i] });
 						}
 
 						//Wait for all downloading threads to finish

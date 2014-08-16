@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.IO.Compression;
 
-namespace HyperPlugin.IO.GZip
+namespace HyperPlugin
 {
 	public class GZipCompressor : ICompressor
 	{

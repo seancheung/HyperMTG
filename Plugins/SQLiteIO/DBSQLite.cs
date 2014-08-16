@@ -4,9 +4,8 @@ using System.Data.SQLite;
 using System.Linq;
 using HyperKore.Common;
 using HyperKore.Utilities;
-using HyperPlugin;
 
-namespace SQLiteIO
+namespace HyperPlugin
 {
 	public class DBSQLite : IDBReader, IDBWriter
 	{

@@ -8,7 +8,7 @@ using HyperKore.Exception;
 using HyperKore.Utilities;
 using ScrapySharp.Extensions;
 
-namespace HyperPlugin.Web
+namespace HyperPlugin
 {
 	public class DataParse : IDataParse, IImageParse
 	{
@@ -90,8 +90,7 @@ namespace HyperPlugin.Web
 			while (matchSC.Success && matchSN.Success)
 			{
 				yield return
-					new Set
-					{SetName = matchSN.Value.Trim(), SetCode = matchSC.Value.Trim().ToUpper()};
+					new Set { SetName = matchSN.Value.Trim(), SetCode = matchSC.Value.Trim().ToUpper() };
 
 				matchSC = matchSC.NextMatch();
 				matchSN = matchSN.NextMatch();
@@ -119,7 +118,7 @@ namespace HyperPlugin.Web
 
 			foreach (HtmlNode td in tds)
 			{
-				var card = new Card {Set = set.SetName, SetCode = set.SetCode};
+				var card = new Card { Set = set.SetName, SetCode = set.SetCode };
 
 				HtmlNode span = td.CssSelect("span").FirstOrDefault();
 				if (span == null)

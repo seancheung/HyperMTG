@@ -45,7 +45,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>HyperMTG.App</StartupObject>
@@ -169,6 +169,7 @@
     <Compile Include="Pages\Settings\SettingsAppearance.xaml.cs">
       <DependentUpon>SettingsAppearance.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\SealedViewModel.cs" />
     <Compile Include="ViewModel\SettingsAppearanceViewModel.cs" />
     <Page Include="Pages\DeckBuilder\Constructed.xaml">
       <SubType>Designer</SubType>
@@ -261,6 +262,10 @@
     <ProjectReference Include="..\HyperBase\HyperKore.csproj">
       <Project>{74f65d7f-c999-4a0b-8316-9c093660dcf7}</Project>
       <Name>HyperKore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HyperLogger\HyperLogger.csproj">
+      <Project>{ea84d043-5a33-4ca4-bc1d-78302d45a73e}</Project>
+      <Name>HyperLogger</Name>
     </ProjectReference>
     <ProjectReference Include="..\HyperPlugin\HyperPlugin.csproj">
       <Project>{bef59a5b-5faf-405e-9e47-862da747ab4e}</Project>
