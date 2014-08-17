@@ -51,6 +51,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Assets\Magic\CardBrushes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Assets\Magic\ManaBrushes.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -108,7 +112,23 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\Pattern\red.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Pattern\multicolor.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Pattern\white.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Pattern\artifact.jpg" />
+    <Resource Include="Resources\Pattern\black.jpg" />
+    <Resource Include="Resources\Pattern\blue.jpg" />
+    <Resource Include="Resources\Pattern\colorless.jpg" />
+    <Resource Include="Resources\Pattern\green.jpg" />
+    <Resource Include="Resources\Pattern\land.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

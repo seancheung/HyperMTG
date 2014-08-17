@@ -7,12 +7,51 @@
              mc:Ignorable="d">
     <Grid>
         <ScrollViewer>
-            <StackPanel MinWidth="200">
-                <TextBlock Style="{StaticResource Heading2}" Text="ABOUT" />
-                <TextBlock Margin="0,0,0,8"
-                           Text="TODO: provide information about the software"
-                           TextWrapping="Wrap" />
-            </StackPanel>
+            <UserControl>
+                <Viewbox>
+                    <Canvas Width="1600" Height="1200">
+                        <Rectangle x:Name="OutterBorder" Canvas.Left="430"
+                                   Canvas.Top="20" Width="822"
+                                   Height="1151" Fill="#FF000000"
+                                   RadiusX="35" RadiusY="35"
+                                   Stretch="Fill" />
+                        <Rectangle x:Name="Pattern" Canvas.Left="472"
+                                   Canvas.Top="62" Width="740"
+                                   Height="1068"
+                                   Fill="{StaticResource MultiColorPatternBrush}"
+                                   Stretch="Fill" />
+
+                        <Rectangle x:Name="TopBar" Canvas.Left="481"
+                                   Canvas.Top="76" Width="723"
+                                   Height="73"
+                                   Fill="{StaticResource RareBrush}"
+                                   RadiusX="15" RadiusY="30"
+                                   Stretch="Fill"
+                                   Stroke="{StaticResource IslandMountainBrush}"
+                                   StrokeThickness="8" />
+                        <Rectangle x:Name="BottomBar" Canvas.Left="481"
+                                   Canvas.Top="660" Width="723"
+                                   Height="72"
+                                   Fill="{StaticResource RareBrush}"
+                                   RadiusX="15" RadiusY="30"
+                                   Stretch="Fill"
+                                   Stroke="{StaticResource IslandMountainBrush}"
+                                   StrokeThickness="8" />
+                        <Rectangle x:Name="TopBox" Canvas.Left="494"
+                                   Canvas.Top="148" Width="696"
+                                   Height="514" Fill="White"
+                                   Stretch="Fill"
+                                   Stroke="{StaticResource IslandMountainBrush}"
+                                   StrokeThickness="8" />
+                        <Rectangle x:Name="BottomBox" Canvas.Left="494"
+                                   Canvas.Top="730" Width="696"
+                                   Height="324" Fill="White"
+                                   Stretch="Fill"
+                                   Stroke="{StaticResource IslandMountainBrush}"
+                                   StrokeThickness="8" />
+                    </Canvas>
+                </Viewbox>
+            </UserControl>
         </ScrollViewer>
     </Grid>
 </UserControl>

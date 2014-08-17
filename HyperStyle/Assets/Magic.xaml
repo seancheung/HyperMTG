@@ -8,5 +8,6 @@
         <ResourceDictionary Source="Magic/SetSymbolStyle.xaml" />
         <ResourceDictionary Source="Magic/TypeSymbolGeometries.xaml" />
         <ResourceDictionary Source="Magic/TypeSymbolStyle.xaml" />
+        <ResourceDictionary Source="Magic/CardBrushes.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
