@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -40,10 +39,12 @@ namespace HyperMTG.ViewModel
 
 		private ExCard _card;
 
-		private ObservableCollection<Card> _cards;
+		private List<Card> _cards;
 		private Deck _deck;
 		private string _info;
 		private string input;
+
+		private volatile int _processCount;
 
 		/// <summary>
 		///     Initializes a new instance of the DeckBuiderViewModel class.
@@ -51,7 +52,7 @@ namespace HyperMTG.ViewModel
 		public DeckBuiderViewModel()
 		{
 			Deck = new Deck();
-			Cards = new ObservableCollection<Card>();
+			Cards = new List<Card>();
 
 			try
 			{
@@ -64,7 +65,7 @@ namespace HyperMTG.ViewModel
 			}
 			catch (Exception ex)
 			{
-				Logger.Log(ex, typeof (DatabaseViewModel));
+				Logger.Log(ex, typeof(DatabaseViewModel));
 				throw;
 			}
 
@@ -80,11 +81,11 @@ namespace HyperMTG.ViewModel
 			{
 				try
 				{
-					Cards = new ObservableCollection<Card>(_dbReader.LoadCards());
+					Cards = _dbReader.LoadCards().ToList();
 				}
 				catch (Exception ex)
 				{
-					Logger.Log(ex, typeof (DatabaseViewModel), _dbReader, Settings.Default.Language);
+					Logger.Log(ex, typeof(DatabaseViewModel), _dbReader, Settings.Default.Language);
 					throw;
 				}
 			}
@@ -113,7 +114,7 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
-		public ObservableCollection<Card> Cards
+		public List<Card> Cards
 		{
 			get { return _cards; }
 			private set
@@ -217,33 +218,36 @@ namespace HyperMTG.ViewModel
 
 		private void ExportImagesDocExecute()
 		{
-			FlowDocument document = new FlowDocument();
+			_processCount++;
+			var document = new FlowDocument();
 
 			foreach (Card card in Deck.MainBoard)
 			{
-				ExCard exCard = new ExCard(_compressor, _dbReader, card, _dbWriter, _imageParse);
+				var exCard = new ExCard(_compressor, _dbReader, card, _dbWriter, _imageParse);
 				byte[] img = exCard.Image;
 				if (img != null)
 				{
-					document.Blocks.Add(new BlockUIContainer(new Image {Source = img.ToBitmapImage(), Width = 312, Height = 445}));
+					document.Blocks.Add(new BlockUIContainer(new Image { Source = img.ToBitmapImage(), Width = 312, Height = 445 }));
 				}
 			}
 			foreach (Card card in Deck.SideBoard)
 			{
-				ExCard exCard = new ExCard(_compressor, _dbReader, card, _dbWriter, _imageParse);
+				var exCard = new ExCard(_compressor, _dbReader, card, _dbWriter, _imageParse);
 				byte[] img = exCard.Image;
 				if (img != null)
 				{
-					document.Blocks.Add(new BlockUIContainer(new Image {Source = img.ToBitmapImage(), Width = 312, Height = 445}));
+					document.Blocks.Add(new BlockUIContainer(new Image { Source = img.ToBitmapImage(), Width = 312, Height = 445 }));
 				}
 			}
 
-			using (FileStream fs = new FileStream(DateTime.Now.ToFileTime() + ".rtf", FileMode.Create))
+			using (var fs = new FileStream(DateTime.Now.ToFileTime() + ".rtf", FileMode.Create))
 			{
-				StreamWriter sw = new StreamWriter(fs);
+				var sw = new StreamWriter(fs);
 				sw.Write(document.ToRTF());
 				sw.Flush();
 			}
+
+			_processCount--;
 		}
 
 		private void CopyImageExecute()
@@ -258,47 +262,40 @@ namespace HyperMTG.ViewModel
 
 		private void FilterExecute()
 		{
+			_processCount++;
 			new Thread(() =>
 			{
 				IEnumerable<Card> result = _dbReader.LoadCards();
 
-				foreach (CheckItem<Set> checkItem in FilterViewModel.Instance.Sets)
-				{
-					if (checkItem.IsChecked == true)
-					{
-						result = result.Where(c => c.SetCode == checkItem.Content.SetCode);
-					}
-					else if (checkItem.IsChecked == null)
-					{
-						result = result.Where(c => c.SetCode != checkItem.Content.SetCode);
-					}
-				}
+				IEnumerable<Set> sets = FilterViewModel.Instance.Sets.Where(s => s.IsChecked).Select(s => s.Content);
+				IEnumerable<Color> colors = FilterViewModel.Instance.Colors.Where(s => s.IsChecked).Select(s => s.Content);
+				IEnumerable<Type> types = FilterViewModel.Instance.Types.Where(s => s.IsChecked).Select(s => s.Content);
+				IEnumerable<Rarity> rarities = FilterViewModel.Instance.Rarities.Where(s => s.IsChecked).Select(s => s.Content);
 
-				foreach (CheckItem<Color> checkItem in FilterViewModel.Instance.Colors)
-				{
-					if (checkItem.IsChecked == true)
-					{
-						result = result.Where(c => c.GetColors().Contains(checkItem.Content));
-					}
-					else if (checkItem.IsChecked == null)
-					{
-						result = result.Where(c => !c.GetColors().Contains(checkItem.Content));
-					}
-				}
+				result = result.Where(c => sets.Any(s => s.SetCode == c.SetCode));
 
-				foreach (CheckItem<Type> checkItem in FilterViewModel.Instance.Types)
-				{
-					if (checkItem.IsChecked == true)
-					{
-						result = result.Where(c => c.GetTypes().Contains(checkItem.Content));
-					}
-					else if (checkItem.IsChecked == null)
-					{
-						result = result.Where(c => !c.GetTypes().Contains(checkItem.Content));
-					}
-				}
+				result = result.Where(c => rarities.Any(r => r == c.GetRarity()));
 
-				result = result.Where(c => string.CompareOrdinal(c.CMC, FilterViewModel.Instance.Cost.ToString()) >= 0);
+				result = FilterViewModel.Instance.IncludeUnselectedColors
+					? result.Where(c => c.GetColors().Any(colors.Contains))
+					: result.Where(c => c.GetColors().All(colors.Contains));
+
+				result = FilterViewModel.Instance.IncludeUnselectedTypes
+					? result.Where(c => c.GetTypes().Any(types.Contains))
+					: result.Where(c => c.GetTypes().All(types.Contains));
+
+				switch (FilterViewModel.Instance.CMCCondition)
+				{
+					case FilterViewModel.CMCCompareType.EqualTo:
+						result = result.Where(c => string.CompareOrdinal(c.CMC, FilterViewModel.Instance.Cost.ToString()) == 0);
+						break;
+					case FilterViewModel.CMCCompareType.NoLessThan:
+						result = result.Where(c => string.CompareOrdinal(c.CMC, FilterViewModel.Instance.Cost.ToString()) >= 0);
+						break;
+					default:
+						result = result.Where(c => string.CompareOrdinal(c.CMC, FilterViewModel.Instance.Cost.ToString()) <= 0);
+						break;
+				}
 
 				if (!string.IsNullOrWhiteSpace(Input))
 				{
@@ -311,17 +308,54 @@ namespace HyperMTG.ViewModel
 							{
 								switch (cons[0].ToLower())
 								{
-									case "n":
+									case "name":
 										result = result.Where(c => Regex.IsMatch(c.Name, cons[1], RegexOptions.IgnoreCase));
 										break;
-									case "t":
+									case "type":
 										result = result.Where(c => Regex.IsMatch(c.Type, cons[1], RegexOptions.IgnoreCase));
 										break;
-									case "x":
+									case "txt":
 										result = result.Where(c => Regex.IsMatch(c.Text, cons[1], RegexOptions.IgnoreCase));
 										break;
-									case "i":
+									case "id":
 										result = result.Where(c => Regex.IsMatch(c.ID, cons[1], RegexOptions.IgnoreCase));
+										break;
+									case "cost":
+										result = result.Where(c => Regex.IsMatch(c.Cost, cons[1], RegexOptions.IgnoreCase));
+										break;
+									case "set":
+										result = result.Where(c => Regex.IsMatch(c.Set, cons[1], RegexOptions.IgnoreCase));
+										break;
+									case "setc":
+										result = result.Where(c => Regex.IsMatch(c.SetCode, cons[1], RegexOptions.IgnoreCase));
+										break;
+									case "fla":
+										result = result.Where(c => Regex.IsMatch(c.Flavor, cons[1], RegexOptions.IgnoreCase));
+										break;
+									case "cmc":
+										result = result.Where(c => Regex.IsMatch(c.CMC, cons[1], RegexOptions.IgnoreCase));
+										break;
+									case "rar":
+										result = result.Where(c => Regex.IsMatch(c.Rarity, cons[1], RegexOptions.IgnoreCase));
+										break;
+									case "col":
+										result =
+											result.Where(c => c.GetColors().Select(col => col.ToString()).Any(co => Regex.IsMatch(co, cons[1], RegexOptions.IgnoreCase)));
+										break;
+									case "tgh":
+										result = result.Where(c => Regex.IsMatch(c.Tgh, cons[1], RegexOptions.IgnoreCase));
+										break;
+									case "pow":
+										result = result.Where(c => Regex.IsMatch(c.Pow, cons[1], RegexOptions.IgnoreCase));
+										break;
+									case "loy":
+										result = result.Where(c => Regex.IsMatch(c.Loyalty, cons[1], RegexOptions.IgnoreCase));
+										break;
+									case "num":
+										result = result.Where(c => Regex.IsMatch(c.Number, cons[1], RegexOptions.IgnoreCase));
+										break;
+									case "art":
+										result = result.Where(c => Regex.IsMatch(c.Artist, cons[1], RegexOptions.IgnoreCase));
 										break;
 								}
 							}
@@ -333,7 +367,9 @@ namespace HyperMTG.ViewModel
 					}
 				}
 
-				_dispatcher.BeginInvoke(new Action(() => { Cards = new ObservableCollection<Card>(result); }));
+				Cards = result.ToList();
+
+				_processCount--;
 			}).Start();
 		}
 
@@ -344,7 +380,8 @@ namespace HyperMTG.ViewModel
 
 		private void OpenDeckExecute()
 		{
-			OpenFileDialog dlg = new OpenFileDialog();
+			_processCount++;
+			var dlg = new OpenFileDialog();
 
 			dlg.Filter =
 				_deckReaders.Aggregate("",
@@ -358,22 +395,24 @@ namespace HyperMTG.ViewModel
 				try
 				{
 					IDeckReader deckReader = _deckReaders[dlg.FilterIndex - 1];
-					using (FileStream fs = (FileStream) dlg.OpenFile())
+					using (var fs = (FileStream)dlg.OpenFile())
 					{
 						Deck = deckReader.Read(fs, Cards);
 					}
 				}
 				catch (Exception ex)
 				{
-					Logger.Log(ex, typeof (DeckBuiderViewModel), _deckReaders[dlg.FilterIndex - 1]);
+					Logger.Log(ex, typeof(DeckBuiderViewModel), _deckReaders[dlg.FilterIndex - 1]);
 					throw;
 				}
 			}
+			_processCount--;
 		}
 
 		private void SaveDeckExecute()
 		{
-			SaveFileDialog dlg = new SaveFileDialog();
+			_processCount++;
+			var dlg = new SaveFileDialog();
 
 			dlg.Filter =
 				_deckWriters.Aggregate("",
@@ -387,7 +426,7 @@ namespace HyperMTG.ViewModel
 				try
 				{
 					IDeckWriter deckWriter = _deckWriters[dlg.FilterIndex - 1];
-					using (FileStream fs = (FileStream)dlg.OpenFile())
+					using (var fs = (FileStream)dlg.OpenFile())
 					{
 						deckWriter.Write(Deck, fs);
 					}
@@ -400,6 +439,7 @@ namespace HyperMTG.ViewModel
 
 				Info = "File successfully saved";
 			}
+			_processCount--;
 		}
 
 		private void AddCardMainExecute(Card card)
@@ -440,58 +480,58 @@ namespace HyperMTG.ViewModel
 
 		private bool CanExecuteExportImageDoc()
 		{
-			return Deck.MainBoard.Count + Deck.SideBoard.Count > 0 && _compressor != null && _dbReader != null &&
-			       _dbWriter != null && _imageParse != null;
+			return _processCount == 0 && Deck.MainBoard.Count + Deck.SideBoard.Count > 0 && _compressor != null && _dbReader != null &&
+				   _dbWriter != null && _imageParse != null;
 		}
 
 		private bool CanExecuteCopyImage()
 		{
-			return SelectedCard.Image != null;
+			return _processCount == 0 && SelectedCard.Image != null;
 		}
 
 		private bool CanExecuteClearInput()
 		{
-			return !string.IsNullOrWhiteSpace(Input);
+			return _processCount == 0 && !string.IsNullOrWhiteSpace(Input);
 		}
 
 		private bool CanExecuteFilter()
 		{
-			return _dbReader != null;
+			return _processCount == 0 && _dbReader != null;
 		}
 
 		private bool CanExecuteNewDeck()
 		{
-			return Deck.MainBoard.Count > 0 || Deck.SideBoard.Count > 0;
+			return _processCount == 0 && Deck.MainBoard.Count > 0 || Deck.SideBoard.Count > 0;
 		}
 
 		private bool CanExecuteOpenDeck()
 		{
-			return _deckReaders != null && _deckReaders.Length > 0 && Cards.Count > 0;
+			return _processCount == 0 && _deckReaders != null && _deckReaders.Length > 0 && Cards.Count > 0;
 		}
 
 		private bool CanExecuteSaveDeck()
 		{
-			return _deckWriters != null && _deckWriters.Length > 0 && (Deck.MainBoard.Count > 0 || Deck.SideBoard.Count > 0);
+			return _processCount == 0 && _deckWriters != null && _deckWriters.Length > 0 && (Deck.MainBoard.Count > 0 || Deck.SideBoard.Count > 0);
 		}
 
 		private bool CanExecuteDeleteCardMain(Card card)
 		{
-			return Deck.MainBoard.Contains(card);
+			return _processCount == 0 && Deck.MainBoard.Contains(card);
 		}
 
 		private bool CanExecuteDeleteCardSide(Card card)
 		{
-			return Deck.SideBoard.Contains(card);
+			return _processCount == 0 && Deck.SideBoard.Contains(card);
 		}
 
 		private bool CanExecuteAddCardMain(Card card)
 		{
-			return card != null;
+			return _processCount == 0 && card != null;
 		}
 
 		private bool CanExecuteAddCardSide(Card card)
 		{
-			return card != null;
+			return _processCount == 0 && card != null;
 		}
 
 		#endregion

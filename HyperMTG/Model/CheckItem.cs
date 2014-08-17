@@ -4,12 +4,12 @@ namespace HyperMTG.Model
 {
 	public class CheckItem<T> : ObservableObject
 	{
-		private bool? _isChecked;
+		private bool _isChecked;
 
 		/// <summary>
 		///     Initializes a new instance of the CheckItem class.
 		/// </summary>
-		public CheckItem(T content, bool? isChecked)
+		public CheckItem(T content, bool isChecked)
 		{
 			Content = content;
 			IsChecked = isChecked;
@@ -22,7 +22,7 @@ namespace HyperMTG.Model
 			get { return Content.ToString(); }
 		}
 
-		public bool? IsChecked
+		public bool IsChecked
 		{
 			get { return _isChecked; }
 			set

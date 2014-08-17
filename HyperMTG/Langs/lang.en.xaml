@@ -2,9 +2,9 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
-    <!--info-->
+    <!--  info  -->
     <sys:String x:Key="info_01">Assembly Missing</sys:String>
-    
+
     <!--  database official  -->
     <sys:String x:Key="dbo_01">Update Ses</sys:String>
     <sys:String x:Key="dbo_01_t">Update Available Set List</sys:String>
@@ -36,7 +36,7 @@
     <sys:String x:Key="cns_01">open</sys:String>
     <sys:String x:Key="cns_02">save</sys:String>
     <sys:String x:Key="cns_03">new</sys:String>
-    <sys:String x:Key="cns_04"><![CDATA[Search keywords in card name; Or use hyper-expression ot do advanced search: e.g. n@ajani&t@cat&x@gain control]]></sys:String>
+    <sys:String x:Key="cns_04">Use HyperSyntax(See quick reference in HELP page)</sys:String>
     <sys:String x:Key="cns_04_t">Clear input</sys:String>
 
     <!--  settings  -->

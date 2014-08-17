@@ -110,7 +110,7 @@ namespace HyperKore.Utilities
 				case "special":
 					return Rarity.Mythic;
 				default:
-					throw new ArgumentException(card.Rarity);
+					return Rarity.Common;
 			}
 		}
 

@@ -34,9 +34,7 @@
     <sys:String x:Key="cns_01">打开</sys:String>
     <sys:String x:Key="cns_02">保存</sys:String>
     <sys:String x:Key="cns_03">新建</sys:String>
-    <sys:String x:Key="cns_04">
-        <![CDATA[在卡牌名中搜索关键字; 或使用hyper表达式进行高级检索: 例. n@阿耶尼&t@猫&x@获得目标]]>
-    </sys:String>
+    <sys:String x:Key="cns_04">使用Hyper语法(在帮助页面查看快速参考)</sys:String>
     <sys:String x:Key="cns_04_t">清除输入</sys:String>
 
     <!--  settings  -->
