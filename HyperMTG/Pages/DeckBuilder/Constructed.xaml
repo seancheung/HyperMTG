@@ -153,34 +153,94 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
+
                     <Image Grid.Row="0" Source="{Binding SelectedCard.Image, IsAsync=True}">
                         <Image.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Command="{Binding CopyImageCommand}" Header="Copy Image To Clipboard" />
                             </ContextMenu>
                         </Image.ContextMenu>
-                        <!--
-                            <Image.OpacityMask>
-                            <VisualBrush>
-                            <VisualBrush.Visual>
-                            <Border Width="{Binding RelativeSource={RelativeSource FindAncestor,
-                            AncestorType={x:Type Image}},
-                            Path=ActualWidth}"
-                            Height="{Binding RelativeSource={RelativeSource FindAncestor,
-                            AncestorType={x:Type Image}},
-                            Path=ActualHeight}"
-                            Background="White" CornerRadius="10" />
-                            </VisualBrush.Visual>
-                            </VisualBrush>
-                            </Image.OpacityMask>
-                        -->
+                        <Image.OpacityMask>
+                            <DrawingBrush Stretch="UniformToFill">
+                                <DrawingBrush.Drawing>
+                                    <DrawingGroup>
+                                        <DrawingGroup.Children>
+                                            <GeometryDrawing Brush="Transparent" Geometry="M 256.138,-177.75C 607.998,-177.75 959.858,-177.75 1311.86,-177.75C 1311.86,313.953 1311.86,805.73 1311.86,1297.75C 960.049,1297.75 608.094,1297.75 256.138,1297.75C 256.138,806.07 256.138,314.198 256.138,-177.75 Z M 349.729,638.953C 638.749,638.953 927.219,638.953 1215.5,638.953C 1215.5,425.991 1215.5,213.509 1215.5,1.15491C 926.65,1.15491 638.336,1.15491 349.729,1.15491C 349.729,213.842 349.729,426.168 349.729,638.953 Z " />
+                                            <GeometryDrawing Brush="Black" Geometry="M 349.729,638.953C 349.729,426.168 349.729,213.842 349.729,1.15491C 638.336,1.15491 926.65,1.15491 1215.5,1.15491C 1215.5,213.509 1215.5,425.991 1215.5,638.953C 927.219,638.953 638.749,638.953 349.729,638.953 Z " />
+                                        </DrawingGroup.Children>
+                                    </DrawingGroup>
+                                </DrawingBrush.Drawing>
+                            </DrawingBrush>
+                        </Image.OpacityMask>
                     </Image>
-                    <!--
-                        <Image Grid.Row="1" MaxWidth="223"
-                        MaxHeight="310"
-                        Source="{Binding SelectedCard.ImageB,
-                        IsAsync=True}" />
-                    -->
+                    <UserControl Grid.Row="0">
+                        <Viewbox>
+                            <Canvas Width="822" Height="1151">
+                                <Canvas.OpacityMask>
+                                    <VisualBrush Stretch="UniformToFill">
+                                        <VisualBrush.Visual>
+                                            <Path Data="F1 M 0,0C 0,492 0,984 0,1476C 351.956,1476 704,1476 1056,1476C 1056,984 1056,492 1056,0C 704,0 351.86,0 0,0 Z M 960,179.058C 960,391.43 960,604 960,817.333C 670.667,817.333 382.667,817.333 93.3333,817.333C 93.3333,604 93.3333,391.829 93.3333,179.058C 93.3333,176.624 93.3333,174.667 93.3333,172C 382.667,172 670.667,172 960,172C 960,174.667 960,176.625 960,179.058 Z" Fill="Black" />
+                                        </VisualBrush.Visual>
+                                    </VisualBrush>
+                                </Canvas.OpacityMask>
+                                <Rectangle x:Name="OutterBorder" Canvas.Left="0"
+                                           Canvas.Top="0" Width="822"
+                                           Height="1151" Fill="#FF000000"
+                                           RadiusX="35" RadiusY="35"
+                                           Stretch="Fill" />
+                                <Rectangle x:Name="Pattern" Canvas.Left="42"
+                                           Canvas.Top="42" Width="740"
+                                           Height="1068"
+                                           Fill="{StaticResource MPatternBrush}"
+                                           Stretch="Fill" />
+                                <Rectangle x:Name="TopBox" Canvas.Left="64"
+                                           Canvas.Top="128" Width="696"
+                                           Height="514" Fill="Transparent"
+                                           Stretch="Fill"
+                                           Stroke="{StaticResource IslandSwampBrush}"
+                                           StrokeThickness="8">
+                                    <Rectangle.Effect>
+                                        <DropShadowEffect Direction="225" />
+                                    </Rectangle.Effect>
+                                </Rectangle>
+                                <Rectangle x:Name="BottomBox" Canvas.Left="64"
+                                           Canvas.Top="710" Width="696"
+                                           Height="324"
+                                           Fill="{StaticResource MBarBrush}"
+                                           Stretch="Fill"
+                                           Stroke="{StaticResource IslandSwampBrush}"
+                                           StrokeThickness="8">
+                                    <Rectangle.Effect>
+                                        <DropShadowEffect Direction="225" />
+                                    </Rectangle.Effect>
+                                </Rectangle>
+                                <Rectangle x:Name="TopBar" Canvas.Left="51"
+                                           Canvas.Top="56" Width="723"
+                                           Height="73"
+                                           Fill="{StaticResource MBarBrush}"
+                                           RadiusX="15" RadiusY="30"
+                                           Stretch="Fill"
+                                           Stroke="{StaticResource IslandSwampBrush}"
+                                           StrokeThickness="8">
+                                    <Rectangle.Effect>
+                                        <DropShadowEffect Direction="225" />
+                                    </Rectangle.Effect>
+                                </Rectangle>
+                                <Rectangle x:Name="BottomBar" Canvas.Left="51"
+                                           Canvas.Top="640" Width="723"
+                                           Height="72"
+                                           Fill="{StaticResource MBarBrush}"
+                                           RadiusX="15" RadiusY="30"
+                                           Stretch="Fill"
+                                           Stroke="{StaticResource IslandSwampBrush}"
+                                           StrokeThickness="8">
+                                    <Rectangle.Effect>
+                                        <DropShadowEffect Direction="225" />
+                                    </Rectangle.Effect>
+                                </Rectangle>
+                            </Canvas>
+                        </Viewbox>
+                    </UserControl>
                     <mui:BBCodeBlock Grid.Row="2" Margin="0,4"
                                      BBCode="{Binding SelectedCard.Card.Text,
                                                       NotifyOnTargetUpdated=True}"

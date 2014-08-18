@@ -8,7 +8,7 @@
 
     <Grid Style="{StaticResource ContentRoot}">
         <ScrollViewer>
-            <Path Style="{StaticResource PathUB}" />
+            <Path Style="{StaticResource PathGU}" />
         </ScrollViewer>
     </Grid>
 </UserControl>

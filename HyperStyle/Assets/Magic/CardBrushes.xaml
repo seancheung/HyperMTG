@@ -1,10 +1,81 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <ImageBrush x:Key="MultiColorPatternBrush"
+    <ImageBrush x:Key="MPatternBrush"
                 ImageSource="../../Resources/Pattern/multicolor.jpg"
                 TileMode="FlipXY" Viewport="0,0,0.5,0.5" />
-    <ImageBrush x:Key="BlackPatternBrush"
+    <ImageBrush x:Key="BPatternBrush"
                 ImageSource="../../Resources/Pattern/black.jpg"
                 TileMode="FlipXY" Viewport="0,0,0.5,0.5" />
+    <ImageBrush x:Key="RPatternBrush"
+                ImageSource="../../Resources/Pattern/red.jpg"
+                TileMode="FlipXY" Viewport="0,0,0.5,0.5" />
+    <ImageBrush x:Key="UPatternBrush"
+                ImageSource="../../Resources/Pattern/blue.jpg"
+                TileMode="FlipXY" Viewport="0,0,0.5,0.5" />
+    <ImageBrush x:Key="GPatternBrush"
+                ImageSource="../../Resources/Pattern/green.jpg"
+                TileMode="FlipXY" Viewport="0,0,0.5,0.5" />
+    <ImageBrush x:Key="WPatternBrush"
+                ImageSource="../../Resources/Pattern/white.jpg"
+                TileMode="FlipXY" Viewport="0,0,0.5,0.5" />
+    <ImageBrush x:Key="APatternBrush"
+                ImageSource="../../Resources/Pattern/artifact.jpg"
+                TileMode="FlipXY" Viewport="0,0,0.5,0.5" />
+    <ImageBrush x:Key="CPatternBrush"
+                ImageSource="../../Resources/Pattern/colorless.jpg"
+                TileMode="FlipXY" Viewport="0,0,0.5,0.5" />
+    <ImageBrush x:Key="LPatternBrush"
+                ImageSource="../../Resources/Pattern/land.jpg"
+                TileMode="FlipXY" Viewport="0,0,0.5,0.5" />
+
+    <SolidColorBrush x:Key="RBarBrush" Color="#E2B88B" />
+    <SolidColorBrush x:Key="WBarBrush" Color="#F7F9F3" />
+    <SolidColorBrush x:Key="GBarBrush" Color="#C1C4AA" />
+    <SolidColorBrush x:Key="ABarBrush" Color="#ABB1AB" />
+    <SolidColorBrush x:Key="MBarBrush" Color="#C6B98D" />
+    <SolidColorBrush x:Key="BBarBrush" Color="#B3AAA2" />
+    <SolidColorBrush x:Key="CBarBrush" Color="#C4B8AF" />
+    <SolidColorBrush x:Key="UBarBrush" Color="#C7D0D9" />
+
+    <LinearGradientBrush x:Key="BRBarBrush">
+        <GradientStop Offset="0" Color="#B3AAA2" />
+        <GradientStop Offset="1" Color="#E2B88B" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="GUBarBrush">
+        <GradientStop Offset="0" Color="#C1C4AA" />
+        <GradientStop Offset="1" Color="#C7D0D9" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="WUBarBrush">
+        <GradientStop Offset="0" Color="#F7F9F3" />
+        <GradientStop Offset="1" Color="#C7D0D9" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="WBBarBrush">
+        <GradientStop Offset="0" Color="#F7F9F3" />
+        <GradientStop Offset="1" Color="#B3AAA2" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="URBarBrush">
+        <GradientStop Offset="0" Color="#C7D0D9" />
+        <GradientStop Offset="1" Color="#E2B88B" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="RGBarBrush">
+        <GradientStop Offset="0" Color="#E2B88B" />
+        <GradientStop Offset="1" Color="#C1C4AA" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="GWBarBrush">
+        <GradientStop Offset="0" Color="#C1C4AA" />
+        <GradientStop Offset="1" Color="#F7F9F3" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="BGBarBrush">
+        <GradientStop Offset="0" Color="#B3AAA2" />
+        <GradientStop Offset="1" Color="#C1C4AA" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="UBBarBrush">
+        <GradientStop Offset="0" Color="#C7D0D9" />
+        <GradientStop Offset="1" Color="#B3AAA2" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="RWBarBrush">
+        <GradientStop Offset="0" Color="#E2B88B" />
+        <GradientStop Offset="1" Color="#F7F9F3" />
+    </LinearGradientBrush>
 
 </ResourceDictionary>
