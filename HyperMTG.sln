@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperWeb", "Plugins\HyperWe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperDeck", "Plugins\HyperDeck\HyperDeck.csproj", "{AF2155D5-BFA6-4F24-8582-7F5C7EBC41F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperBoard", "HyperBoard\HyperBoard.csproj", "{897EC983-5E81-4355-B02C-75F99034B350}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,6 +109,10 @@ Global
 		{AF2155D5-BFA6-4F24-8582-7F5C7EBC41F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF2155D5-BFA6-4F24-8582-7F5C7EBC41F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF2155D5-BFA6-4F24-8582-7F5C7EBC41F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{897EC983-5E81-4355-B02C-75F99034B350}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{897EC983-5E81-4355-B02C-75F99034B350}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{897EC983-5E81-4355-B02C-75F99034B350}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{897EC983-5E81-4355-B02C-75F99034B350}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

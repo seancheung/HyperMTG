@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:hp="clr-namespace:HyperMTG.Helper"
+             xmlns:hs="clr-namespace:HyperStyle.Controls;assembly=HyperStyle"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
@@ -173,74 +174,7 @@
                             </DrawingBrush>
                         </Image.OpacityMask>
                     </Image>
-                    <UserControl Grid.Row="0">
-                        <Viewbox>
-                            <Canvas Width="822" Height="1151">
-                                <Canvas.OpacityMask>
-                                    <VisualBrush Stretch="UniformToFill">
-                                        <VisualBrush.Visual>
-                                            <Path Data="F1 M 0,0C 0,492 0,984 0,1476C 351.956,1476 704,1476 1056,1476C 1056,984 1056,492 1056,0C 704,0 351.86,0 0,0 Z M 960,179.058C 960,391.43 960,604 960,817.333C 670.667,817.333 382.667,817.333 93.3333,817.333C 93.3333,604 93.3333,391.829 93.3333,179.058C 93.3333,176.624 93.3333,174.667 93.3333,172C 382.667,172 670.667,172 960,172C 960,174.667 960,176.625 960,179.058 Z" Fill="Black" />
-                                        </VisualBrush.Visual>
-                                    </VisualBrush>
-                                </Canvas.OpacityMask>
-                                <Rectangle x:Name="OutterBorder" Canvas.Left="0"
-                                           Canvas.Top="0" Width="822"
-                                           Height="1151" Fill="#FF000000"
-                                           RadiusX="35" RadiusY="35"
-                                           Stretch="Fill" />
-                                <Rectangle x:Name="Pattern" Canvas.Left="42"
-                                           Canvas.Top="42" Width="740"
-                                           Height="1068"
-                                           Fill="{StaticResource MPatternBrush}"
-                                           Stretch="Fill" />
-                                <Rectangle x:Name="TopBox" Canvas.Left="64"
-                                           Canvas.Top="128" Width="696"
-                                           Height="514" Fill="Transparent"
-                                           Stretch="Fill"
-                                           Stroke="{StaticResource IslandSwampBrush}"
-                                           StrokeThickness="8">
-                                    <Rectangle.Effect>
-                                        <DropShadowEffect Direction="225" />
-                                    </Rectangle.Effect>
-                                </Rectangle>
-                                <Rectangle x:Name="BottomBox" Canvas.Left="64"
-                                           Canvas.Top="710" Width="696"
-                                           Height="324"
-                                           Fill="{StaticResource MBarBrush}"
-                                           Stretch="Fill"
-                                           Stroke="{StaticResource IslandSwampBrush}"
-                                           StrokeThickness="8">
-                                    <Rectangle.Effect>
-                                        <DropShadowEffect Direction="225" />
-                                    </Rectangle.Effect>
-                                </Rectangle>
-                                <Rectangle x:Name="TopBar" Canvas.Left="51"
-                                           Canvas.Top="56" Width="723"
-                                           Height="73"
-                                           Fill="{StaticResource MBarBrush}"
-                                           RadiusX="15" RadiusY="30"
-                                           Stretch="Fill"
-                                           Stroke="{StaticResource IslandSwampBrush}"
-                                           StrokeThickness="8">
-                                    <Rectangle.Effect>
-                                        <DropShadowEffect Direction="225" />
-                                    </Rectangle.Effect>
-                                </Rectangle>
-                                <Rectangle x:Name="BottomBar" Canvas.Left="51"
-                                           Canvas.Top="640" Width="723"
-                                           Height="72"
-                                           Fill="{StaticResource MBarBrush}"
-                                           RadiusX="15" RadiusY="30"
-                                           Stretch="Fill"
-                                           Stroke="{StaticResource IslandSwampBrush}"
-                                           StrokeThickness="8">
-                                    <Rectangle.Effect>
-                                        <DropShadowEffect Direction="225" />
-                                    </Rectangle.Effect>
-                                </Rectangle>
-                            </Canvas>
-                        </Viewbox>
-                    </UserControl>
+                    <hs:CardControl Grid.Row="0" BorderStyle="Black" />
                     <mui:BBCodeBlock Grid.Row="2" Margin="0,4"
                                      BBCode="{Binding SelectedCard.Card.Text,
                                                       NotifyOnTargetUpdated=True}"
