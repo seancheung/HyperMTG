@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="HyperMTG.Pages.DeckBuilder.Analyzer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:de="clr-namespace:De.TorstenMandelkow.MetroChart;assembly=De.TorstenMandelkow.MetroChart"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             xmlns:vm="clr-namespace:HyperMTG.ViewModel"
+             d:DesignHeight="300" d:DesignWidth="300"
+             mc:Ignorable="d">
+    <UserControl.DataContext>
+        <vm:AnalyzerViewModel />
+    </UserControl.DataContext>
+    <Grid Style="{StaticResource ContentRoot}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <mui:ModernButton Content="Sync" Command="{Binding SyncDeckCommand}"/>
+        </StackPanel>
+        <ScrollViewer Grid.Row="1">
+            <de:PieChart>
+                <de:PieChart.Series>
+                    <de:ChartSeries DisplayMember="CMC"
+                                    ItemsSource="{Binding Path=ManaSeries}"
+                                    SeriesTitle="ManaChart"
+                                    ValueMember="Count" />
+                </de:PieChart.Series>
+            </de:PieChart>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

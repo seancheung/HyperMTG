@@ -54,16 +54,23 @@
     <Reference Include="3DTools">
       <HintPath>..\net40\3DTools.dll</HintPath>
     </Reference>
+    <Reference Include="De.TorstenMandelkow.MetroChart">
+      <HintPath>..\net40\De.TorstenMandelkow.MetroChart.dll</HintPath>
+    </Reference>
     <Reference Include="FirstFloor.ModernUI">
-      <HintPath>..\packages\ModernUI.WPF.1.0.5\lib\net40\FirstFloor.ModernUI.dll</HintPath>
+      <HintPath>..\net40\FirstFloor.ModernUI.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Windows.Shell">
-      <HintPath>..\packages\ModernUI.WPF.1.0.5\lib\net40\Microsoft.Windows.Shell.dll</HintPath>
+      <HintPath>..\net40\Microsoft.Windows.Shell.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\net40\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -99,6 +106,9 @@
     <Compile Include="Helper\TooltipConverter.cs" />
     <Compile Include="Helper\TriggerConverter.cs" />
     <Compile Include="Helper\VisibaleConverter.cs" />
+    <Compile Include="Pages\DeckBuilder\Analyzer.xaml.cs">
+      <DependentUpon>Analyzer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\DeckBuilder\Draft.xaml.cs">
       <DependentUpon>Draft.xaml</DependentUpon>
     </Compile>
@@ -121,6 +131,7 @@
     <Compile Include="Model\CheckSetItem.cs" />
     <Compile Include="Model\CheckItem.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="ViewModel\AnalyzerViewModel.cs" />
     <Compile Include="ViewModel\DatabaseViewModel.cs" />
     <Compile Include="ViewModel\DeckBuiderViewModel.cs" />
     <Compile Include="Model\ExCard.cs" />
@@ -147,6 +158,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Pages\DeckBuilder\Analyzer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\DeckBuilder\Draft.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -250,7 +265,6 @@
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

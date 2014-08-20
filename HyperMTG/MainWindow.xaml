@@ -18,6 +18,7 @@
                 <mui:Link DisplayName="{StaticResource mw_02_02}" Source="/Pages/DeckBuilder/Sealed.xaml" />
                 <mui:Link DisplayName="{StaticResource mw_02_03}" Source="/Pages/DeckBuilder/Draft.xaml" />
                 <mui:Link DisplayName="{StaticResource mw_02_04}" Source="/Pages/DeckBuilder/Filter.xaml" />
+                <mui:Link DisplayName="Analyzer" Source="/Pages/DeckBuilder/Analyzer.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
         <mui:LinkGroup DisplayName="{StaticResource mw_03}">

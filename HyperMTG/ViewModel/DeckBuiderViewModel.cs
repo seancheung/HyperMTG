@@ -40,7 +40,7 @@ namespace HyperMTG.ViewModel
 		private ExCard _card;
 
 		private List<Card> _cards;
-		private Deck _deck;
+		private static Deck _deck;
 		private string _info;
 		private string input;
 
@@ -142,6 +142,11 @@ namespace HyperMTG.ViewModel
 				input = value;
 				RaisePropertyChanged("Input");
 			}
+		}
+
+		public static Deck GetCurrentDeck()
+		{
+			return _deck;
 		}
 
 		#region Command
