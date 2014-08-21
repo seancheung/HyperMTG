@@ -6,7 +6,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
              xmlns:vm="clr-namespace:HyperMTG.ViewModel"
-             xmlns:hp="clr-namespace:HyperMTG.Helper"
              d:DesignHeight="300" d:DesignWidth="300"
              mc:Ignorable="d">
     <UserControl.DataContext>
@@ -18,18 +17,89 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel>
-            <mui:ModernButton Content="Sync" Command="{Binding SyncDeckCommand}"/>
+            <mui:ModernButton Command="{Binding SyncDeckCommand}" Content="Sync" />
         </StackPanel>
         <ScrollViewer Grid.Row="1">
             <Grid>
-                <de:PieChart Background="Transparent">
-                    <de:PieChart.Series>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <de:ClusteredColumnChart Background="Transparent"
+                                         ChartLegendVisibility="Collapsed"
+                                         FontSize="{DynamicResource DefaultFontSize}"
+                                         IsRowColumnSwitched="True"
+                                         SelectedBrush="{DynamicResource WindowBorderActive}" 
+                                         ChartSubTitle=""
+                                    ChartTitle="Mana Curve">
+                    <de:ClusteredColumnChart.Series>
                         <de:ChartSeries DisplayMember="CMC"
-                                    ItemsSource="{Binding Path=SpellsCMC}"
-                                    SeriesTitle="Mana Status"
-                                    ValueMember="Count" />
+                                        ItemsSource="{Binding Path=SpellsCMCSource}"
+                                        SeriesTitle="Mana Status" ValueMember="Count" />
+                    </de:ClusteredColumnChart.Series>
+                </de:ClusteredColumnChart>
+                <de:DoughnutChart Grid.Row="0" Grid.Column="1"
+                                  Background="Transparent"
+                                  ChartLegendVisibility="Visible"
+                                  ChartTitleVisibility="Collapsed"
+                                  FontSize="{DynamicResource DefaultFontSize}"
+                                  InnerRadiusRatio="0.65">
+                    <de:DoughnutChart.Series>
+                        <de:ChartSeries DisplayMember="IsBasic"
+                                        ItemsSource="{Binding Path=LandSource}"
+                                        SeriesTitle="Land Status" ValueMember="Count" />
+                    </de:DoughnutChart.Series>
+                </de:DoughnutChart>
+                <de:PieChart Grid.Row="1" Grid.Column="0"
+                             Background="Transparent"
+                             ChartSubTitle=""
+                                    ChartTitle="Type Status"
+                             FontSize="{DynamicResource DefaultFontSize}">
+                    <de:PieChart.Series>
+                        <de:ChartSeries DisplayMember="Type"
+                                        ItemsSource="{Binding Path=TypeSource}"
+                                        SeriesTitle="Types" ValueMember="Count" />
                     </de:PieChart.Series>
                 </de:PieChart>
+                <de:PieChart Grid.Row="1" Grid.Column="1"
+                             Background="Transparent"
+                             FontSize="{DynamicResource DefaultFontSize}"
+                             ChartSubTitle=""
+                                    ChartTitle="Color Status">
+                    <de:PieChart.Series>
+                        <de:ChartSeries DisplayMember="Color"
+                                        ItemsSource="{Binding Path=ColorSource}"
+                                        SeriesTitle="Colors" ValueMember="Count" />
+                    </de:PieChart.Series>
+                </de:PieChart>
+                <de:PieChart Grid.Row="2" Grid.Column="0"
+                             Background="Transparent"
+                             FontSize="{DynamicResource DefaultFontSize}"
+                             ChartSubTitle=""
+                                    ChartTitle="Rarity Status">
+                    <de:PieChart.Series>
+                        <de:ChartSeries DisplayMember="Rarity"
+                                        ItemsSource="{Binding Path=RaritySource}"
+                                        SeriesTitle="Rarities" ValueMember="Count" />
+                    </de:PieChart.Series>
+                </de:PieChart>
+                <de:StackedBarChart Grid.Row="3" Grid.Column="0"
+                                    Grid.ColumnSpan="2" Background="Transparent"
+                                    ChartLegendVisibility="Collapsed" ChartSubTitle=""
+                                    ChartTitle="Included Sets"
+                                    FontSize="{DynamicResource DefaultFontSize}">
+                    <de:StackedBarChart.Series>
+                        <de:ChartSeries DisplayMember="Set"
+                                        ItemsSource="{Binding Path=SetSource}"
+                                        SeriesTitle="Sets" ValueMember="Count" />
+                    </de:StackedBarChart.Series>
+                </de:StackedBarChart>
             </Grid>
         </ScrollViewer>
     </Grid>

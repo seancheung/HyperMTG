@@ -89,7 +89,7 @@ namespace HyperKore.Utilities
 			if (card == null || card.Type == null)
 				throw new ArgumentNullException();
 
-			return from type in Enum.GetNames(typeof (Type)) where Regex.Match(card.Type, string.Format(@"\s*{0}\s*", type), RegexOptions.IgnoreCase).Success select (Type) Enum.Parse(typeof (Type), type);
+			return from type in Enum.GetNames(typeof (Type)) where Regex.Match(card.Type, string.Format(@"\b{0}\b", type), RegexOptions.IgnoreCase).Success select (Type) Enum.Parse(typeof (Type), type);
 		}
 
 		/// <summary>
@@ -164,6 +164,22 @@ namespace HyperKore.Utilities
 		public static bool CanProduceMana(this Card card)
 		{
 			return card != null && (card.IsBasicLand() || !string.IsNullOrWhiteSpace(card.Text) && Regex.IsMatch(card.Text, @"add .+ to .* mana pool", RegexOptions.IgnoreCase));
+		}
+
+		/// <summary>
+		/// Get parsed CMC
+		/// </summary>
+		/// <param name="card"></param>
+		/// <returns></returns>
+		public static int ParsedCMC(this Card card)
+		{
+			if (card == null)
+			{
+				throw new ArgumentNullException();
+			}
+			int result;
+			Int32.TryParse(card.CMC, out result);
+			return result;
 		}
 	}
 }
