@@ -57,6 +57,28 @@ namespace HyperKore.Utilities
 		}
 
 		/// <summary>
+		/// Check card color
+		/// </summary>
+		/// <param name="card"></param>
+		/// <param name="color"></param>
+		/// <returns></returns>
+		public static bool HasColor(this Card card, Color color)
+		{
+			return card.GetColors().Contains(color);
+		}
+
+		/// <summary>
+		/// Check card type
+		/// </summary>
+		/// <param name="card"></param>
+		/// <param name="type"></param>
+		/// <returns></returns>
+		public static bool HasType(this Card card, Type type)
+		{
+			return card.GetTypes().Contains(type);
+		}
+
+		/// <summary>
 		/// Get card types.
 		/// Including super-types.
 		/// </summary>
@@ -81,7 +103,7 @@ namespace HyperKore.Utilities
 				throw new ArgumentNullException();
 
 			return card.GetTypes().Contains(Type.Basic) && card.GetTypes().Contains(Type.Land);
-		} 
+		}
 
 		/// <summary>
 		/// Get rarity of a card. 
@@ -122,6 +144,26 @@ namespace HyperKore.Utilities
 		public static bool IsMultiColored(this Card card)
 		{
 			return card.GetColors().Count() > 1;
+		}
+
+		/// <summary>
+		/// Whether this card is hybrid
+		/// </summary>
+		/// <param name="card"></param>
+		/// <returns></returns>
+		public static bool IsHybrid(this Card card)
+		{
+			return card != null && Regex.IsMatch(card.Cost, @"{\D+}", RegexOptions.IgnoreCase);
+		}
+
+		/// <summary>
+		/// Whether this card produce any mana
+		/// </summary>
+		/// <param name="card"></param>
+		/// <returns></returns>
+		public static bool CanProduceMana(this Card card)
+		{
+			return card != null && (card.IsBasicLand() || !string.IsNullOrWhiteSpace(card.Text) && Regex.IsMatch(card.Text, @"add .+ to .* mana pool", RegexOptions.IgnoreCase));
 		}
 	}
 }

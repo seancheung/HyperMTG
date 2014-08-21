@@ -6,6 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
              xmlns:vm="clr-namespace:HyperMTG.ViewModel"
+             xmlns:hp="clr-namespace:HyperMTG.Helper"
              d:DesignHeight="300" d:DesignWidth="300"
              mc:Ignorable="d">
     <UserControl.DataContext>
@@ -20,14 +21,16 @@
             <mui:ModernButton Content="Sync" Command="{Binding SyncDeckCommand}"/>
         </StackPanel>
         <ScrollViewer Grid.Row="1">
-            <de:PieChart>
-                <de:PieChart.Series>
-                    <de:ChartSeries DisplayMember="CMC"
-                                    ItemsSource="{Binding Path=ManaSeries}"
-                                    SeriesTitle="ManaChart"
+            <Grid>
+                <de:PieChart Background="Transparent">
+                    <de:PieChart.Series>
+                        <de:ChartSeries DisplayMember="CMC"
+                                    ItemsSource="{Binding Path=SpellsCMC}"
+                                    SeriesTitle="Mana Status"
                                     ValueMember="Count" />
-                </de:PieChart.Series>
-            </de:PieChart>
+                    </de:PieChart.Series>
+                </de:PieChart>
+            </Grid>
         </ScrollViewer>
     </Grid>
 </UserControl>

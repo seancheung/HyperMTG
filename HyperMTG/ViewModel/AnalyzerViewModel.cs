@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using HyperKore.Common;
+using HyperKore.Utilities;
 using HyperMTG.Helper;
 
 namespace HyperMTG.ViewModel
@@ -18,13 +19,13 @@ namespace HyperMTG.ViewModel
 			{
 				deck = value;
 				RaisePropertyChanged("Deck");
-				RaisePropertyChanged("ManaSeries");
+				RaisePropertyChanged("SpellsCMC");
 			}
 		}
 
-		public IEnumerable ManaSeries
+		public IEnumerable SpellsCMC
 		{
-			get { return Deck.MainBoard.GroupBy(c => c.CMC).Select(g => new { CMC = g.Key, Count = g.Count() }); }
+			get { return Deck.MainBoard.Where(c => !c.HasType(Type.Land)).GroupBy(c => c.CMC).Select(g => new { CMC = g.Key, Count = g.Count() }); }
 		}
 
 		public ICommand SyncDeckCommand
