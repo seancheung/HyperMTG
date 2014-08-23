@@ -24,6 +24,7 @@ namespace HyperMTG.ViewModel
 				RaisePropertyChanged("ColorSource");
 				RaisePropertyChanged("RaritySource");
 				RaisePropertyChanged("SetSource");
+				RaisePropertyChanged("ManaProduceSource");
 			}
 		}
 
@@ -46,7 +47,23 @@ namespace HyperMTG.ViewModel
 				return
 					Deck.MainBoard.Where(c => c.HasType(Type.Land))
 						.GroupBy(c => c.IsBasicLand())
-						.Select(g => new {IsBasic = g.Key, Count = g.Count()});
+						.Select(g => new {IsBasic = g.Key ? "Basic" : "None Basic", Count = g.Count()});
+			}
+		}
+
+		public IEnumerable ManaProduceSource
+		{
+			get
+			{
+				return
+					Deck.MainBoard.Where(c => c.CanProduceMana())
+						.SelectMany(c => c.GetTypes())
+						.Where(
+							t =>
+								t == Type.Land || t == Type.Artifact || t == Type.Creature || t == Type.Instant || t == Type.Sorcery ||
+								t == Type.Enchantment || t == Type.Planeswalker)
+						.GroupBy(t => t)
+						.Select(g => new {Type = g.Key, Count = g.Count()}).OrderBy(p => p.Type);
 			}
 		}
 
@@ -55,7 +72,8 @@ namespace HyperMTG.ViewModel
 			get
 			{
 				return
-					Deck.MainBoard.SelectMany(c => c.GetTypes())
+					Deck.MainBoard.Where(c => !c.HasType(Type.Land))
+						.SelectMany(c => c.GetTypes())
 						.Where(
 							t =>
 								t == Type.Land || t == Type.Artifact || t == Type.Creature || t == Type.Instant || t == Type.Sorcery ||
@@ -70,7 +88,7 @@ namespace HyperMTG.ViewModel
 			get
 			{
 				return
-					Deck.MainBoard.SelectMany(c => c.GetColors())
+					Deck.MainBoard.Where(c => !c.HasType(Type.Land)).SelectMany(c => c.GetColors())
 						.GroupBy(t => t)
 						.Select(g => new {Color = g.Key, Count = g.Count()})
 						.OrderBy(p => p.Color);
@@ -82,9 +100,9 @@ namespace HyperMTG.ViewModel
 			get
 			{
 				return
-					Deck.MainBoard.Select(c=>c.GetRarity())
+					Deck.MainBoard.Select(c => c.GetRarity())
 						.GroupBy(t => t)
-						.Select(g => new { Rarity = g.Key, Count = g.Count() })
+						.Select(g => new {Rarity = g.Key, Count = g.Count()})
 						.OrderBy(p => p.Rarity);
 			}
 		}
@@ -96,7 +114,7 @@ namespace HyperMTG.ViewModel
 				return
 					Deck.MainBoard.Select(c => c.Set)
 						.GroupBy(t => t)
-						.Select(g => new { Set = g.Key, Count = g.Count() })
+						.Select(g => new {Set = g.Key, Count = g.Count()})
 						.OrderByDescending(p => p.Count);
 			}
 		}

@@ -30,13 +30,14 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <de:ClusteredColumnChart Background="Transparent"
                                          ChartLegendVisibility="Collapsed"
                                          FontSize="{DynamicResource DefaultFontSize}"
                                          IsRowColumnSwitched="True"
                                          SelectedBrush="{DynamicResource WindowBorderActive}" 
-                                         ChartSubTitle=""
+                                         ChartSubTitle="Converted mana cost breakdown"
                                     ChartTitle="Mana Curve">
                     <de:ClusteredColumnChart.Series>
                         <de:ChartSeries DisplayMember="CMC"
@@ -46,8 +47,8 @@
                 </de:ClusteredColumnChart>
                 <de:DoughnutChart Grid.Row="0" Grid.Column="1"
                                   Background="Transparent"
-                                  ChartLegendVisibility="Visible"
-                                  ChartTitleVisibility="Collapsed"
+                                  ChartTitle="Land Status"
+                                  ChartSubTitle="Types of lands"
                                   FontSize="{DynamicResource DefaultFontSize}"
                                   InnerRadiusRatio="0.65">
                     <de:DoughnutChart.Series>
@@ -58,7 +59,7 @@
                 </de:DoughnutChart>
                 <de:PieChart Grid.Row="1" Grid.Column="0"
                              Background="Transparent"
-                             ChartSubTitle=""
+                             ChartSubTitle="Types of all non-land cards"
                                     ChartTitle="Type Status"
                              FontSize="{DynamicResource DefaultFontSize}">
                     <de:PieChart.Series>
@@ -70,7 +71,7 @@
                 <de:PieChart Grid.Row="1" Grid.Column="1"
                              Background="Transparent"
                              FontSize="{DynamicResource DefaultFontSize}"
-                             ChartSubTitle=""
+                             ChartSubTitle="Colors of all non-land cards"
                                     ChartTitle="Color Status">
                     <de:PieChart.Series>
                         <de:ChartSeries DisplayMember="Color"
@@ -81,7 +82,7 @@
                 <de:PieChart Grid.Row="2" Grid.Column="0"
                              Background="Transparent"
                              FontSize="{DynamicResource DefaultFontSize}"
-                             ChartSubTitle=""
+                             ChartSubTitle="Rarities of cards"
                                     ChartTitle="Rarity Status">
                     <de:PieChart.Series>
                         <de:ChartSeries DisplayMember="Rarity"
@@ -91,7 +92,7 @@
                 </de:PieChart>
                 <de:StackedBarChart Grid.Row="3" Grid.Column="0"
                                     Grid.ColumnSpan="2" Background="Transparent"
-                                    ChartLegendVisibility="Collapsed" ChartSubTitle=""
+                                    ChartLegendVisibility="Collapsed" ChartSubTitle="Sets of all cards"
                                     ChartTitle="Included Sets"
                                     FontSize="{DynamicResource DefaultFontSize}">
                     <de:StackedBarChart.Series>
@@ -100,6 +101,17 @@
                                         SeriesTitle="Sets" ValueMember="Count" />
                     </de:StackedBarChart.Series>
                 </de:StackedBarChart>
+                <de:DoughnutChart Grid.Row="4" Grid.Column="0"
+                             Background="Transparent"
+                             FontSize="{DynamicResource DefaultFontSize}"
+                             ChartSubTitle="Types of cards that produce mana" InnerRadiusRatio="0.65"
+                                    ChartTitle="Mana Produce">
+                    <de:DoughnutChart.Series>
+                        <de:ChartSeries DisplayMember="Type"
+                                        ItemsSource="{Binding Path=ManaProduceSource}"
+                                        SeriesTitle="Mana Produce" ValueMember="Count" />
+                    </de:DoughnutChart.Series>
+                </de:DoughnutChart>
             </Grid>
         </ScrollViewer>
     </Grid>

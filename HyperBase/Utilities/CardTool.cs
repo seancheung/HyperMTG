@@ -38,7 +38,7 @@ namespace HyperKore.Utilities
 			if (card == null)
 				throw new ArgumentNullException();
 
-			if (card.Cost == null)
+			if (string.IsNullOrWhiteSpace(card.Cost) || !Regex.IsMatch(card.Cost,@"W|B|U|R|G"))
 			{
 				yield return Color.Colorless;
 				yield break;
@@ -163,7 +163,7 @@ namespace HyperKore.Utilities
 		/// <returns></returns>
 		public static bool CanProduceMana(this Card card)
 		{
-			return card != null && (card.IsBasicLand() || !string.IsNullOrWhiteSpace(card.Text) && Regex.IsMatch(card.Text, @"add .+ to .* mana pool", RegexOptions.IgnoreCase));
+			return card != null && (card.IsBasicLand() || !string.IsNullOrWhiteSpace(card.Text) && Regex.IsMatch(card.Text, @"add .* to .* mana pool", RegexOptions.IgnoreCase));
 		}
 
 		/// <summary>
