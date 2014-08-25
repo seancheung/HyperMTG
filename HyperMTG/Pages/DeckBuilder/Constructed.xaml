@@ -376,23 +376,23 @@
                     </GridView>
                 </ListView.View>
             </ListView>
-            <StackPanel Grid.Row="2" Grid.Column="0"
-                        Grid.ColumnSpan="3" Height="20"
-                        Orientation="Horizontal">
-                <mui:ModernButton Margin="4,0"
-                                  Command="{Binding OpenDeckCommand}"
-                                  Content="{DynamicResource cns_01}" />
-                <mui:ModernButton Margin="4,0"
-                                  Command="{Binding SaveDeckCommand}"
-                                  Content="{DynamicResource cns_02}" />
-                <mui:ModernButton Margin="4,0"
-                                  Command="{Binding NewDeckCommand}"
-                                  Content="{DynamicResource cns_03}" />
-                <mui:ModernButton Margin="4,0"
-                                  Command="{Binding ExportImageDocCommand}"
-                                  Content="Export deck images to rtf" />
+            <Menu Grid.Row="2" Grid.Column="0"
+                  Grid.ColumnSpan="3" Height="20"
+                  Background="Transparent">
+                <MenuItem Margin="4,0" Header="File">
+                    <MenuItem Command="{Binding OpenDeckCommand}" Header="{DynamicResource cns_01}" />
+                    <MenuItem Command="{Binding SaveDeckCommand}" Header="{DynamicResource cns_02}" />
+                    <MenuItem Command="{Binding NewDeckCommand}" Header="{DynamicResource cns_03}" />
+                </MenuItem>
+                <MenuItem Header="Image">
+                    <MenuItem Command="{Binding ExportImageDocCommand}" Header="Export rtf" />
+                </MenuItem>
+                <MenuItem Margin="4,0" Header="Clipboard">
+                    <MenuItem Command="{Binding CopyToClipboardCommand}" Header="Copy To Clipboard" />
+                    <MenuItem Command="{Binding OpenFromClipboardCommand}" Header="Open From Clipboard" />
+                </MenuItem>
+            </Menu>
 
-            </StackPanel>
             <StackPanel Grid.Row="2" Grid.Column="3"
                         Grid.ColumnSpan="4" Height="20">
                 <mui:BBCodeBlock HorizontalAlignment="Right"

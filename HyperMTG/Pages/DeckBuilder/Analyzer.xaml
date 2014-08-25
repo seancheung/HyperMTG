@@ -34,11 +34,11 @@
                 </Grid.RowDefinitions>
                 <de:ClusteredColumnChart Background="Transparent"
                                          ChartLegendVisibility="Collapsed"
+                                         ChartSubTitle="Converted mana cost breakdown"
+                                         ChartTitle="Mana Curve"
                                          FontSize="{DynamicResource DefaultFontSize}"
                                          IsRowColumnSwitched="True"
-                                         SelectedBrush="{DynamicResource WindowBorderActive}" 
-                                         ChartSubTitle="Converted mana cost breakdown"
-                                    ChartTitle="Mana Curve">
+                                         SelectedBrush="{DynamicResource WindowBorderActive}">
                     <de:ClusteredColumnChart.Series>
                         <de:ChartSeries DisplayMember="CMC"
                                         ItemsSource="{Binding Path=SpellsCMCSource}"
@@ -47,10 +47,11 @@
                 </de:ClusteredColumnChart>
                 <de:DoughnutChart Grid.Row="0" Grid.Column="1"
                                   Background="Transparent"
-                                  ChartTitle="Land Status"
                                   ChartSubTitle="Types of lands"
+                                  ChartTitle="Land Status"
                                   FontSize="{DynamicResource DefaultFontSize}"
-                                  InnerRadiusRatio="0.65">
+                                  InnerRadiusRatio="0.65"
+                                  SelectedBrush="{DynamicResource WindowBorderActive}">
                     <de:DoughnutChart.Series>
                         <de:ChartSeries DisplayMember="IsBasic"
                                         ItemsSource="{Binding Path=LandSource}"
@@ -60,8 +61,9 @@
                 <de:PieChart Grid.Row="1" Grid.Column="0"
                              Background="Transparent"
                              ChartSubTitle="Types of all non-land cards"
-                                    ChartTitle="Type Status"
-                             FontSize="{DynamicResource DefaultFontSize}">
+                             ChartTitle="Type Status"
+                             FontSize="{DynamicResource DefaultFontSize}"
+                             SelectedBrush="{DynamicResource WindowBorderActive}">
                     <de:PieChart.Series>
                         <de:ChartSeries DisplayMember="Type"
                                         ItemsSource="{Binding Path=TypeSource}"
@@ -70,9 +72,10 @@
                 </de:PieChart>
                 <de:PieChart Grid.Row="1" Grid.Column="1"
                              Background="Transparent"
-                             FontSize="{DynamicResource DefaultFontSize}"
                              ChartSubTitle="Colors of all non-land cards"
-                                    ChartTitle="Color Status">
+                             ChartTitle="Color Status"
+                             FontSize="{DynamicResource DefaultFontSize}"
+                             SelectedBrush="{DynamicResource WindowBorderActive}">
                     <de:PieChart.Series>
                         <de:ChartSeries DisplayMember="Color"
                                         ItemsSource="{Binding Path=ColorSource}"
@@ -81,9 +84,10 @@
                 </de:PieChart>
                 <de:PieChart Grid.Row="2" Grid.Column="0"
                              Background="Transparent"
-                             FontSize="{DynamicResource DefaultFontSize}"
                              ChartSubTitle="Rarities of cards"
-                                    ChartTitle="Rarity Status">
+                             ChartTitle="Rarity Status"
+                             FontSize="{DynamicResource DefaultFontSize}"
+                             SelectedBrush="{DynamicResource WindowBorderActive}">
                     <de:PieChart.Series>
                         <de:ChartSeries DisplayMember="Rarity"
                                         ItemsSource="{Binding Path=RaritySource}"
@@ -92,9 +96,11 @@
                 </de:PieChart>
                 <de:StackedBarChart Grid.Row="3" Grid.Column="0"
                                     Grid.ColumnSpan="2" Background="Transparent"
-                                    ChartLegendVisibility="Collapsed" ChartSubTitle="Sets of all cards"
+                                    ChartLegendVisibility="Collapsed"
+                                    ChartSubTitle="Sets of all cards"
                                     ChartTitle="Included Sets"
-                                    FontSize="{DynamicResource DefaultFontSize}">
+                                    FontSize="{DynamicResource DefaultFontSize}"
+                                    SelectedBrush="{DynamicResource WindowBorderActive}">
                     <de:StackedBarChart.Series>
                         <de:ChartSeries DisplayMember="Set"
                                         ItemsSource="{Binding Path=SetSource}"
@@ -102,10 +108,12 @@
                     </de:StackedBarChart.Series>
                 </de:StackedBarChart>
                 <de:DoughnutChart Grid.Row="4" Grid.Column="0"
-                             Background="Transparent"
-                             FontSize="{DynamicResource DefaultFontSize}"
-                             ChartSubTitle="Types of cards that produce mana" InnerRadiusRatio="0.65"
-                                    ChartTitle="Mana Produce">
+                                  Background="Transparent"
+                                  ChartSubTitle="Types of cards that produce mana"
+                                  ChartTitle="Mana Produce"
+                                  FontSize="{DynamicResource DefaultFontSize}"
+                                  InnerRadiusRatio="0.65"
+                                  SelectedBrush="{DynamicResource WindowBorderActive}">
                     <de:DoughnutChart.Series>
                         <de:ChartSeries DisplayMember="Type"
                                         ItemsSource="{Binding Path=ManaProduceSource}"

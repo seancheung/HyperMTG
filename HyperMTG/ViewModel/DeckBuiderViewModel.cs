@@ -151,6 +151,16 @@ namespace HyperMTG.ViewModel
 
 		#region Command
 
+		public ICommand OpenFromClipboardCommand
+		{
+			get { return new RelayCommand(OpenFromClipboardExecute, CanExecuteOpenFromClipboard); }
+		}
+
+		public ICommand CopyToClipboardCommand
+		{
+			get { return new RelayCommand(CopyToClipboardExecute, CanExecuteCopyToClipboard); }
+		}
+
 		public ICommand ExportImageDocCommand
 		{
 			get { return new RelayCommand(ExportImagesDocExecute, CanExecuteExportImageDoc); }
@@ -220,6 +230,91 @@ namespace HyperMTG.ViewModel
 		#endregion
 
 		#region Execute
+
+		private void OpenFromClipboardExecute()
+		{
+			_processCount++;
+			var data = Clipboard.GetText(TextDataFormat.Text);
+			new Thread(() =>
+			{
+				if (!string.IsNullOrWhiteSpace(data))
+				{
+					var db = _dbReader.LoadCards();
+					var side = Regex.Match(data, "sideboard:", RegexOptions.IgnoreCase);
+					List<Card> mainCards = new List<Card>();
+					List<Card> sideCards = new List<Card>();
+
+					foreach (Match match in Regex.Matches(data, @"\d+\s+[^\d\r\n]+"))
+					{
+						if (match.Success)
+						{
+							var count = Int32.Parse(Regex.Match(match.Value, @"\d+(?=\s+[^\d\r\n]+)").Value);
+							var name = Regex.Match(match.Value, @"(?<=\d+\s+)[^\d\r\n]+").Value.Trim();
+							var card = db.FirstOrDefault(c => c.Name == name);
+							if (card != null)
+							{
+								if (side.Success && match.Index < side.Index)
+								{
+									for (int i = 0; i < count; i++)
+									{
+										mainCards.Add(card);
+									}
+								}
+								else
+								{
+									for (int i = 0; i < count; i++)
+									{
+										sideCards.Add(card);
+									}
+								}
+							}
+							else
+							{
+								Info = name;
+							}
+						}
+					}
+
+					if (mainCards.Any() || sideCards.Any())
+					{
+						NewDeckCommand.Execute(null);
+						foreach (var card in mainCards)
+						{
+							_dispatcher.BeginInvoke(new Action(() => Deck.MainBoard.Add(card)));
+						}
+						foreach (var card in sideCards)
+						{
+							_dispatcher.BeginInvoke(new Action(() => Deck.SideBoard.Add(card)));
+						}
+					}
+				}
+				_processCount--;
+			}).Start();
+			
+		}
+
+		private void CopyToClipboardExecute()
+		{
+			var main = Deck.MainBoard.GroupBy(c => c.Name);
+			var side = Deck.SideBoard.GroupBy(c => c.Name);
+			using (StringWriter sw = new StringWriter())
+			{
+				foreach (var gp in main)
+				{
+					sw.WriteLine("{0}\t{1}", gp.Count(), gp.Key);
+				}
+				if (side.Any())
+				{
+					sw.WriteLine("Sideboard:");
+					foreach (var gp in side)
+					{
+						sw.WriteLine("{0}\t{1}", gp.Count(), gp.Key);
+					}
+				}
+
+				Clipboard.SetText(sw.ToString());
+			}
+		}
 
 		private void ExportImagesDocExecute()
 		{
@@ -482,6 +577,16 @@ namespace HyperMTG.ViewModel
 		#endregion
 
 		#region CanExecute
+
+		private bool CanExecuteOpenFromClipboard()
+		{
+			return _processCount == 0 && _dbReader != null;
+		}
+
+		private bool CanExecuteCopyToClipboard()
+		{
+			return Deck.SideBoard.Any() || Deck.SideBoard.Any();
+		}
 
 		private bool CanExecuteExportImageDoc()
 		{
