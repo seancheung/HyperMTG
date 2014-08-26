@@ -167,6 +167,16 @@ namespace HyperKore.Utilities
 		}
 
 		/// <summary>
+		/// Whether this card have trigger effect
+		/// </summary>
+		/// <param name="card"></param>
+		/// <returns></returns>
+		public static bool HasTriggerEffect(this Card card)
+		{
+			return card != null && !string.IsNullOrWhiteSpace(card.Text) && Regex.IsMatch(card.Text, "(when|whenever)|at the (beginning|end)", RegexOptions.IgnoreCase);
+		}
+
+		/// <summary>
 		/// Get parsed CMC
 		/// </summary>
 		/// <param name="card"></param>

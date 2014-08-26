@@ -253,18 +253,18 @@ namespace HyperMTG.ViewModel
 							var card = db.FirstOrDefault(c => c.Name == name);
 							if (card != null)
 							{
-								if (side.Success && match.Index < side.Index)
+								if (side.Success && match.Index > side.Index)
 								{
 									for (int i = 0; i < count; i++)
 									{
-										mainCards.Add(card);
+										sideCards.Add(card);
 									}
 								}
 								else
 								{
 									for (int i = 0; i < count; i++)
 									{
-										sideCards.Add(card);
+										mainCards.Add(card);
 									}
 								}
 							}
