@@ -41,14 +41,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HyperEventArgs.cs" />
     <Compile Include="Kard.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="HyperAction.cs" />
-    <Compile Include="IPlay.cs" />
-    <Compile Include="IPlayCallback.cs" />
+    <Compile Include="IGame.cs" />
+    <Compile Include="IGameCallback.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="MessageType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Team.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

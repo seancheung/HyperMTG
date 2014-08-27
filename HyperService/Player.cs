@@ -16,14 +16,14 @@ namespace HyperService
 		[DataMember]
 		public DateTime Time { get; set; }
 
-		[DataMember]
-		public int Life { get; set; }
+		//[DataMember]
+		//public int Life { get; set; }
 
-		[DataMember]
-		public int Poison { get; set; }
+		//[DataMember]
+		//public int Poison { get; set; }
 
-		[DataMember]
-		public bool InTurn { get; set; }
+		//[DataMember]
+		//public bool InTurn { get; set; }
 
 		[DataMember]
 		public List<Kard> Library { get; set; }
