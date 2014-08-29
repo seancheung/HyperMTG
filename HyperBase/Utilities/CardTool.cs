@@ -153,7 +153,7 @@ namespace HyperKore.Utilities
 		/// <returns></returns>
 		public static bool IsHybrid(this Card card)
 		{
-			return card != null && Regex.IsMatch(card.Cost, @"{\D+}", RegexOptions.IgnoreCase);
+			return card != null && Regex.IsMatch(card.Cost, @"{\D{2}}", RegexOptions.IgnoreCase);
 		}
 
 		/// <summary>

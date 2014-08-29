@@ -12,54 +12,56 @@
 
     <SolidColorBrush x:Key="IslandBrush" Color="#FF00A3E6" />
 
-    <SolidColorBrush x:Key="ColorlessBrush" Color="#FFE1E1E1" />
+    <SolidColorBrush x:Key="ColorlessBrush" Color="#FFB0B0B0" />
+
+    <SolidColorBrush x:Key="MultiBrush" Color="#FF80750F" />
 
     <LinearGradientBrush x:Key="SwampForestBrush">
         <GradientStop Offset="0.0" Color="#FF3E3E3E" />
         <GradientStop Offset="1.0" Color="#FF008023" />
     </LinearGradientBrush>
 
-    <LinearGradientBrush x:Key="IslandSwampBrush">
+    <LinearGradientBrush x:Key="IslandSwampBrush"  StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Offset="0.0" Color="#FF00A3E6" />
         <GradientStop Offset="1.0" Color="#FF3E3E3E" />
     </LinearGradientBrush>
 
-    <LinearGradientBrush x:Key="IslandMountainBrush">
+    <LinearGradientBrush x:Key="IslandMountainBrush"  StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Offset="0.0" Color="#FF00A3E6" />
         <GradientStop Offset="1.0" Color="#FFFD664A" />
     </LinearGradientBrush>
 
-    <LinearGradientBrush x:Key="PlainIslandBrush">
+    <LinearGradientBrush x:Key="PlainIslandBrush"  StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Offset="0.0" Color="#FFE1E1E1" />
         <GradientStop Offset="1.0" Color="#FF00A3E6" />
     </LinearGradientBrush>
 
-    <LinearGradientBrush x:Key="PlainSwampBrush">
+    <LinearGradientBrush x:Key="PlainSwampBrush"  StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Offset="0.0" Color="#FFE1E1E1" />
         <GradientStop Offset="1.0" Color="#FF3E3E3E" />
     </LinearGradientBrush>
 
-    <LinearGradientBrush x:Key="MountainPlainBrush">
+    <LinearGradientBrush x:Key="MountainPlainBrush"  StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Offset="0.0" Color="#FFFD664A" />
         <GradientStop Offset="1.0" Color="#FFE1E1E1" />
     </LinearGradientBrush>
 
-    <LinearGradientBrush x:Key="MountainForestBrush">
+    <LinearGradientBrush x:Key="MountainForestBrush"  StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Offset="0.0" Color="#FFFD664A" />
         <GradientStop Offset="1.0" Color="#FF008023" />
     </LinearGradientBrush>
 
-    <LinearGradientBrush x:Key="ForestPlainBrush">
+    <LinearGradientBrush x:Key="ForestPlainBrush"  StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Offset="0.0" Color="#FF008023" />
         <GradientStop Offset="1.0" Color="#FFE1E1E1" />
     </LinearGradientBrush>
 
-    <LinearGradientBrush x:Key="ForestIslandBrush">
+    <LinearGradientBrush x:Key="ForestIslandBrush"  StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Offset="0.0" Color="#FF008023" />
         <GradientStop Offset="1.0" Color="#FF00A3E6" />
     </LinearGradientBrush>
 
-    <LinearGradientBrush x:Key="SwampMountainBrush">
+    <LinearGradientBrush x:Key="SwampMountainBrush"  StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Offset="0.0" Color="#FF3E3E3E" />
         <GradientStop Offset="1.0" Color="#FFFD664A" />
     </LinearGradientBrush>

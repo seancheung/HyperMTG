@@ -174,7 +174,13 @@
                             </DrawingBrush>
                         </Image.OpacityMask>
                     </Image>
-                    <hs:CardControl Grid.Row="0" BorderStyle="Black" />
+                    <hs:CardControl Grid.Row="0" BorderStyle="Black"
+                                    CardName="{Binding SelectedCard.Card.Name}"
+                                    Cost="{Binding SelectedCard.Card.Cost}"
+                                    Flavor="{Binding SelectedCard.Card.Flavor}"
+                                    IsFoil="False"
+                                    Text="{Binding SelectedCard.Card.Text}"
+                                    Type="{Binding SelectedCard.Card.Type}" />
                     <mui:BBCodeBlock Grid.Row="2" Margin="0,4"
                                      BBCode="{Binding SelectedCard.Card.Text,
                                                       NotifyOnTargetUpdated=True}"

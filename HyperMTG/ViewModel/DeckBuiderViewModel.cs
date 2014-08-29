@@ -290,7 +290,7 @@ namespace HyperMTG.ViewModel
 				}
 				_processCount--;
 			}).Start();
-			
+
 		}
 
 		private void CopyToClipboardExecute()
@@ -408,20 +408,20 @@ namespace HyperMTG.ViewModel
 							{
 								switch (cons[0].ToLower())
 								{
-									case "name":
+									case "flavor":
 										result = result.Where(c => Regex.IsMatch(c.Name, cons[1], RegexOptions.IgnoreCase));
 										break;
 									case "type":
 										result = result.Where(c => Regex.IsMatch(c.Type, cons[1], RegexOptions.IgnoreCase));
 										break;
 									case "txt":
-										result = result.Where(c => Regex.IsMatch(c.Text, cons[1], RegexOptions.IgnoreCase));
+										result = result.Where(c => c.Text != null && Regex.IsMatch(c.Text, cons[1], RegexOptions.IgnoreCase));
 										break;
 									case "id":
 										result = result.Where(c => Regex.IsMatch(c.ID, cons[1], RegexOptions.IgnoreCase));
 										break;
 									case "cost":
-										result = result.Where(c => Regex.IsMatch(c.Cost, cons[1], RegexOptions.IgnoreCase));
+										result = result.Where(c => c.Cost != null && Regex.IsMatch(c.Cost, cons[1], RegexOptions.IgnoreCase));
 										break;
 									case "set":
 										result = result.Where(c => Regex.IsMatch(c.Set, cons[1], RegexOptions.IgnoreCase));
@@ -430,7 +430,7 @@ namespace HyperMTG.ViewModel
 										result = result.Where(c => Regex.IsMatch(c.SetCode, cons[1], RegexOptions.IgnoreCase));
 										break;
 									case "fla":
-										result = result.Where(c => Regex.IsMatch(c.Flavor, cons[1], RegexOptions.IgnoreCase));
+										result = result.Where(c => c.Flavor != null && Regex.IsMatch(c.Flavor, cons[1], RegexOptions.IgnoreCase));
 										break;
 									case "cmc":
 										result = result.Where(c => Regex.IsMatch(c.CMC, cons[1], RegexOptions.IgnoreCase));
@@ -443,13 +443,13 @@ namespace HyperMTG.ViewModel
 											result.Where(c => c.GetColors().Select(col => col.ToString()).Any(co => Regex.IsMatch(co, cons[1], RegexOptions.IgnoreCase)));
 										break;
 									case "tgh":
-										result = result.Where(c => Regex.IsMatch(c.Tgh, cons[1], RegexOptions.IgnoreCase));
+										result = result.Where(c => c.Tgh != null && Regex.IsMatch(c.Tgh, cons[1], RegexOptions.IgnoreCase));
 										break;
 									case "pow":
-										result = result.Where(c => Regex.IsMatch(c.Pow, cons[1], RegexOptions.IgnoreCase));
+										result = result.Where(c => c.Pow != null && Regex.IsMatch(c.Pow, cons[1], RegexOptions.IgnoreCase));
 										break;
 									case "loy":
-										result = result.Where(c => Regex.IsMatch(c.Loyalty, cons[1], RegexOptions.IgnoreCase));
+										result = result.Where(c => c.Loyalty != null && Regex.IsMatch(c.Loyalty, cons[1], RegexOptions.IgnoreCase));
 										break;
 									case "num":
 										result = result.Where(c => Regex.IsMatch(c.Number, cons[1], RegexOptions.IgnoreCase));

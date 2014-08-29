@@ -1,4 +1,5 @@
 ﻿using HyperKore.Common;
+using HyperKore.Utilities;
 using HyperMTG.Helper;
 using HyperMTG.Properties;
 using HyperPlugin;

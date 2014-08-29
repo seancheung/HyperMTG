@@ -25,7 +25,7 @@ namespace HyperMTG.Helper
 		/// <summary>
 		/// Initializes a new instance of the <see cref="RelayCommand&lt;T&gt;"/> class and the command can always be executed.
 		/// </summary>
-		/// <param name="execute">The execution logic.</param>
+		/// <param flavor="execute">The execution logic.</param>
 		public RelayCommand(Action<T> execute)
 			: this(execute, null)
 		{
@@ -34,8 +34,8 @@ namespace HyperMTG.Helper
 		/// <summary>
 		/// Initializes a new instance of the <see cref="RelayCommand&lt;T&gt;"/> class.
 		/// </summary>
-		/// <param name="execute">The execution logic.</param>
-		/// <param name="canExecute">The execution status logic.</param>
+		/// <param flavor="execute">The execution logic.</param>
+		/// <param flavor="canExecute">The execution status logic.</param>
 		public RelayCommand(Action<T> execute, Predicate<T> canExecute)
 		{
 
@@ -97,7 +97,7 @@ namespace HyperMTG.Helper
 		/// <summary>
 		/// Initializes a new instance of the <see cref="RelayCommand&lt;T&gt;"/> class and the command can always be executed.
 		/// </summary>
-		/// <param name="execute">The execution logic.</param>
+		/// <param flavor="execute">The execution logic.</param>
 		public RelayCommand(Action execute)
 			: this(execute, null)
 		{
@@ -106,8 +106,8 @@ namespace HyperMTG.Helper
 		/// <summary>
 		/// Initializes a new instance of the <see cref="RelayCommand&lt;T&gt;"/> class.
 		/// </summary>
-		/// <param name="execute">The execution logic.</param>
-		/// <param name="canExecute">The execution status logic.</param>
+		/// <param flavor="execute">The execution logic.</param>
+		/// <param flavor="canExecute">The execution status logic.</param>
 		public RelayCommand(Action execute, Func<Boolean> canExecute)
 		{
 

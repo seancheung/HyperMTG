@@ -132,7 +132,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8" Style="{StaticResource PathB}" />
+                            <Path Margin="12" Style="{StaticResource PathB}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -146,7 +146,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8" Style="{StaticResource PathG}" />
+                            <Path Margin="12" Style="{StaticResource PathG}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -160,7 +160,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8" Style="{StaticResource PathW}" />
+                            <Path Margin="12" Style="{StaticResource PathW}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -174,7 +174,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8" Style="{StaticResource PathR}" />
+                            <Path Margin="12" Style="{StaticResource PathR}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -188,7 +188,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8" Style="{StaticResource PathU}" />
+                            <Path Margin="12" Style="{StaticResource PathU}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -205,7 +205,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8" Style="{StaticResource PathBG}" />
+                            <Path Margin="12" Style="{StaticResource PathBG}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -219,7 +219,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8" Style="{StaticResource PathBR}" />
+                            <Path Margin="12" Style="{StaticResource PathBR}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -233,7 +233,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8" Style="{StaticResource PathGU}" />
+                            <Path Margin="12" Style="{StaticResource PathGU}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -247,7 +247,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8" Style="{StaticResource PathGW}" />
+                            <Path Margin="12" Style="{StaticResource PathGW}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -261,7 +261,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8" Style="{StaticResource PathRG}" />
+                            <Path Margin="12" Style="{StaticResource PathRG}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -275,7 +275,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8" Style="{StaticResource PathRW}" />
+                            <Path Margin="12" Style="{StaticResource PathRW}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -289,7 +289,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8" Style="{StaticResource PathUB}" />
+                            <Path Margin="12" Style="{StaticResource PathUB}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -303,7 +303,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8" Style="{StaticResource PathUR}" />
+                            <Path Margin="12" Style="{StaticResource PathUR}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -317,7 +317,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8" Style="{StaticResource PathWB}" />
+                            <Path Margin="12" Style="{StaticResource PathWB}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -331,7 +331,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8" Style="{StaticResource PathWU}" />
+                            <Path Margin="12" Style="{StaticResource PathWU}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -348,7 +348,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource NumXGeometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -365,7 +365,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource Num0Geometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -381,7 +381,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource Num1Geometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -397,7 +397,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource Num2Geometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -413,7 +413,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource Num3Geometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -429,7 +429,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource Num4Geometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -445,7 +445,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource Num5Geometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -461,7 +461,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource Num6Geometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -477,7 +477,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource Num7Geometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -493,7 +493,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource Num8Geometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -509,7 +509,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource Num9Geometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -525,7 +525,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource Num10Geometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -541,7 +541,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource Num11Geometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -557,7 +557,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource Num12Geometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -573,7 +573,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource Num13Geometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -589,7 +589,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource Num14Geometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -605,7 +605,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource Num15Geometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -621,7 +621,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource Num16Geometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -637,7 +637,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource Num17Geometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -653,7 +653,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource Num18Geometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -669,7 +669,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource Num19Geometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -685,7 +685,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource Num20Geometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -701,7 +701,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource NumHalfGeometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>
@@ -717,7 +717,7 @@
                     <Viewbox>
                         <Grid>
                             <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="8"
+                            <Path Margin="12"
                                   Data="{StaticResource TapGeometry}"
                                   Style="{StaticResource PathNum}" />
                         </Grid>

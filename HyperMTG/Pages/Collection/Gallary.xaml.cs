@@ -24,7 +24,7 @@ namespace HyperMTG.Pages
 		/// <summary>
 		///     Opens the 3D book.
 		/// </summary>
-		/// <param name="durationSeconds">Time in seconds that the animation will take.</param>
+		/// <param flavor="durationSeconds">Time in seconds that the animation will take.</param>
 		private void OpenBook(double durationSeconds)
 		{
 			// Transform3D_LeftRotation
@@ -62,7 +62,7 @@ namespace HyperMTG.Pages
 		/// <summary>
 		///     Closes the 3D book.
 		/// </summary>
-		/// <param name="durationSeconds">Time in seconds that the animation will take.</param>
+		/// <param flavor="durationSeconds">Time in seconds that the animation will take.</param>
 		private void CloseBook(double durationSeconds)
 		{
 			// Transform3D_LeftRotation

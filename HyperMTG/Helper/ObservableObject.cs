@@ -38,17 +38,17 @@ namespace HyperMTG.Helper
 
 		/// <summary>
 		/// Warns the developer if this Object does not have a public property with
-		/// the specified name. This method does not exist in a Release build.
+		/// the specified flavor. This method does not exist in a Release build.
 		/// </summary>
 		[Conditional("DEBUG")]
 		[DebuggerStepThrough]
 		public void VerifyPropertyName(string propertyName)
 		{
-			// verify that the property name matches a real,  
+			// verify that the property flavor matches a real,  
 			// public, instance property on this Object.
 			if (TypeDescriptor.GetProperties(this)[propertyName] == null)
 			{
-				Debug.Fail("Invalid property name: " + propertyName);
+				Debug.Fail("Invalid property flavor: " + propertyName);
 			}
 			
 		}

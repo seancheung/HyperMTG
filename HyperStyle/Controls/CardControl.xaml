@@ -77,6 +77,67 @@
                     <DropShadowEffect Direction="225" />
                 </Rectangle.Effect>
             </Rectangle>
+            <Rectangle x:Name="FoilMask" Canvas.Left="0"
+                       Canvas.Top="0" Width="822"
+                       Height="1151" RadiusX="35"
+                       RadiusY="35" Visibility="Collapsed">
+                <Rectangle.Fill>
+                    <LinearGradientBrush Opacity="0.25" SpreadMethod="Repeat">
+                        <GradientStop Offset="0" Color="#FFD32E2E" />
+                        <GradientStop Offset="0.2" Color="#FFF08214" />
+                        <GradientStop Offset="0.3" Color="#FFE4CA22" />
+                        <GradientStop Offset="0.4" Color="#FF2FE827" />
+                        <GradientStop Offset="0.5" Color="#FF00CADE" />
+                        <GradientStop Offset="0.6" Color="#FF0F22E0" />
+                        <GradientStop Offset="0.8" Color="#FF9515D1" />
+                        <GradientStop Offset="1" Color="#FFE22D1A" />
+                        <LinearGradientBrush.Transform>
+                            <TranslateTransform x:Name="Transform" />
+                        </LinearGradientBrush.Transform>
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+                <Rectangle.Triggers>
+                    <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Duration="0:0:5" From="0"
+                                                 RepeatBehavior="Forever"
+                                                 Storyboard.TargetName="Transform"
+                                                 Storyboard.TargetProperty="X"
+                                                 To="{Binding ElementName=FoilMask,
+                                                              Path=Width}" />
+                                <DoubleAnimation Duration="0:0:5" From="0"
+                                                 RepeatBehavior="Forever"
+                                                 Storyboard.TargetName="Transform"
+                                                 Storyboard.TargetProperty="Y"
+                                                 To="{Binding ElementName=FoilMask,
+                                                              Path=Height}" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Rectangle.Triggers>
+            </Rectangle>
+            <TextBlock x:Name="NameBox" Canvas.Left="65"
+                       Canvas.Top="60" Width="500"
+                       Height="70" FontSize="46"
+                       Text="Card Name" />
+            <TextBlock x:Name="CostBox" Canvas.Left="500"
+                       Canvas.Top="65" Width="250"
+                       Height="60" FontSize="46"
+                       Text="Card Cost"  TextAlignment="Right"/>
+            <TextBlock x:Name="TypeBox" Canvas.Left="65"
+                       Canvas.Top="650" Width="600"
+                       Height="60" FontSize="40"
+                       Text="Card Name" />
+            <Path x:Name="SetBox" Canvas.Left="700"
+                  Canvas.Top="650" Width="50"
+                  Height="50"
+                  Style="{StaticResource PathBG}" />
+            <TextBlock x:Name="TextBox" Canvas.Left="80"
+                       Canvas.Top="720" Width="662"
+                       Height="300" FontSize="36"
+                       Text="Card text goes here" TextWrapping="Wrap"/>
+
         </Canvas>
     </Viewbox>
 </UserControl>

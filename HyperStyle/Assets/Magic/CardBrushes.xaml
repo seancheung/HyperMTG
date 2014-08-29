@@ -28,6 +28,146 @@
                 ImageSource="../../Resources/Pattern/land.jpg"
                 TileMode="FlipXY" Viewport="0,0,0.5,0.5" />
 
+    <LinearGradientBrush x:Key="OpacityLeftBrush" StartPoint="0,0.5" EndPoint="1,0.5">
+        <GradientStop Offset="0" Color="Black" />
+        <GradientStop Offset="1" Color="Transparent" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="OpacityRightBrush" StartPoint="0,0.5" EndPoint="1,0.5">
+        <GradientStop Offset="0" Color="Transparent" />
+        <GradientStop Offset="1" Color="Black" />
+    </LinearGradientBrush>
+
+    <VisualBrush x:Key="BRPatternBrush">
+        <VisualBrush.Visual>
+            <Grid>
+                <Rectangle Width="740" Height="1068"
+                           Fill="{StaticResource BPatternBrush}"
+                           OpacityMask="{StaticResource OpacityLeftBrush}" />
+                <Rectangle Width="740" Height="1068"
+                           Fill="{StaticResource RPatternBrush}"
+                           OpacityMask="{StaticResource OpacityRightBrush}" />
+            </Grid>
+
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="GUPatternBrush">
+        <VisualBrush.Visual>
+            <Grid>
+                <Rectangle Width="740" Height="1068"
+                           Fill="{StaticResource GPatternBrush}"
+                           OpacityMask="{StaticResource OpacityLeftBrush}" />
+                <Rectangle Width="740" Height="1068"
+                           Fill="{StaticResource UPatternBrush}"
+                           OpacityMask="{StaticResource OpacityRightBrush}" />
+            </Grid>
+
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="WUPatternBrush">
+        <VisualBrush.Visual>
+            <Grid>
+                <Rectangle Width="740" Height="1068"
+                           Fill="{StaticResource WPatternBrush}"
+                           OpacityMask="{StaticResource OpacityLeftBrush}" />
+                <Rectangle Width="740" Height="1068"
+                           Fill="{StaticResource UPatternBrush}"
+                           OpacityMask="{StaticResource OpacityRightBrush}" />
+            </Grid>
+
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="WBPatternBrush">
+        <VisualBrush.Visual>
+            <Grid>
+                <Rectangle Width="740" Height="1068"
+                           Fill="{StaticResource WPatternBrush}"
+                           OpacityMask="{StaticResource OpacityLeftBrush}" />
+                <Rectangle Width="740" Height="1068"
+                           Fill="{StaticResource BPatternBrush}"
+                           OpacityMask="{StaticResource OpacityRightBrush}" />
+            </Grid>
+
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="URPatternBrush">
+        <VisualBrush.Visual>
+            <Grid>
+                <Rectangle Width="740" Height="1068"
+                           Fill="{StaticResource UPatternBrush}"
+                           OpacityMask="{StaticResource OpacityLeftBrush}" />
+                <Rectangle Width="740" Height="1068"
+                           Fill="{StaticResource RPatternBrush}"
+                           OpacityMask="{StaticResource OpacityRightBrush}" />
+            </Grid>
+
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="RGPatternBrush">
+        <VisualBrush.Visual>
+            <Grid>
+                <Rectangle Width="740" Height="1068"
+                           Fill="{StaticResource RPatternBrush}"
+                           OpacityMask="{StaticResource OpacityLeftBrush}" />
+                <Rectangle Width="740" Height="1068"
+                           Fill="{StaticResource GPatternBrush}"
+                           OpacityMask="{StaticResource OpacityRightBrush}" />
+            </Grid>
+
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="GWPatternBrush">
+        <VisualBrush.Visual>
+            <Grid>
+                <Rectangle Width="740" Height="1068"
+                           Fill="{StaticResource GPatternBrush}"
+                           OpacityMask="{StaticResource OpacityLeftBrush}" />
+                <Rectangle Width="740" Height="1068"
+                           Fill="{StaticResource WPatternBrush}"
+                           OpacityMask="{StaticResource OpacityRightBrush}" />
+            </Grid>
+
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="BGPatternBrush">
+        <VisualBrush.Visual>
+            <Grid>
+                <Rectangle Width="740" Height="1068"
+                           Fill="{StaticResource BPatternBrush}"
+                           OpacityMask="{StaticResource OpacityLeftBrush}" />
+                <Rectangle Width="740" Height="1068"
+                           Fill="{StaticResource GPatternBrush}"
+                           OpacityMask="{StaticResource OpacityRightBrush}" />
+            </Grid>
+
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="UBPatternBrush">
+        <VisualBrush.Visual>
+            <Grid>
+                <Rectangle Width="740" Height="1068"
+                           Fill="{StaticResource UPatternBrush}"
+                           OpacityMask="{StaticResource OpacityLeftBrush}" />
+                <Rectangle Width="740" Height="1068"
+                           Fill="{StaticResource BPatternBrush}"
+                           OpacityMask="{StaticResource OpacityRightBrush}" />
+            </Grid>
+
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="RWPatternBrush">
+        <VisualBrush.Visual>
+            <Grid>
+                <Rectangle Width="740" Height="1068"
+                           Fill="{StaticResource RPatternBrush}"
+                           OpacityMask="{StaticResource OpacityLeftBrush}" />
+                <Rectangle Width="740" Height="1068"
+                           Fill="{StaticResource WPatternBrush}"
+                           OpacityMask="{StaticResource OpacityRightBrush}" />
+            </Grid>
+
+        </VisualBrush.Visual>
+    </VisualBrush>
+
     <SolidColorBrush x:Key="RBarBrush" Color="#E2B88B" />
     <SolidColorBrush x:Key="WBarBrush" Color="#F7F9F3" />
     <SolidColorBrush x:Key="GBarBrush" Color="#C1C4AA" />
@@ -37,45 +177,56 @@
     <SolidColorBrush x:Key="CBarBrush" Color="#C4B8AF" />
     <SolidColorBrush x:Key="UBarBrush" Color="#C7D0D9" />
 
-    <LinearGradientBrush x:Key="BRBarBrush">
+    <LinearGradientBrush x:Key="BRBarBrush" StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Offset="0" Color="#B3AAA2" />
         <GradientStop Offset="1" Color="#E2B88B" />
     </LinearGradientBrush>
-    <LinearGradientBrush x:Key="GUBarBrush">
+    <LinearGradientBrush x:Key="GUBarBrush" StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Offset="0" Color="#C1C4AA" />
         <GradientStop Offset="1" Color="#C7D0D9" />
     </LinearGradientBrush>
-    <LinearGradientBrush x:Key="WUBarBrush">
+    <LinearGradientBrush x:Key="WUBarBrush" StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Offset="0" Color="#F7F9F3" />
         <GradientStop Offset="1" Color="#C7D0D9" />
     </LinearGradientBrush>
-    <LinearGradientBrush x:Key="WBBarBrush">
+    <LinearGradientBrush x:Key="WBBarBrush" StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Offset="0" Color="#F7F9F3" />
         <GradientStop Offset="1" Color="#B3AAA2" />
     </LinearGradientBrush>
-    <LinearGradientBrush x:Key="URBarBrush">
+    <LinearGradientBrush x:Key="URBarBrush" StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Offset="0" Color="#C7D0D9" />
         <GradientStop Offset="1" Color="#E2B88B" />
     </LinearGradientBrush>
-    <LinearGradientBrush x:Key="RGBarBrush">
+    <LinearGradientBrush x:Key="RGBarBrush" StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Offset="0" Color="#E2B88B" />
         <GradientStop Offset="1" Color="#C1C4AA" />
     </LinearGradientBrush>
-    <LinearGradientBrush x:Key="GWBarBrush">
+    <LinearGradientBrush x:Key="GWBarBrush" StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Offset="0" Color="#C1C4AA" />
         <GradientStop Offset="1" Color="#F7F9F3" />
     </LinearGradientBrush>
-    <LinearGradientBrush x:Key="BGBarBrush">
+    <LinearGradientBrush x:Key="BGBarBrush" StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Offset="0" Color="#B3AAA2" />
         <GradientStop Offset="1" Color="#C1C4AA" />
     </LinearGradientBrush>
-    <LinearGradientBrush x:Key="UBBarBrush">
+    <LinearGradientBrush x:Key="UBBarBrush" StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Offset="0" Color="#C7D0D9" />
         <GradientStop Offset="1" Color="#B3AAA2" />
     </LinearGradientBrush>
-    <LinearGradientBrush x:Key="RWBarBrush">
+    <LinearGradientBrush x:Key="RWBarBrush" StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Offset="0" Color="#E2B88B" />
         <GradientStop Offset="1" Color="#F7F9F3" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="FoilBrush" Opacity="0.25" SpreadMethod="Repeat">
+        <GradientStop Offset="0" Color="#FFD32E2E" />
+        <GradientStop Offset="0.2" Color="#FFF08214" />
+        <GradientStop Offset="0.3" Color="#FFE4CA22" />
+        <GradientStop Offset="0.4" Color="#FF2FE827" />
+        <GradientStop Offset="0.5" Color="#FF00CADE" />
+        <GradientStop Offset="0.6" Color="#FF0F22E0" />
+        <GradientStop Offset="0.8" Color="#FF9515D1" />
+        <GradientStop Offset="1" Color="#FFE22D1A" />
     </LinearGradientBrush>
 
 </ResourceDictionary>

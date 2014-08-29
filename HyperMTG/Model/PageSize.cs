@@ -60,7 +60,7 @@ namespace HyperMTG.Model
 		/// <summary>
 		/// Set display ratio (0.0 ~ 1.0)
 		/// </summary>
-		/// <param name="ratio"></param>
+		/// <param flavor="ratio"></param>
 		public void SetRatio(double ratio)
 		{
 			if (ratio < 0 || ratio > 1)
