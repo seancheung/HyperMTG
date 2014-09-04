@@ -45,6 +45,7 @@ namespace HyperMTG.ViewModel
 		private string input;
 
 		private volatile int _processCount;
+		private bool _isFoil;
 
 		/// <summary>
 		///     Initializes a new instance of the DeckBuiderViewModel class.
@@ -141,6 +142,16 @@ namespace HyperMTG.ViewModel
 			{
 				input = value;
 				RaisePropertyChanged("Input");
+			}
+		}
+
+		public bool IsFoil
+		{
+			get { return _isFoil; }
+			set
+			{
+				_isFoil = value;
+				RaisePropertyChanged("IsFoil");
 			}
 		}
 

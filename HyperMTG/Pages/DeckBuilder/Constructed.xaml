@@ -36,6 +36,7 @@
                     <scm:SortDescription PropertyName="CMC" />
                 </CollectionViewSource.SortDescriptions>
             </CollectionViewSource>
+            <hp:VisibaleConverter x:Key="VisibaleConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Style="{StaticResource ContentRoot}">
@@ -159,28 +160,74 @@
                         <Image.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Command="{Binding CopyImageCommand}" Header="Copy Image To Clipboard" />
+                                <CheckBox Content="Is Foil" IsChecked="{Binding IsFoil}" />
                             </ContextMenu>
                         </Image.ContextMenu>
-                        <Image.OpacityMask>
+                        <!--
+                            <Image.OpacityMask>
                             <DrawingBrush Stretch="UniformToFill">
-                                <DrawingBrush.Drawing>
-                                    <DrawingGroup>
-                                        <DrawingGroup.Children>
-                                            <GeometryDrawing Brush="Transparent" Geometry="M 256.138,-177.75C 607.998,-177.75 959.858,-177.75 1311.86,-177.75C 1311.86,313.953 1311.86,805.73 1311.86,1297.75C 960.049,1297.75 608.094,1297.75 256.138,1297.75C 256.138,806.07 256.138,314.198 256.138,-177.75 Z M 349.729,638.953C 638.749,638.953 927.219,638.953 1215.5,638.953C 1215.5,425.991 1215.5,213.509 1215.5,1.15491C 926.65,1.15491 638.336,1.15491 349.729,1.15491C 349.729,213.842 349.729,426.168 349.729,638.953 Z " />
-                                            <GeometryDrawing Brush="Black" Geometry="M 349.729,638.953C 349.729,426.168 349.729,213.842 349.729,1.15491C 638.336,1.15491 926.65,1.15491 1215.5,1.15491C 1215.5,213.509 1215.5,425.991 1215.5,638.953C 927.219,638.953 638.749,638.953 349.729,638.953 Z " />
-                                        </DrawingGroup.Children>
-                                    </DrawingGroup>
-                                </DrawingBrush.Drawing>
+                            <DrawingBrush.Drawing>
+                            <DrawingGroup>
+                            <DrawingGroup.Children>
+                            <GeometryDrawing Brush="Transparent" Geometry="M 256.138,-177.75C 607.998,-177.75 959.858,-177.75 1311.86,-177.75C 1311.86,313.953 1311.86,805.73 1311.86,1297.75C 960.049,1297.75 608.094,1297.75 256.138,1297.75C 256.138,806.07 256.138,314.198 256.138,-177.75 Z M 349.729,638.953C 638.749,638.953 927.219,638.953 1215.5,638.953C 1215.5,425.991 1215.5,213.509 1215.5,1.15491C 926.65,1.15491 638.336,1.15491 349.729,1.15491C 349.729,213.842 349.729,426.168 349.729,638.953 Z " />
+                            <GeometryDrawing Brush="Black" Geometry="M 349.729,638.953C 349.729,426.168 349.729,213.842 349.729,1.15491C 638.336,1.15491 926.65,1.15491 1215.5,1.15491C 1215.5,213.509 1215.5,425.991 1215.5,638.953C 927.219,638.953 638.749,638.953 349.729,638.953 Z " />
+                            </DrawingGroup.Children>
+                            </DrawingGroup>
+                            </DrawingBrush.Drawing>
                             </DrawingBrush>
-                        </Image.OpacityMask>
+                            </Image.OpacityMask>
+                        -->
                     </Image>
-                    <hs:CardControl Grid.Row="0" BorderStyle="Black"
-                                    CardName="{Binding SelectedCard.Card.Name}"
-                                    Cost="{Binding SelectedCard.Card.Cost}"
-                                    Flavor="{Binding SelectedCard.Card.Flavor}"
-                                    IsFoil="False"
-                                    Text="{Binding SelectedCard.Card.Text}"
-                                    Type="{Binding SelectedCard.Card.Type}" />
+                    <!--
+                        <hs:CardControl Grid.Row="0" BorderStyle="Black"
+                        CardName="{Binding SelectedCard.Card.Name}"
+                        Cost="{Binding SelectedCard.Card.Cost}"
+                        Flavor="{Binding SelectedCard.Card.Flavor}"
+                        IsFoil="False"
+                        Text="{Binding SelectedCard.Card.Text}"
+                        Type="{Binding SelectedCard.Card.Type}" />
+                    -->
+                    <Rectangle Grid.Row="0" IsHitTestVisible="False"
+                               Visibility="{Binding IsFoil,
+                                                    Converter={StaticResource VisibaleConverter}}">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush Opacity="0.25" SpreadMethod="Repeat">
+                                <GradientStop Offset="0" Color="#FFD32E2E" />
+                                <GradientStop Offset="0.2" Color="#FFF08214" />
+                                <GradientStop Offset="0.3" Color="#FFE4CA22" />
+                                <GradientStop Offset="0.4" Color="#FF2FE827" />
+                                <GradientStop Offset="0.5" Color="#FF00CADE" />
+                                <GradientStop Offset="0.6" Color="#FF0F22E0" />
+                                <GradientStop Offset="0.8" Color="#FF9515D1" />
+                                <GradientStop Offset="1" Color="#FFE22D1A" />
+                                <LinearGradientBrush.Transform>
+                                    <TranslateTransform x:Name="Transform" />
+                                </LinearGradientBrush.Transform>
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                        <Rectangle.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0:0:5" From="0"
+                                                         RepeatBehavior="Forever"
+                                                         Storyboard.TargetName="Transform"
+                                                         Storyboard.TargetProperty="X"
+                                                         To="{Binding RelativeSource={RelativeSource FindAncestor,
+                                                                                                     AncestorType={x:Type Rectangle}},
+                                                                      Path=ActualWidth}" />
+                                        <DoubleAnimation Duration="0:0:5" From="0"
+                                                         RepeatBehavior="Forever"
+                                                         Storyboard.TargetName="Transform"
+                                                         Storyboard.TargetProperty="Y"
+                                                         To="{Binding RelativeSource={RelativeSource FindAncestor,
+                                                                                                     AncestorType={x:Type Rectangle}},
+                                                                      Path=ActualHeight}" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Rectangle.Triggers>
+                    </Rectangle>
                     <mui:BBCodeBlock Grid.Row="2" Margin="0,4"
                                      BBCode="{Binding SelectedCard.Card.Text,
                                                       NotifyOnTargetUpdated=True}"
