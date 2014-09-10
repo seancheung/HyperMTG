@@ -8,6 +8,7 @@
 		public MainWindow()
 		{
 			InitializeComponent();
+			MainGame game = new MainGame();
 		}
 	}
 }
