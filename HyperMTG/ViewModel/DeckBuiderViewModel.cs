@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -374,7 +375,7 @@ namespace HyperMTG.ViewModel
 		private void FilterExecute()
 		{
 			_processCount++;
-			new Thread(() =>
+			Task task = new Task(() =>
 			{
 				IEnumerable<Card> result = _dbReader.LoadCards();
 
@@ -479,9 +480,10 @@ namespace HyperMTG.ViewModel
 				}
 
 				Cards = result.ToList();
-
-				_processCount--;
-			}).Start();
+			});
+			
+			task.Start();
+			task.ContinueWith(delegate { _processCount--; });
 		}
 
 		private void NewDeckExecute()

@@ -45,5 +45,10 @@ namespace HyperBoard
 		}
 
 		#endregion
+
+		public void Close()
+		{
+			GameOver = true;
+		}
 	}
 }

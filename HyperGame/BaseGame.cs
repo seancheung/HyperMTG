@@ -6,28 +6,10 @@ namespace HyperKore.Game
 	public abstract class BaseGame
 	{
 		private readonly double previousTime;
-		private readonly double time;
 		private readonly PreciseTimer timer = new PreciseTimer();
 		protected bool GameOver;
 		private double fps = 60;
-
-		protected BaseGame()
-		{
-			Initialize();
-			Start();
-			while (!GameOver)
-			{
-				time += DeltaTime;
-				if (time >= 1000 / fps)
-				{
-					Update();
-					Render();
-					time = 0;
-				}
-			}
-			End();
-			Finalize();
-		}
+		private double time;
 
 		public double FPS
 		{
@@ -39,7 +21,25 @@ namespace HyperKore.Game
 		/// </summary>
 		protected double DeltaTime
 		{
-			get { return timer.GetElapsedTime() * 1000; }
+			get { return timer.GetElapsedTime()*1000; }
+		}
+
+		public void Run()
+		{
+			Initialize();
+			Start();
+			while (!GameOver)
+			{
+				time += DeltaTime;
+				if (time >= 1000/fps)
+				{
+					Update();
+					Render();
+					time = 0;
+				}
+			}
+			End();
+			Finalize();
 		}
 
 		protected abstract void Initialize();
@@ -58,6 +58,8 @@ namespace HyperKore.Game
 		{
 			fps = newFPS;
 		}
+
+		#region Nested type: PreciseTimer
 
 		private class PreciseTimer
 		{
@@ -84,11 +86,13 @@ namespace HyperKore.Game
 			{
 				long time = 0;
 				QueryPerformanceCounter(ref time);
-				double elapsedTime = (time - _previousElapsedTime) /
-									 (double)_ticksPerSecond;
+				double elapsedTime = (time - _previousElapsedTime)/
+				                     (double) _ticksPerSecond;
 				_previousElapsedTime = time;
 				return elapsedTime;
 			}
 		}
+
+		#endregion
 	}
 }

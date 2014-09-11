@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -40,7 +40,7 @@ namespace HyperMTG.ViewModel
 
 		private readonly IImageParse _imageParse;
 
-		private ObservableCollection<Card> _cards;
+		private List<Card> _cards;
 		private int _currentPage;
 		private bool _doImage;
 
@@ -49,11 +49,12 @@ namespace HyperMTG.ViewModel
 
 		private volatile int _processCount;
 		private int _recordSize;
+		private List<CheckSetItem> _sets;
 
 		public DatabaseViewModel()
 		{
-			Cards = new ObservableCollection<Card>();
-			Sets = new ObservableCollection<CheckSetItem>();
+			Cards = new List<Card>();
+			Sets = new List<CheckSetItem>();
 
 			try
 			{
@@ -91,7 +92,7 @@ namespace HyperMTG.ViewModel
 			set
 			{
 				_doImage = value;
-				RaisePropertyChanged("DoImage");
+				RaisePropertyChanged("SaveImage");
 			}
 		}
 
@@ -142,7 +143,7 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
-		public ObservableCollection<Card> Cards
+		public List<Card> Cards
 		{
 			get { return _cards; }
 			set
@@ -152,7 +153,15 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
-		public ObservableCollection<CheckSetItem> Sets { get; set; }
+		public List<CheckSetItem> Sets
+		{
+			get { return _sets; }
+			set
+			{
+				_sets = value;
+				RaisePropertyChanged("Sets");
+			}
+		}
 
 		#region Command
 
@@ -213,9 +222,11 @@ namespace HyperMTG.ViewModel
 		private void PageExecute(object next)
 		{
 			_processCount++;
-			Thread td = new Thread(() =>
+			Info = "Loading";
+			List<Card> result = new List<Card>();
+
+			Task task = new Task(() =>
 			{
-				Info = "Loading";
 				IEnumerable<Card> cards = _dbReader.LoadCards();
 				int count = cards.Count();
 				PageSize = count/RecordSize + (count%RecordSize == 0 ? 0 : 1);
@@ -223,31 +234,33 @@ namespace HyperMTG.ViewModel
 					CurrentPage++;
 				else
 					CurrentPage--;
-
-				IEnumerable<Card> result;
 				try
 				{
-					result = cards.Take(RecordSize*CurrentPage).Skip(RecordSize*(CurrentPage - 1));
+					result = cards.Take(RecordSize*CurrentPage).Skip(RecordSize*(CurrentPage - 1)).ToList();
 				}
 				catch (Exception ex)
 				{
 					Logger.Log(ex, typeof (DatabaseViewModel));
 					throw;
 				}
-
-				_dispatcher.Invoke(
-					new Action(() => { Cards = new ObservableCollection<Card>(result); }));
-				Info = "Done!";
-				_processCount--;
 			});
 
-			td.Start();
+			task.Start();
+			task.ContinueWith(t =>
+			{
+				Cards = result;
+				_processCount--;
+				Info = "Done!";
+			});
 		}
 
 		private void LoadSetsExecute()
 		{
 			_processCount++;
-			Thread td = new Thread(() =>
+
+			List<CheckSetItem> result = new List<CheckSetItem>();
+
+			Task task = new Task(() =>
 			{
 				IEnumerable<Set> sets;
 				try
@@ -260,25 +273,24 @@ namespace HyperMTG.ViewModel
 					throw;
 				}
 
-				_dispatcher.Invoke(new Action(() =>
-				{
-					Sets.Clear();
-					foreach (Set set in sets)
-					{
-						Sets.Add(new CheckSetItem(false, set));
-					}
-				}));
+				Parallel.ForEach(sets, set => result.Add(new CheckSetItem(false, set)));
+			});
+			task.Start();
+			task.ContinueWith(t =>
+			{
+				Sets = result;
 				_processCount--;
 			});
-			td.Start();
 		}
 
 		private void LoadCardsExecute()
 		{
 			_processCount++;
-			Thread td = new Thread(() =>
+			Info = "Loading";
+			List<Card> result = new List<Card>();
+
+			Task task = new Task(() =>
 			{
-				Info = "Loading";
 				IEnumerable<Card> cards;
 				try
 				{
@@ -293,33 +305,33 @@ namespace HyperMTG.ViewModel
 				int count = cards.Count();
 				PageSize = count/RecordSize + (count%RecordSize == 0 ? 0 : 1);
 				CurrentPage = 1;
-
-				IEnumerable<Card> result;
 				try
 				{
-					result = cards.Take(RecordSize*CurrentPage).Skip(RecordSize*(CurrentPage - 1));
+					result = cards.Take(RecordSize*CurrentPage).Skip(RecordSize*(CurrentPage - 1)).ToList();
 				}
 				catch (Exception ex)
 				{
 					Logger.Log(ex, typeof (DatabaseViewModel));
 					throw;
 				}
-
-				_dispatcher.Invoke(
-					new Action(() => { Cards = new ObservableCollection<Card>(result); }));
-
-				Info = "Done!";
-
-				_processCount--;
 			});
-			td.Start();
+
+			task.Start();
+			task.ContinueWith(t =>
+			{
+				Cards = result;
+				_processCount--;
+				Info = "Done!";
+			});
 		}
 
 		private void UpdateSetsExecute()
 		{
 			_processCount++;
 			Info = "Waiting...Grabbing Source";
-			Thread td = new Thread(() =>
+			List<CheckSetItem> result = new List<CheckSetItem>();
+
+			Task task = new Task(() =>
 			{
 				IEnumerable<Set> sets;
 				try
@@ -342,151 +354,97 @@ namespace HyperMTG.ViewModel
 					throw;
 				}
 
-				_dispatcher.Invoke(new Action(() =>
-				{
-					Sets.Clear();
-					foreach (Set set in sets)
-					{
-						Sets.Add(new CheckSetItem(false, set));
-					}
-				}));
+				Parallel.ForEach(sets, set => result.Add(new CheckSetItem(false, set)));
+			});
 
+			task.Start();
+			task.ContinueWith(t =>
+			{
+				Sets = result;
 				_processCount--;
-
 				Info = "Done!";
 			});
-			td.Start();
 		}
 
 		private void UpdateCardsExecute()
 		{
-			foreach (CheckSetItem checkSetItem in Sets)
+			foreach (CheckSetItem checkSetItem in Sets.Where(s => s.IsChecked))
 			{
-				Cards.Clear();
-
-				if (checkSetItem.IsChecked)
+				List<Card> cards = new List<Card>();
+				Task task = new Task(() =>
 				{
-					Thread td = new Thread(() =>
+					_processCount++;
+					checkSetItem.IsProcessing = true;
+					Info = "Preparing for " + checkSetItem.Content.FullName;
+
+
+					try
 					{
-						_processCount++;
-						checkSetItem.IsProcessing = true;
-						Info = "Preparing for " + checkSetItem.Content.FullName;
+						cards.AddRange(_dataParse.Process(checkSetItem.Content, Settings.Default.Language));
+						Cards = cards;
+					}
+					catch (Exception ex)
+					{
+						Logger.Log(ex, typeof (DatabaseViewModel), _dataParse, checkSetItem.Content, Settings.Default.Language);
+						throw;
+					}
 
-						List<Card> cards;
-						try
+					checkSetItem.Max = cards.Count();
+					checkSetItem.Prog = 0;
+
+					if (SaveImage)
+					{
+						Parallel.ForEach(cards, card =>
 						{
-							cards = _dataParse.Process(checkSetItem.Content, Settings.Default.Language).ToList();
-						}
-						catch (Exception ex)
-						{
-							Logger.Log(ex, typeof (DatabaseViewModel), _dataParse, checkSetItem.Content, Settings.Default.Language);
-							throw;
-						}
-
-						checkSetItem.Max = cards.Count;
-						checkSetItem.Prog = 0;
-
-						//Split the full card list into several parts
-						List<List<Card>> cardsThread = new List<List<Card>>();
-						for (int i = 0; i < MaxThread - 1; i++)
-						{
-							cardsThread.Add(cards.GetRange(cards.Count/MaxThread*i, cards.Count/MaxThread));
-						}
-						cardsThread.Add(cards.GetRange(cards.Count/MaxThread*(MaxThread - 1),
-							cards.Count/MaxThread + cards.Count%MaxThread));
-
-						#region WaitCallback
-
-						WaitCallback waitCallback = param =>
-						{
-							object[] parameres = param as object[];
-							if (parameres == null || parameres.Length != 2)
-								return;
-							IList<Card> tmpCards = parameres[0] as IList<Card>;
-							if (tmpCards == null)
-								return;
-							AutoResetEvent waitHandle = parameres[1] as AutoResetEvent;
-							if (waitHandle == null)
-								return;
-
 							if (!_cts.Token.IsCancellationRequested)
 							{
-								//Save Data
+								Info = string.Format("Downloading image{0}: {1}", card.Set, card.ID);
+
 								try
 								{
-									_dbWriter.Insert(tmpCards);
+									byte[] data = _imageParse.Download(card, Settings.Default.Language);
+									if (data != null && _compressor != null)
+										_dbWriter.Insert(card.ID, data, _compressor);
 								}
 								catch (Exception ex)
 								{
-									Logger.Log(ex, typeof (DatabaseViewModel), _dbWriter);
+									Logger.Log(ex, typeof (DatabaseViewModel), _imageParse, _compressor, _dbWriter, Settings.Default.Language,
+										card.ID);
 									throw;
 								}
+
+								checkSetItem.Prog++;
 							}
+						});
+					}
+				});
 
-							if (SaveImage)
-							{
-								//If action is cancelled, break
-								for (int i = 0; i < tmpCards.Count && !_cts.Token.IsCancellationRequested; i++)
-								{
-									Info = string.Format("Downloading image{0}: {1}", cards.Count, tmpCards[i].ID);
-
-									#region Images
-
-									try
-									{
-										byte[] data = _imageParse.Download(tmpCards[i], Settings.Default.Language);
-										if (data != null && _compressor != null)
-											_dbWriter.Insert(tmpCards[i].ID, data, _compressor);
-									}
-									catch (Exception ex)
-									{
-										Logger.Log(ex, typeof (DatabaseViewModel), _imageParse, _compressor, _dbWriter, Settings.Default.Language,
-											tmpCards[i].ID);
-										throw;
-									}
-
-									#endregion
-
-									_dispatcher.Invoke(new Action(() => { Cards.Add(tmpCards[i]); }));
-
-									checkSetItem.Prog++;
-								}
-							}
-							else
-							{
-								List<Card> list = tmpCards.ToList();
-								_dispatcher.Invoke(new Action(() => list.ForEach(c => Cards.Add(c))));
-							}
-
-							//Set the current thread state as finished
-							waitHandle.Set();
-						};
-
-						#endregion
-
-						WaitHandle[] waitHandles = new WaitHandle[MaxThread];
-						//Start a thread pool for updating
-						for (int i = 0; i < MaxThread; i++)
+				task.ContinueWith(t =>
+				{
+					if (t.IsCompleted)
+					{
+						//Save Data
+						try
 						{
-							waitHandles[i] = new AutoResetEvent(false);
-							ThreadPool.QueueUserWorkItem(waitCallback, new object[] {cardsThread[i], waitHandles[i]});
+							_dbWriter.Insert(cards);
+						}
+						catch (Exception ex)
+						{
+							Logger.Log(ex, typeof (DatabaseViewModel), _dbWriter);
+							throw;
 						}
 
-						//Wait for all downloading threads to finish
-						WaitHandle.WaitAll(waitHandles);
+						checkSetItem.IsLocal = true;
+						checkSetItem.IsChecked = false;
+						_dbWriter.Update(checkSetItem.Content);
+					}
 
-						if (!_cts.IsCancellationRequested)
-						{
-							checkSetItem.IsLocal = true;
-							checkSetItem.IsChecked = false;
-							_dbWriter.Update(checkSetItem.Content);
-						}
-						checkSetItem.IsProcessing = false;
-						Info = "Done!";
-						_processCount--;
-					});
-					td.Start();
-				}
+					checkSetItem.IsProcessing = false;
+					Info = "Done!";
+					_processCount--;
+				});
+
+				task.Start();
 			}
 		}
 

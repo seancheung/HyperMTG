@@ -57,6 +57,7 @@
     <Compile Include="entity\Land.cs" />
     <Compile Include="entity\Planeswalker.cs" />
     <Compile Include="entity\Player.cs" />
+    <Compile Include="Subject.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="entity\Sorcery.cs" />
