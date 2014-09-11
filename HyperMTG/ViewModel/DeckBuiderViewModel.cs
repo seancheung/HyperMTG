@@ -67,7 +67,7 @@ namespace HyperMTG.ViewModel
 			}
 			catch (Exception ex)
 			{
-				Logger.Log(ex, typeof(DatabaseViewModel));
+				Logger.Log(ex, typeof (DatabaseViewModel));
 				throw;
 			}
 
@@ -81,15 +81,26 @@ namespace HyperMTG.ViewModel
 
 			if (_dbReader != null)
 			{
-				try
+				Task task = new Task(() =>
 				{
-					Cards = _dbReader.LoadCards().ToList();
-				}
-				catch (Exception ex)
+					try
+					{
+						Cards = _dbReader.LoadCards().ToList();
+					}
+					catch (Exception ex)
+					{
+						Logger.Log(ex, typeof (DatabaseViewModel), _dbReader, Settings.Default.Language);
+						throw;
+					}
+				});
+				task.Start();
+				task.ContinueWith((t) =>
 				{
-					Logger.Log(ex, typeof(DatabaseViewModel), _dbReader, Settings.Default.Language);
-					throw;
-				}
+					if (t.IsCompleted)
+					{
+						Info = "Loading data complete";
+					}
+				});
 			}
 			else Info = "Assemblly Missing";
 
@@ -302,7 +313,6 @@ namespace HyperMTG.ViewModel
 				}
 				_processCount--;
 			}).Start();
-
 		}
 
 		private void CopyToClipboardExecute()
@@ -339,7 +349,7 @@ namespace HyperMTG.ViewModel
 				byte[] img = exCard.Image;
 				if (img != null)
 				{
-					document.Blocks.Add(new BlockUIContainer(new Image { Source = img.ToBitmapImage(), Width = 312, Height = 445 }));
+					document.Blocks.Add(new BlockUIContainer(new Image {Source = img.ToBitmapImage(), Width = 312, Height = 445}));
 				}
 			}
 			foreach (Card card in Deck.SideBoard)
@@ -348,7 +358,7 @@ namespace HyperMTG.ViewModel
 				byte[] img = exCard.Image;
 				if (img != null)
 				{
-					document.Blocks.Add(new BlockUIContainer(new Image { Source = img.ToBitmapImage(), Width = 312, Height = 445 }));
+					document.Blocks.Add(new BlockUIContainer(new Image {Source = img.ToBitmapImage(), Width = 312, Height = 445}));
 				}
 			}
 
@@ -452,7 +462,9 @@ namespace HyperMTG.ViewModel
 										break;
 									case "col":
 										result =
-											result.Where(c => c.GetColors().Select(col => col.ToString()).Any(co => Regex.IsMatch(co, cons[1], RegexOptions.IgnoreCase)));
+											result.Where(
+												c =>
+													c.GetColors().Select(col => col.ToString()).Any(co => Regex.IsMatch(co, cons[1], RegexOptions.IgnoreCase)));
 										break;
 									case "tgh":
 										result = result.Where(c => c.Tgh != null && Regex.IsMatch(c.Tgh, cons[1], RegexOptions.IgnoreCase));
@@ -481,7 +493,7 @@ namespace HyperMTG.ViewModel
 
 				Cards = result.ToList();
 			});
-			
+
 			task.Start();
 			task.ContinueWith(delegate { _processCount--; });
 		}
@@ -508,14 +520,14 @@ namespace HyperMTG.ViewModel
 				try
 				{
 					IDeckReader deckReader = _deckReaders[dlg.FilterIndex - 1];
-					using (var fs = (FileStream)dlg.OpenFile())
+					using (var fs = (FileStream) dlg.OpenFile())
 					{
 						Deck = deckReader.Read(fs, Cards);
 					}
 				}
 				catch (Exception ex)
 				{
-					Logger.Log(ex, typeof(DeckBuiderViewModel), _deckReaders[dlg.FilterIndex - 1]);
+					Logger.Log(ex, typeof (DeckBuiderViewModel), _deckReaders[dlg.FilterIndex - 1]);
 					throw;
 				}
 			}
@@ -539,14 +551,14 @@ namespace HyperMTG.ViewModel
 				try
 				{
 					IDeckWriter deckWriter = _deckWriters[dlg.FilterIndex - 1];
-					using (var fs = (FileStream)dlg.OpenFile())
+					using (var fs = (FileStream) dlg.OpenFile())
 					{
 						deckWriter.Write(Deck, fs);
 					}
 				}
 				catch (Exception ex)
 				{
-					Logger.Log(ex, typeof(DeckBuiderViewModel), _deckWriters[dlg.FilterIndex - 1]);
+					Logger.Log(ex, typeof (DeckBuiderViewModel), _deckWriters[dlg.FilterIndex - 1]);
 					throw;
 				}
 
@@ -603,8 +615,9 @@ namespace HyperMTG.ViewModel
 
 		private bool CanExecuteExportImageDoc()
 		{
-			return _processCount == 0 && Deck.MainBoard.Count + Deck.SideBoard.Count > 0 && _compressor != null && _dbReader != null &&
-				   _dbWriter != null && _imageParse != null;
+			return _processCount == 0 && Deck.MainBoard.Count + Deck.SideBoard.Count > 0 && _compressor != null &&
+			       _dbReader != null &&
+			       _dbWriter != null && _imageParse != null;
 		}
 
 		private bool CanExecuteCopyImage()
@@ -634,7 +647,8 @@ namespace HyperMTG.ViewModel
 
 		private bool CanExecuteSaveDeck()
 		{
-			return _processCount == 0 && _deckWriters != null && _deckWriters.Length > 0 && (Deck.MainBoard.Count > 0 || Deck.SideBoard.Count > 0);
+			return _processCount == 0 && _deckWriters != null && _deckWriters.Length > 0 &&
+			       (Deck.MainBoard.Count > 0 || Deck.SideBoard.Count > 0);
 		}
 
 		private bool CanExecuteDeleteCardMain(Card card)

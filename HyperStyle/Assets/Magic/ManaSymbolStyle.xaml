@@ -116,11 +116,13 @@
            TargetType="Path">
         <Setter Property="Data" Value="{StaticResource ManaGeometry}" />
         <Setter Property="Fill" Value="{StaticResource ColorlessBrush}" />
-        <Setter Property="Effect">
+        <!--
+            <Setter Property="Effect">
             <Setter.Value>
-                <x:Null />
+            <x:Null />
             </Setter.Value>
-        </Setter>
+            </Setter>
+        -->
     </Style>
 
     <!--  UserControl Style  -->
@@ -131,8 +133,9 @@
                 <ControlTemplate>
                     <Viewbox>
                         <Grid>
-                            <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="12" Style="{StaticResource PathB}" />
+                            <Path Fill="{StaticResource SwampBrush}" Style="{StaticResource PathMana}" />
+                            <Path Margin="12" Fill="Black"
+                                  Style="{StaticResource PathB}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -145,8 +148,9 @@
                 <ControlTemplate>
                     <Viewbox>
                         <Grid>
-                            <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="12" Style="{StaticResource PathG}" />
+                            <Path Fill="{StaticResource ForestBrush}" Style="{StaticResource PathMana}" />
+                            <Path Margin="12" Fill="Black"
+                                  Style="{StaticResource PathG}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -159,8 +163,9 @@
                 <ControlTemplate>
                     <Viewbox>
                         <Grid>
-                            <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="12" Style="{StaticResource PathW}" />
+                            <Path Fill="{StaticResource PlainBrush}" Style="{StaticResource PathMana}" />
+                            <Path Margin="12" Fill="Black"
+                                  Style="{StaticResource PathW}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -173,8 +178,9 @@
                 <ControlTemplate>
                     <Viewbox>
                         <Grid>
-                            <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="12" Style="{StaticResource PathR}" />
+                            <Path Fill="{StaticResource MountainBrush}" Style="{StaticResource PathMana}" />
+                            <Path Margin="12" Fill="Black"
+                                  Style="{StaticResource PathR}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -187,8 +193,9 @@
                 <ControlTemplate>
                     <Viewbox>
                         <Grid>
-                            <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="12" Style="{StaticResource PathU}" />
+                            <Path Fill="{StaticResource IslandBrush}" Style="{StaticResource PathMana}" />
+                            <Path Margin="12" Fill="Black"
+                                  Style="{StaticResource PathU}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -204,8 +211,9 @@
                 <ControlTemplate>
                     <Viewbox>
                         <Grid>
-                            <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="12" Style="{StaticResource PathBG}" />
+                            <Path Fill="{StaticResource SwampForestBrush}" Style="{StaticResource PathMana}" />
+                            <Path Margin="12" Fill="Black"
+                                  Style="{StaticResource PathBG}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -218,8 +226,9 @@
                 <ControlTemplate>
                     <Viewbox>
                         <Grid>
-                            <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="12" Style="{StaticResource PathBR}" />
+                            <Path Fill="{StaticResource SwampMountainBrush}" Style="{StaticResource PathMana}" />
+                            <Path Margin="12" Fill="Black"
+                                  Style="{StaticResource PathBR}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -232,8 +241,9 @@
                 <ControlTemplate>
                     <Viewbox>
                         <Grid>
-                            <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="12" Style="{StaticResource PathGU}" />
+                            <Path Fill="{StaticResource ForestIslandBrush}" Style="{StaticResource PathMana}" />
+                            <Path Margin="12" Fill="Black"
+                                  Style="{StaticResource PathGU}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -246,8 +256,9 @@
                 <ControlTemplate>
                     <Viewbox>
                         <Grid>
-                            <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="12" Style="{StaticResource PathGW}" />
+                            <Path Fill="{StaticResource ForestPlainBrush}" Style="{StaticResource PathMana}" />
+                            <Path Margin="12" Fill="Black"
+                                  Style="{StaticResource PathGW}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -260,8 +271,9 @@
                 <ControlTemplate>
                     <Viewbox>
                         <Grid>
-                            <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="12" Style="{StaticResource PathRG}" />
+                            <Path Fill="{StaticResource MountainForestBrush}" Style="{StaticResource PathMana}" />
+                            <Path Margin="12" Fill="Black"
+                                  Style="{StaticResource PathRG}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -274,8 +286,9 @@
                 <ControlTemplate>
                     <Viewbox>
                         <Grid>
-                            <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="12" Style="{StaticResource PathRW}" />
+                            <Path Fill="{StaticResource MountainPlainBrush}" Style="{StaticResource PathMana}" />
+                            <Path Margin="12" Fill="Black"
+                                  Style="{StaticResource PathRW}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -288,8 +301,9 @@
                 <ControlTemplate>
                     <Viewbox>
                         <Grid>
-                            <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="12" Style="{StaticResource PathUB}" />
+                            <Path Fill="{StaticResource IslandSwampBrush}" Style="{StaticResource PathMana}" />
+                            <Path Margin="12" Fill="Black"
+                                  Style="{StaticResource PathUB}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -302,8 +316,9 @@
                 <ControlTemplate>
                     <Viewbox>
                         <Grid>
-                            <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="12" Style="{StaticResource PathUR}" />
+                            <Path Fill="{StaticResource IslandMountainBrush}" Style="{StaticResource PathMana}" />
+                            <Path Margin="12" Fill="Black"
+                                  Style="{StaticResource PathUR}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -316,8 +331,9 @@
                 <ControlTemplate>
                     <Viewbox>
                         <Grid>
-                            <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="12" Style="{StaticResource PathWB}" />
+                            <Path Fill="{StaticResource PlainSwampBrush}" Style="{StaticResource PathMana}" />
+                            <Path Margin="12" Fill="Black"
+                                  Style="{StaticResource PathWB}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>
@@ -330,8 +346,9 @@
                 <ControlTemplate>
                     <Viewbox>
                         <Grid>
-                            <Path Style="{StaticResource PathMana}" />
-                            <Path Margin="12" Style="{StaticResource PathWU}" />
+                            <Path Fill="{StaticResource PlainIslandBrush}" Style="{StaticResource PathMana}" />
+                            <Path Margin="12" Fill="Black"
+                                  Style="{StaticResource PathWU}" />
                         </Grid>
                     </Viewbox>
                 </ControlTemplate>

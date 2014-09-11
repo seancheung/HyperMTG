@@ -4,6 +4,10 @@ namespace HyperMTG.Model
 {
 	public class PageSize : ObservableObject
 	{
+		private readonly double originalItemHeight = 445;
+		private readonly double originalItemWidth = 312;
+		private readonly double originalPageHeight = 1335;
+		private readonly double originalPageWidth = 936;
 		private double _itemHeight;
 		private double _itemWidth;
 		private double _pageHeight;
@@ -58,7 +62,7 @@ namespace HyperMTG.Model
 		}
 
 		/// <summary>
-		/// Set display ratio (0.0 ~ 1.0)
+		///     Set display ratio (0.0 ~ 1.0)
 		/// </summary>
 		/// <param flavor="ratio"></param>
 		public void SetRatio(double ratio)
@@ -68,10 +72,10 @@ namespace HyperMTG.Model
 				return;
 			}
 
-			ItemHeight *= ratio;
-			ItemWidth *= ratio;
-			PageHeight *= ratio;
-			PageWidth *= ratio;
+			ItemHeight = ratio*originalItemHeight;
+			ItemWidth = ratio*originalItemWidth;
+			PageHeight = ratio*originalPageHeight;
+			PageWidth = ratio*originalPageWidth;
 		}
 	}
 }

@@ -11,11 +11,80 @@
         <vm:SealedViewModel />
     </UserControl.DataContext>
     <Grid Style="{StaticResource ContentRoot}">
-        <ScrollViewer>
-            <StackPanel MinWidth="200">
-                <TextBlock Style="{StaticResource Heading2}" Text="BASIC PAGE" />
-                <TextBlock Text="Content goes here" />
-            </StackPanel>
-        </ScrollViewer>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <GroupBox Grid.Row="0" Margin="0,5"
+                      Header="Packs">
+                <StackPanel>
+                    <ComboBox Margin="5"
+                              ItemsSource="{Binding Sets}"
+                              SelectedValue="{Binding Packs[0]}" />
+                    <ComboBox Margin="5"
+                              ItemsSource="{Binding Sets}"
+                              SelectedValue="{Binding Packs[1]}" />
+                    <ComboBox Margin="5"
+                              ItemsSource="{Binding Sets}"
+                              SelectedValue="{Binding Packs[2]}" />
+                    <ComboBox Margin="5"
+                              ItemsSource="{Binding Sets}"
+                              SelectedValue="{Binding Packs[3]}" />
+                    <ComboBox Margin="5"
+                              ItemsSource="{Binding Sets}"
+                              SelectedValue="{Binding Packs[4]}" />
+                    <ComboBox Margin="5"
+                              ItemsSource="{Binding Sets}"
+                              SelectedValue="{Binding Packs[5]}" />
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Grid.Row="1" Margin="0,5"
+                      Header="Booster Info">
+                <StackPanel>
+                    <mui:BBCodeBlock BBCode="{Binding Cards.Count, StringFormat='Total Cards: [b]{0}[/b]'}" />
+                </StackPanel>
+            </GroupBox>
+            <Button Grid.Row="2" Margin="0,5"
+                    Command="{Binding GenerateCommand}"
+                    Content="Generate" />
+            <Slider Grid.Row="3" Margin="0,5"
+                    AutoToolTipPlacement="TopLeft"
+                    AutoToolTipPrecision="2" LargeChange="0.1"
+                    Maximum="1.0" Minimum="0.2"
+                    Value="{Binding Ratio}" />
+        </Grid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <ScrollViewer Grid.Row="1">
+                <ItemsControl ItemsSource="{Binding Cards}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel ItemHeight="{Binding Size.ItemHeight}"
+                                       ItemWidth="{Binding Size.ItemWidth}"
+                                       Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Image Margin="5"
+                                   Source="{Binding Image,
+                                                    IsAsync=True}"
+                                   ToolTip="{Binding Card.Name}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </UserControl>

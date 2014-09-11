@@ -172,7 +172,7 @@ namespace HyperPlugin
 					card.Cost = null;
 					card.CMC = "0";
 				}
-				card.Text = ps[2].InnerHtml.RemoveHtmlTag();
+				card.Text = ps[2].InnerHtml.RemoveHtmlTag().ManaFormat();
 				card.Flavor = ps[3].InnerHtml.RemoveHtmlTag();
 				card.Artist = ps[4].InnerText.Trim();
 				card.Number = Regex.Match(id, @"(?<=/)\w+\z").Value;

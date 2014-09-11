@@ -272,8 +272,7 @@ namespace HyperMTG.ViewModel
 					Logger.Log(ex, typeof (DatabaseViewModel), _dbReader);
 					throw;
 				}
-
-				Parallel.ForEach(sets, set => result.Add(new CheckSetItem(false, set)));
+				result.AddRange(sets.Select(set => new CheckSetItem(false, set)));
 			});
 			task.Start();
 			task.ContinueWith(t =>

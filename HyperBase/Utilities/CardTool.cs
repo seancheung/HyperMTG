@@ -20,16 +20,16 @@ namespace HyperKore.Utilities
 			if (card == null || target == null || ReferenceEquals(card, target))
 				return;
 
-			foreach (PropertyInfo p in typeof(Card).GetProperties())
+			foreach (PropertyInfo p in typeof (Card).GetProperties())
 			{
 				//Make sure it's readable
 				if (p.CanWrite)
-					p.SetValue(card, typeof(Card).GetProperty(p.Name).GetValue(target, null), null);
+					p.SetValue(card, typeof (Card).GetProperty(p.Name).GetValue(target, null), null);
 			}
 		}
 
 		/// <summary>
-		/// Get card colors
+		///     Get card colors
 		/// </summary>
 		/// <param name="card"></param>
 		/// <returns></returns>
@@ -38,7 +38,7 @@ namespace HyperKore.Utilities
 			if (card == null)
 				throw new ArgumentNullException();
 
-			if (string.IsNullOrWhiteSpace(card.Cost) || !Regex.IsMatch(card.Cost,@"W|B|U|R|G"))
+			if (string.IsNullOrWhiteSpace(card.Cost) || !Regex.IsMatch(card.Cost, @"W|B|U|R|G"))
 			{
 				yield return Color.Colorless;
 				yield break;
@@ -57,7 +57,7 @@ namespace HyperKore.Utilities
 		}
 
 		/// <summary>
-		/// Check card color
+		///     Check card color
 		/// </summary>
 		/// <param name="card"></param>
 		/// <param name="color"></param>
@@ -68,7 +68,7 @@ namespace HyperKore.Utilities
 		}
 
 		/// <summary>
-		/// Check card type
+		///     Check card type
 		/// </summary>
 		/// <param name="card"></param>
 		/// <param name="type"></param>
@@ -79,8 +79,8 @@ namespace HyperKore.Utilities
 		}
 
 		/// <summary>
-		/// Get card types.
-		/// Including super-types.
+		///     Get card types.
+		///     Including super-types.
 		/// </summary>
 		/// <param name="card"></param>
 		/// <returns></returns>
@@ -89,11 +89,13 @@ namespace HyperKore.Utilities
 			if (card == null || card.Type == null)
 				throw new ArgumentNullException();
 
-			return from type in Enum.GetNames(typeof (Type)) where Regex.Match(card.Type, string.Format(@"\b{0}\b", type), RegexOptions.IgnoreCase).Success select (Type) Enum.Parse(typeof (Type), type);
+			return from type in Enum.GetNames(typeof (Type))
+				where Regex.Match(card.Type, string.Format(@"\b{0}\b", type), RegexOptions.IgnoreCase).Success
+				select (Type) Enum.Parse(typeof (Type), type);
 		}
 
 		/// <summary>
-		/// Whether this card is a basic land
+		///     Whether this card is a basic land
 		/// </summary>
 		/// <param name="card"></param>
 		/// <returns></returns>
@@ -106,9 +108,9 @@ namespace HyperKore.Utilities
 		}
 
 		/// <summary>
-		/// Get rarity of a card. 
-		/// Basic Land count as Common;
-		/// Special count as Mythic Rare.
+		///     Get rarity of a card.
+		///     Basic Land count as Common;
+		///     Special count as Mythic Rare.
 		/// </summary>
 		/// <param name="card"></param>
 		/// <returns></returns>
@@ -137,7 +139,7 @@ namespace HyperKore.Utilities
 		}
 
 		/// <summary>
-		/// Whether this card is multicolored
+		///     Whether this card is multicolored
 		/// </summary>
 		/// <param name="card"></param>
 		/// <returns></returns>
@@ -147,7 +149,7 @@ namespace HyperKore.Utilities
 		}
 
 		/// <summary>
-		/// Whether this card is hybrid
+		///     Whether this card is hybrid
 		/// </summary>
 		/// <param name="card"></param>
 		/// <returns></returns>
@@ -157,27 +159,31 @@ namespace HyperKore.Utilities
 		}
 
 		/// <summary>
-		/// Whether this card produce any mana
+		///     Whether this card produce any mana
 		/// </summary>
 		/// <param name="card"></param>
 		/// <returns></returns>
 		public static bool CanProduceMana(this Card card)
 		{
-			return card != null && (card.IsBasicLand() || !string.IsNullOrWhiteSpace(card.Text) && Regex.IsMatch(card.Text, @"add .* to .* mana pool", RegexOptions.IgnoreCase));
+			return card != null &&
+			       (card.IsBasicLand() ||
+			        !string.IsNullOrWhiteSpace(card.Text) &&
+			        Regex.IsMatch(card.Text, @"add .* to .* mana pool", RegexOptions.IgnoreCase));
 		}
 
 		/// <summary>
-		/// Whether this card have trigger effect
+		///     Whether this card have trigger effect
 		/// </summary>
 		/// <param name="card"></param>
 		/// <returns></returns>
 		public static bool HasTriggerEffect(this Card card)
 		{
-			return card != null && !string.IsNullOrWhiteSpace(card.Text) && Regex.IsMatch(card.Text, "(when|whenever)|at the (beginning|end)", RegexOptions.IgnoreCase);
+			return card != null && !string.IsNullOrWhiteSpace(card.Text) &&
+			       Regex.IsMatch(card.Text, "(when|whenever)|at the (beginning|end)", RegexOptions.IgnoreCase);
 		}
 
 		/// <summary>
-		/// Get parsed CMC
+		///     Get parsed CMC
 		/// </summary>
 		/// <param name="card"></param>
 		/// <returns></returns>
@@ -190,6 +196,21 @@ namespace HyperKore.Utilities
 			int result;
 			Int32.TryParse(card.CMC, out result);
 			return result;
+		}
+
+		public static IEnumerable<Card> GetRandoms(this IList<Card> cards, int count = 1)
+		{
+			if (cards == null)
+			{
+				throw new ArgumentNullException();
+			}
+
+			var ran = new Random();
+			for (int i = 0; i < count; i++)
+			{
+				int index = ran.Next(0, cards.Count);
+				yield return cards[index];
+			}
 		}
 	}
 }
