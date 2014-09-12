@@ -41,7 +41,11 @@ namespace HyperMTG.ViewModel
 			Size.SetRatio(0.5);
 
 			_dispatcher.BeginInvoke(new Action(LoadData));
+
+			Instance = this;
 		}
+
+		public static GallaryViewModel Instance { get; private set; }
 
 		private void LoadData()
 		{

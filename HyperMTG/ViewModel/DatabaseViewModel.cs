@@ -84,7 +84,11 @@ namespace HyperMTG.ViewModel
 			{
 				LoadSetsCommand.Execute(null);
 			}
+
+			Instance = this;
 		}
+
+		public static DatabaseViewModel Instance { get; private set; }
 
 		public bool SaveImage
 		{

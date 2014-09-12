@@ -2,6 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:hp="clr-namespace:HyperMTG.Helper"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
              xmlns:vm="clr-namespace:HyperMTG.ViewModel"
@@ -15,52 +16,75 @@
             <ColumnDefinition Width="200" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <GroupBox Grid.Row="0" Margin="0,5"
-                      Header="Packs">
-                <StackPanel>
-                    <ComboBox Margin="5"
-                              ItemsSource="{Binding Sets}"
-                              SelectedValue="{Binding Packs[0]}" />
-                    <ComboBox Margin="5"
-                              ItemsSource="{Binding Sets}"
-                              SelectedValue="{Binding Packs[1]}" />
-                    <ComboBox Margin="5"
-                              ItemsSource="{Binding Sets}"
-                              SelectedValue="{Binding Packs[2]}" />
-                    <ComboBox Margin="5"
-                              ItemsSource="{Binding Sets}"
-                              SelectedValue="{Binding Packs[3]}" />
-                    <ComboBox Margin="5"
-                              ItemsSource="{Binding Sets}"
-                              SelectedValue="{Binding Packs[4]}" />
-                    <ComboBox Margin="5"
-                              ItemsSource="{Binding Sets}"
-                              SelectedValue="{Binding Packs[5]}" />
-                </StackPanel>
-            </GroupBox>
-            <GroupBox Grid.Row="1" Margin="0,5"
-                      Header="Booster Info">
-                <StackPanel>
-                    <mui:BBCodeBlock BBCode="{Binding Cards.Count, StringFormat='Total Cards: [b]{0}[/b]'}" />
-                </StackPanel>
-            </GroupBox>
-            <Button Grid.Row="2" Margin="0,5"
-                    Command="{Binding GenerateCommand}"
-                    Content="Generate" />
-            <Slider Grid.Row="3" Margin="0,5"
-                    AutoToolTipPlacement="TopLeft"
-                    AutoToolTipPrecision="2" LargeChange="0.1"
-                    Maximum="1.0" Minimum="0.2"
-                    Value="{Binding Ratio}" />
-        </Grid>
+        <ScrollViewer Grid.Column="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <GroupBox Grid.Row="0" Margin="0,5"
+                          Header="Packs">
+                    <StackPanel>
+                        <ComboBox Margin="5"
+                                  ItemsSource="{Binding SetSource}"
+                                  SelectedValue="{Binding Packs[0]}" />
+                        <ComboBox Margin="5"
+                                  ItemsSource="{Binding SetSource}"
+                                  SelectedValue="{Binding Packs[1]}" />
+                        <ComboBox Margin="5"
+                                  ItemsSource="{Binding SetSource}"
+                                  SelectedValue="{Binding Packs[2]}" />
+                        <ComboBox Margin="5"
+                                  ItemsSource="{Binding SetSource}"
+                                  SelectedValue="{Binding Packs[3]}" />
+                        <ComboBox Margin="5"
+                                  ItemsSource="{Binding SetSource}"
+                                  SelectedValue="{Binding Packs[4]}" />
+                        <ComboBox Margin="5"
+                                  ItemsSource="{Binding SetSource}"
+                                  SelectedValue="{Binding Packs[5]}" />
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Margin="0,5"
+                          Header="Booster Info">
+                    <StackPanel>
+                        <mui:BBCodeBlock BBCode="{Binding Cards.Count, StringFormat='Total Cards: [b]{0}[/b]'}" />
+                    </StackPanel>
+                </GroupBox>
+                <Button Grid.Row="2" Margin="0,5"
+                        Command="{Binding GenerateCommand}"
+                        Content="Generate" />
+                <Slider Grid.Row="3" Margin="0,5"
+                        AutoToolTipPlacement="TopLeft"
+                        AutoToolTipPrecision="2" LargeChange="0.1"
+                        Maximum="1.0" Minimum="0.2"
+                        Value="{Binding Ratio}" />
+                <CheckBox Grid.Row="4" Margin="0,5"
+                          Content="Show Check"
+                          IsChecked="{Binding IsCheckVisible}" />
+                <GroupBox Grid.Row="5" Header="Sort">
+                    <StackPanel>
+                        <ComboBox Margin="0,5"
+                                  ItemsSource="{Binding SortSource}"
+                                  SelectedValue="{Binding Sorts[0]}" />
+                        <ComboBox Margin="0,5"
+                                  ItemsSource="{Binding SortSource}"
+                                  SelectedValue="{Binding Sorts[1]}" />
+                        <Button Margin="0,5"
+                                Command="{Binding SortCommand}"
+                                Content="Sort" />
+                    </StackPanel>
+                </GroupBox>
+                <mui:ModernButton Grid.Row="6" Margin="0,5"
+                                  Command="{Binding SyncCommand}"
+                                  Content="Sync To Deckbuilder" />
+            </Grid>
+        </ScrollViewer>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -68,6 +92,9 @@
             </Grid.RowDefinitions>
             <ScrollViewer Grid.Row="1">
                 <ItemsControl ItemsSource="{Binding Cards}">
+                    <ItemsControl.Resources>
+                        <hp:VisibaleConverter x:Key="VisibaleConverter" />
+                    </ItemsControl.Resources>
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel ItemHeight="{Binding Size.ItemHeight}"
@@ -77,10 +104,17 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Image Margin="5"
-                                   Source="{Binding Image,
-                                                    IsAsync=True}"
-                                   ToolTip="{Binding Card.Name}" />
+                            <Grid Margin="5">
+                                <Image Source="{Binding Image, IsAsync=True}" ToolTip="{Binding Card.Name}" />
+                                <CheckBox Width="{Binding Path=DataContext.CheckSize,
+                                                          RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                          Height="{Binding Path=DataContext.CheckSize,
+                                                           RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                          IsChecked="{Binding IsChecked}"
+                                          Visibility="{Binding Path=DataContext.IsCheckVisible,
+                                                               RelativeSource={RelativeSource AncestorType={x:Type UserControl}},
+                                                               Converter={StaticResource VisibaleConverter}}" />
+                            </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

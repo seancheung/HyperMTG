@@ -13,6 +13,7 @@ namespace HyperMTG.Model
 		private readonly IDBWriter _dbWriter;
 		private readonly IImageParse _imageParse;
 		private Card _card;
+		private bool isChecked;
 
 		public ExCard(IDBReader dbReader, ICompressor compressor, IDBWriter dbWriter, IImageParse imageParse)
 		{
@@ -70,6 +71,16 @@ namespace HyperMTG.Model
 			if (data != null)
 				_dbWriter.Insert(card.ID, data, _compressor);
 			return data;
+		}
+
+		public bool IsChecked
+		{
+			get { return isChecked; }
+			set
+			{
+				isChecked = value;
+				RaisePropertyChanged("IsChecked");
+			}
 		}
 	}
 }

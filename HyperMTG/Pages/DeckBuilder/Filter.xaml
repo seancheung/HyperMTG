@@ -4,8 +4,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             xmlns:vm="clr-namespace:HyperMTG.ViewModel"
              d:DesignHeight="320" d:DesignWidth="480"
              mc:Ignorable="d">
+    <UserControl.DataContext>
+        <vm:FilterViewModel />
+    </UserControl.DataContext>
     <UserControl.Resources>
         <DataTemplate x:Key="CheckBoxTemplate">
             <CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked, Mode=TwoWay}" />

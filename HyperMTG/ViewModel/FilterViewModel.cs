@@ -14,7 +14,6 @@ namespace HyperMTG.ViewModel
 {
 	internal class FilterViewModel : ObservableObject
 	{
-		private static readonly FilterViewModel _instance = new FilterViewModel();
 		private readonly IDBReader _dbReader;
 		private bool _includeUnselectedColors;
 		private bool _includeUnselectedTypes;
@@ -25,7 +24,7 @@ namespace HyperMTG.ViewModel
 		/// <summary>
 		///     Initializes a new instance of the FilterViewModel class.
 		/// </summary>
-		private FilterViewModel()
+		public FilterViewModel()
 		{
 			_dbReader = PluginManager.Instance.GetPlugin<IDBReader>();
 			if (_dbReader != null)
@@ -44,6 +43,7 @@ namespace HyperMTG.ViewModel
 			IncludeUnselectedTypes = true;
 			IncludeUnselectedColors = true;
 			CMCNoLessThan = true;
+			Instance = this;
 		}
 
 		public bool IncludeUnselectedTypes
@@ -66,10 +66,7 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
-		public static FilterViewModel Instance
-		{
-			get { return _instance; }
-		}
+		public static FilterViewModel Instance { get; private set; }
 
 		public int Cost
 		{

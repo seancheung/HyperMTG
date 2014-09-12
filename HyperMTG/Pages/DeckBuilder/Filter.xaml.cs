@@ -1,6 +1,4 @@
-﻿using HyperMTG.ViewModel;
-
-namespace HyperMTG.Pages
+﻿namespace HyperMTG.Pages
 {
 	/// <summary>
 	///     Interaction logic for Filter.xaml
@@ -9,8 +7,6 @@ namespace HyperMTG.Pages
 	{
 		public Filter()
 		{
-			DataContext = FilterViewModel.Instance;
-
 			InitializeComponent();
 		}
 	}

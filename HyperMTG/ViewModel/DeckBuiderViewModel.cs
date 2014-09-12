@@ -41,12 +41,11 @@ namespace HyperMTG.ViewModel
 		private ExCard _card;
 
 		private List<Card> _cards;
-		private static Deck _deck;
+		private Deck _deck;
 		private string _info;
-		private string input;
-
-		private volatile int _processCount;
 		private bool _isFoil;
+		private volatile int _processCount;
+		private string input;
 
 		/// <summary>
 		///     Initializes a new instance of the DeckBuiderViewModel class.
@@ -94,7 +93,7 @@ namespace HyperMTG.ViewModel
 					}
 				});
 				task.Start();
-				task.ContinueWith((t) =>
+				task.ContinueWith(t =>
 				{
 					if (t.IsCompleted)
 					{
@@ -105,7 +104,11 @@ namespace HyperMTG.ViewModel
 			else Info = "Assemblly Missing";
 
 			SelectedCard = new ExCard(_dbReader, _compressor, _dbWriter, _imageParse);
+
+			Instance = this;
 		}
+
+		public static DeckBuiderViewModel Instance { get; private set; }
 
 		public ExCard SelectedCard
 		{
@@ -165,11 +168,6 @@ namespace HyperMTG.ViewModel
 				_isFoil = value;
 				RaisePropertyChanged("IsFoil");
 			}
-		}
-
-		public static Deck GetCurrentDeck()
-		{
-			return _deck;
 		}
 
 		#region Command
@@ -257,13 +255,13 @@ namespace HyperMTG.ViewModel
 		private void OpenFromClipboardExecute()
 		{
 			_processCount++;
-			var data = Clipboard.GetText(TextDataFormat.Text);
+			string data = Clipboard.GetText(TextDataFormat.Text);
 			new Thread(() =>
 			{
 				if (!string.IsNullOrWhiteSpace(data))
 				{
-					var db = _dbReader.LoadCards();
-					var side = Regex.Match(data, "sideboard:", RegexOptions.IgnoreCase);
+					IEnumerable<Card> db = _dbReader.LoadCards();
+					Match side = Regex.Match(data, "sideboard:", RegexOptions.IgnoreCase);
 					List<Card> mainCards = new List<Card>();
 					List<Card> sideCards = new List<Card>();
 
@@ -271,9 +269,9 @@ namespace HyperMTG.ViewModel
 					{
 						if (match.Success)
 						{
-							var count = Int32.Parse(Regex.Match(match.Value, @"\d+(?=\s+[^\d\r\n]+)").Value);
-							var name = Regex.Match(match.Value, @"(?<=\d+\s+)[^\d\r\n]+").Value.Trim();
-							var card = db.FirstOrDefault(c => c.Name == name);
+							int count = Int32.Parse(Regex.Match(match.Value, @"\d+(?=\s+[^\d\r\n]+)").Value);
+							string name = Regex.Match(match.Value, @"(?<=\d+\s+)[^\d\r\n]+").Value.Trim();
+							Card card = db.FirstOrDefault(c => c.Name == name);
 							if (card != null)
 							{
 								if (side.Success && match.Index > side.Index)
@@ -301,11 +299,11 @@ namespace HyperMTG.ViewModel
 					if (mainCards.Any() || sideCards.Any())
 					{
 						NewDeckCommand.Execute(null);
-						foreach (var card in mainCards)
+						foreach (Card card in mainCards)
 						{
 							_dispatcher.BeginInvoke(new Action(() => Deck.MainBoard.Add(card)));
 						}
-						foreach (var card in sideCards)
+						foreach (Card card in sideCards)
 						{
 							_dispatcher.BeginInvoke(new Action(() => Deck.SideBoard.Add(card)));
 						}
@@ -317,18 +315,18 @@ namespace HyperMTG.ViewModel
 
 		private void CopyToClipboardExecute()
 		{
-			var main = Deck.MainBoard.GroupBy(c => c.Name);
-			var side = Deck.SideBoard.GroupBy(c => c.Name);
+			IEnumerable<IGrouping<string, Card>> main = Deck.MainBoard.GroupBy(c => c.Name);
+			IEnumerable<IGrouping<string, Card>> side = Deck.SideBoard.GroupBy(c => c.Name);
 			using (StringWriter sw = new StringWriter())
 			{
-				foreach (var gp in main)
+				foreach (IGrouping<string, Card> gp in main)
 				{
 					sw.WriteLine("{0}\t{1}", gp.Count(), gp.Key);
 				}
 				if (side.Any())
 				{
 					sw.WriteLine("Sideboard:");
-					foreach (var gp in side)
+					foreach (IGrouping<string, Card> gp in side)
 					{
 						sw.WriteLine("{0}\t{1}", gp.Count(), gp.Key);
 					}
@@ -341,11 +339,11 @@ namespace HyperMTG.ViewModel
 		private void ExportImagesDocExecute()
 		{
 			_processCount++;
-			var document = new FlowDocument();
+			FlowDocument document = new FlowDocument();
 
 			foreach (Card card in Deck.MainBoard)
 			{
-				var exCard = new ExCard(_compressor, _dbReader, card, _dbWriter, _imageParse);
+				ExCard exCard = new ExCard(_compressor, _dbReader, card, _dbWriter, _imageParse);
 				byte[] img = exCard.Image;
 				if (img != null)
 				{
@@ -354,7 +352,7 @@ namespace HyperMTG.ViewModel
 			}
 			foreach (Card card in Deck.SideBoard)
 			{
-				var exCard = new ExCard(_compressor, _dbReader, card, _dbWriter, _imageParse);
+				ExCard exCard = new ExCard(_compressor, _dbReader, card, _dbWriter, _imageParse);
 				byte[] img = exCard.Image;
 				if (img != null)
 				{
@@ -362,9 +360,9 @@ namespace HyperMTG.ViewModel
 				}
 			}
 
-			using (var fs = new FileStream(DateTime.Now.ToFileTime() + ".rtf", FileMode.Create))
+			using (FileStream fs = new FileStream(DateTime.Now.ToFileTime() + ".rtf", FileMode.Create))
 			{
-				var sw = new StreamWriter(fs);
+				StreamWriter sw = new StreamWriter(fs);
 				sw.Write(document.ToRTF());
 				sw.Flush();
 			}
@@ -506,7 +504,7 @@ namespace HyperMTG.ViewModel
 		private void OpenDeckExecute()
 		{
 			_processCount++;
-			var dlg = new OpenFileDialog();
+			OpenFileDialog dlg = new OpenFileDialog();
 
 			dlg.Filter =
 				_deckReaders.Aggregate("",
@@ -520,7 +518,7 @@ namespace HyperMTG.ViewModel
 				try
 				{
 					IDeckReader deckReader = _deckReaders[dlg.FilterIndex - 1];
-					using (var fs = (FileStream) dlg.OpenFile())
+					using (FileStream fs = (FileStream) dlg.OpenFile())
 					{
 						Deck = deckReader.Read(fs, Cards);
 					}
@@ -537,7 +535,7 @@ namespace HyperMTG.ViewModel
 		private void SaveDeckExecute()
 		{
 			_processCount++;
-			var dlg = new SaveFileDialog();
+			SaveFileDialog dlg = new SaveFileDialog();
 
 			dlg.Filter =
 				_deckWriters.Aggregate("",
@@ -551,7 +549,7 @@ namespace HyperMTG.ViewModel
 				try
 				{
 					IDeckWriter deckWriter = _deckWriters[dlg.FilterIndex - 1];
-					using (var fs = (FileStream) dlg.OpenFile())
+					using (FileStream fs = (FileStream) dlg.OpenFile())
 					{
 						deckWriter.Write(Deck, fs);
 					}
@@ -632,7 +630,7 @@ namespace HyperMTG.ViewModel
 
 		private bool CanExecuteFilter()
 		{
-			return _processCount == 0 && _dbReader != null;
+			return _processCount == 0 && _dbReader != null && FilterViewModel.Instance != null;
 		}
 
 		private bool CanExecuteNewDeck()

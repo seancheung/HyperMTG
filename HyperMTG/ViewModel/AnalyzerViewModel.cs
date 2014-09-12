@@ -11,6 +11,13 @@ namespace HyperMTG.ViewModel
 	{
 		private Deck _deck;
 
+		public AnalyzerViewModel()
+		{
+			Instance = this;
+		}
+
+		public static AnalyzerViewModel Instance { get; private set; }
+
 		public Deck Deck
 		{
 			get { return _deck; }
@@ -28,6 +35,7 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
+
 		public IEnumerable SpellsCMCSource
 		{
 			get
@@ -35,7 +43,7 @@ namespace HyperMTG.ViewModel
 				return
 					Deck.MainBoard.Where(c => !c.HasType(Type.Land))
 						.GroupBy(c => c.ParsedCMC())
-						.Select(g => new { CMC = g.Key, Count = g.Count() })
+						.Select(g => new {CMC = g.Key, Count = g.Count()})
 						.OrderBy(t => t.CMC);
 			}
 		}
@@ -47,7 +55,7 @@ namespace HyperMTG.ViewModel
 				return
 					Deck.MainBoard.Where(c => c.HasType(Type.Land))
 						.GroupBy(c => c.IsBasicLand())
-						.Select(g => new { IsBasic = g.Key ? "Basic" : "None Basic", Count = g.Count() });
+						.Select(g => new {IsBasic = g.Key ? "Basic" : "None Basic", Count = g.Count()});
 			}
 		}
 
@@ -63,7 +71,7 @@ namespace HyperMTG.ViewModel
 								t == Type.Land || t == Type.Artifact || t == Type.Creature || t == Type.Instant || t == Type.Sorcery ||
 								t == Type.Enchantment || t == Type.Planeswalker)
 						.GroupBy(t => t)
-						.Select(g => new { Type = g.Key, Count = g.Count() }).OrderBy(p => p.Type);
+						.Select(g => new {Type = g.Key, Count = g.Count()}).OrderBy(p => p.Type);
 			}
 		}
 
@@ -79,7 +87,7 @@ namespace HyperMTG.ViewModel
 								t == Type.Land || t == Type.Artifact || t == Type.Creature || t == Type.Instant || t == Type.Sorcery ||
 								t == Type.Enchantment || t == Type.Planeswalker)
 						.GroupBy(t => t)
-						.Select(g => new { Type = g.Key, Count = g.Count() }).OrderBy(p => p.Type);
+						.Select(g => new {Type = g.Key, Count = g.Count()}).OrderBy(p => p.Type);
 			}
 		}
 
@@ -90,7 +98,7 @@ namespace HyperMTG.ViewModel
 				return
 					Deck.MainBoard.Where(c => !c.HasType(Type.Land)).SelectMany(c => c.GetColors())
 						.GroupBy(t => t)
-						.Select(g => new { Color = g.Key, Count = g.Count() })
+						.Select(g => new {Color = g.Key, Count = g.Count()})
 						.OrderBy(p => p.Color);
 			}
 		}
@@ -102,7 +110,7 @@ namespace HyperMTG.ViewModel
 				return
 					Deck.MainBoard.Select(c => c.GetRarity())
 						.GroupBy(t => t)
-						.Select(g => new { Rarity = g.Key, Count = g.Count() })
+						.Select(g => new {Rarity = g.Key, Count = g.Count()})
 						.OrderBy(p => p.Rarity);
 			}
 		}
@@ -114,7 +122,7 @@ namespace HyperMTG.ViewModel
 				return
 					Deck.MainBoard.Select(c => c.Set)
 						.GroupBy(t => t)
-						.Select(g => new { Set = g.Key, Count = g.Count() })
+						.Select(g => new {Set = g.Key, Count = g.Count()})
 						.OrderByDescending(p => p.Count);
 			}
 		}
@@ -124,14 +132,14 @@ namespace HyperMTG.ViewModel
 			get { return new RelayCommand(ExecuteSyncDeck, CanExecuteSync); }
 		}
 
-		private void ExecuteSyncDeck()
+		public void ExecuteSyncDeck()
 		{
-			Deck = DeckBuiderViewModel.GetCurrentDeck();
+			Deck = DeckBuiderViewModel.Instance.Deck;
 		}
 
 		public bool CanExecuteSync()
 		{
-			return Deck != null && Deck.MainBoard != null && Deck.MainBoard.Any();
+			return DeckBuiderViewModel.Instance != null && DeckBuiderViewModel.Instance.Deck.MainBoard.Any();
 		}
 	}
 }

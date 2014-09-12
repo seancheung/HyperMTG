@@ -1,17 +1,144 @@
 ﻿<UserControl x:Class="HyperMTG.Pages.Draft"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:hp="clr-namespace:HyperMTG.Helper"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             xmlns:vm="clr-namespace:HyperMTG.ViewModel"
+             d:DesignHeight="300" d:DesignWidth="300"
+             mc:Ignorable="d">
+    <UserControl.DataContext>
+        <vm:DraftViewModel />
+    </UserControl.DataContext>
     <Grid Style="{StaticResource ContentRoot}">
-        <ScrollViewer>
-            <StackPanel MinWidth="200">
-                <TextBlock Text="BASIC PAGE" Style="{StaticResource Heading2}" />
-                <TextBlock Text="Content goes here" />
-            </StackPanel>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" MinHeight="100" />
+            </Grid.RowDefinitions>
+            <ScrollViewer Grid.Row="0">
+                <ItemsControl ItemsSource="{Binding CurrentBooster}">
+                    <ItemsControl.Resources>
+                        <hp:TriggerConverter x:Key="TriggerConverter" />
+                        <hp:CommandReference x:Key="PickCommandReference">
+                            <hp:CommandReference.Command>
+                                <MultiBinding Converter="{StaticResource TriggerConverter}">
+                                    <Binding Path="PickCardCommand" />
+                                </MultiBinding>
+                            </hp:CommandReference.Command>
+                        </hp:CommandReference>
+                    </ItemsControl.Resources>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel ItemHeight="{Binding Size.ItemHeight}"
+                                       ItemWidth="{Binding Size.ItemWidth}"
+                                       Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Image Margin="5"
+                                   Source="{Binding Image,
+                                                    IsAsync=True}"
+                                   ToolTip="{Binding Card.Name}">
+                                <Image.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Command="{DynamicResource PickCommandReference}"
+                                                  CommandParameter="{Binding}"
+                                                  Header="Add To Pile" />
+                                    </ContextMenu>
+                                </Image.ContextMenu>
+                            </Image>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto">
+                <ItemsControl BorderBrush="{DynamicResource ItemBorder}"
+                              BorderThickness="2"
+                              ItemsSource="{Binding Hand}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Image Width="{Binding Path=DataContext.Size.ItemWidth,
+                                                   RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                   Height="{Binding Path=DataContext.Size.ItemHeight,
+                                                    RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                   Margin="2"
+                                   Source="{Binding Image,
+                                                    IsAsync=True}"
+                                   ToolTip="{Binding Card.Name}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+        <ScrollViewer Grid.Column="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <mui:BBCodeBlock Grid.Row="0" Margin="0,5"
+                                 BBCode="{Binding TimerTick,
+                                                  StringFormat='Time: [b]{0}[/b]'}" />
+                <GroupBox Grid.Row="1" Margin="0,5"
+                          Header="Packs">
+                    <StackPanel>
+                        <ComboBox Margin="5"
+                                  ItemsSource="{Binding SetSource}"
+                                  SelectedValue="{Binding Packs[0]}" />
+                        <ComboBox Margin="5"
+                                  ItemsSource="{Binding SetSource}"
+                                  SelectedValue="{Binding Packs[1]}" />
+                        <ComboBox Margin="5"
+                                  ItemsSource="{Binding SetSource}"
+                                  SelectedValue="{Binding Packs[2]}" />
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Grid.Row="2" Margin="0,5"
+                          Header="Players">
+                    <Slider AutoToolTipPlacement="TopLeft"
+                            IsSnapToTickEnabled="True" Maximum="8"
+                            Minimum="2" SmallChange="1"
+                            TickPlacement="TopLeft"
+                            Value="{Binding PlayerAmount}" />
+                </GroupBox>
+                <Button Grid.Row="3" Margin="0,5"
+                        Command="{Binding StartCommand}"
+                        Content="Start" />
+                <GroupBox Grid.Row="4" Margin="0,5"
+                          Header="Booster Info">
+                    <StackPanel>
+                        <mui:BBCodeBlock BBCode="{Binding CurrentBooster.Count, StringFormat='Total Cards: [b]{0}[/b]'}" />
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Grid.Row="5" Margin="0,5">
+                    <Slider AutoToolTipPlacement="TopLeft"
+                            AutoToolTipPrecision="2" LargeChange="0.1"
+                            Maximum="1.0" Minimum="0.2"
+                            Value="{Binding Ratio}" />
+                </GroupBox>
+                <mui:ModernButton Grid.Row="6" Margin="0,5"
+                                  Command="{Binding SyncCommand}"
+                                  Content="Sync To Deckbuilder" />
+            </Grid>
         </ScrollViewer>
+
     </Grid>
 </UserControl>

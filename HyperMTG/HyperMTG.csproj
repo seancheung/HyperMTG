@@ -135,6 +135,7 @@
     <Compile Include="ViewModel\DatabaseViewModel.cs" />
     <Compile Include="ViewModel\DeckBuiderViewModel.cs" />
     <Compile Include="Model\ExCard.cs" />
+    <Compile Include="ViewModel\DraftViewModel.cs" />
     <Compile Include="ViewModel\FilterViewModel.cs" />
     <Compile Include="ViewModel\GallaryViewModel.cs" />
     <Compile Include="Model\PageSize.cs" />
