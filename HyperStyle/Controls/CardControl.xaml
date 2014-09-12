@@ -124,19 +124,18 @@
             <TextBlock x:Name="CostBox" Canvas.Left="500"
                        Canvas.Top="65" Width="250"
                        Height="60" FontSize="46"
-                       Text="Card Cost"  TextAlignment="Right"/>
+                       Text="Card Cost" TextAlignment="Right" />
             <TextBlock x:Name="TypeBox" Canvas.Left="65"
                        Canvas.Top="650" Width="600"
                        Height="60" FontSize="40"
-                       Text="Card Name" />
+                       Text="Card Type" />
             <Path x:Name="SetBox" Canvas.Left="700"
                   Canvas.Top="650" Width="50"
-                  Height="50"
-                  Style="{StaticResource PathBG}" />
+                  Height="50" />
             <TextBlock x:Name="TextBox" Canvas.Left="80"
                        Canvas.Top="720" Width="662"
                        Height="300" FontSize="36"
-                       Text="Card text goes here" TextWrapping="Wrap"/>
+                       Text="Card text goes here" TextWrapping="Wrap" />
 
         </Canvas>
     </Viewbox>

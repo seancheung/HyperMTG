@@ -156,7 +156,9 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <Image Grid.Row="0" Source="{Binding SelectedCard.Image, IsAsync=True}">
+                    <Image x:Name="Image" Grid.Row="0"
+                           Source="{Binding SelectedCard.Image,
+                                            IsAsync=True}">
                         <Image.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Command="{Binding CopyImageCommand}" Header="Copy Image To Clipboard" />
@@ -210,19 +212,15 @@
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <DoubleAnimation Duration="0:0:5" From="0"
-                                                         RepeatBehavior="Forever"
-                                                         Storyboard.TargetName="Transform"
+                                                         RepeatBehavior="Forever" 
+                                                         Storyboard.TargetName="Transform" IsCumulative="True"
                                                          Storyboard.TargetProperty="X"
-                                                         To="{Binding RelativeSource={RelativeSource FindAncestor,
-                                                                                                     AncestorType={x:Type Rectangle}},
-                                                                      Path=ActualWidth}" />
+                                                         To="100" />
                                         <DoubleAnimation Duration="0:0:5" From="0"
-                                                         RepeatBehavior="Forever"
+                                                         RepeatBehavior="Forever" IsCumulative="True"
                                                          Storyboard.TargetName="Transform"
                                                          Storyboard.TargetProperty="Y"
-                                                         To="{Binding RelativeSource={RelativeSource FindAncestor,
-                                                                                                     AncestorType={x:Type Rectangle}},
-                                                                      Path=ActualHeight}" />
+                                                         To="120" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </EventTrigger>

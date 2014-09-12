@@ -207,6 +207,11 @@ namespace HyperMTG.ViewModel
 
 			CurrentBooster = currentBoosters.First();
 			TimerTick = 0;
+			if (Hand.Count >= 45)
+			{
+				currentBoosters = null;
+				timer.Stop();
+			}
 		}
 
 		public void SyncExecute()
@@ -224,6 +229,7 @@ namespace HyperMTG.ViewModel
 		{
 			IEnumerable<Card> db = _dbReader.LoadCards();
 			boosters.Clear();
+			Hand.Clear();
 
 			Task task = new Task(() =>
 			{

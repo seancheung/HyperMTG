@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:hp="clr-namespace:HyperMTG.Helper"
+             xmlns:hs="clr-namespace:HyperStyle.Controls;assembly=HyperStyle"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
              xmlns:vm="clr-namespace:HyperMTG.ViewModel"
@@ -11,6 +12,9 @@
     <UserControl.DataContext>
         <vm:DraftViewModel />
     </UserControl.DataContext>
+    <UserControl.Resources>
+        <hp:VisibaleConverter x:Key="VisibaleConverter" />
+    </UserControl.Resources>
     <Grid Style="{StaticResource ContentRoot}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200" />
@@ -19,7 +23,7 @@
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" MinHeight="100" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <ScrollViewer Grid.Row="0">
                 <ItemsControl ItemsSource="{Binding CurrentBooster}">
@@ -42,23 +46,32 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Image Margin="5"
-                                   Source="{Binding Image,
-                                                    IsAsync=True}"
-                                   ToolTip="{Binding Card.Name}">
-                                <Image.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Command="{DynamicResource PickCommandReference}"
-                                                  CommandParameter="{Binding}"
-                                                  Header="Add To Pile" />
-                                    </ContextMenu>
-                                </Image.ContextMenu>
-                            </Image>
+                            <Grid Margin="5">
+                                <!--
+                                    <hs:CardControl CardName="{Binding Card.Name}"
+                                    Cost="{Binding Card.Cost}"
+                                    Text="{Binding Card.Text}"
+                                    Type="{Binding Card.Type}" />
+                                -->
+                                <ProgressBar IsIndeterminate="True" />
+                                <Image Source="{Binding Image, IsAsync=True}" ToolTip="{Binding Card.Name}">
+                                    <Image.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Command="{DynamicResource PickCommandReference}"
+                                                      CommandParameter="{Binding}"
+                                                      Header="Add To Pile" />
+                                        </ContextMenu>
+                                    </Image.ContextMenu>
+                                </Image>
+                            </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
-            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto">
+            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto"
+                          Visibility="{Binding ElementName=HandCheckBox,
+                                               Path=IsChecked,
+                                               Converter={StaticResource VisibaleConverter}}">
                 <ItemsControl BorderBrush="{DynamicResource ItemBorder}"
                               BorderThickness="2"
                               ItemsSource="{Binding Hand}">
@@ -94,9 +107,9 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <mui:BBCodeBlock Grid.Row="0" Margin="0,5"
-                                 BBCode="{Binding TimerTick,
-                                                  StringFormat='Time: [b]{0}[/b]'}" />
+                <ProgressBar Grid.Row="0" Height="10"
+                             Maximum="30"
+                             Value="{Binding TimerTick}" />
                 <GroupBox Grid.Row="1" Margin="0,5"
                           Header="Packs">
                     <StackPanel>
@@ -113,7 +126,7 @@
                 </GroupBox>
                 <GroupBox Grid.Row="2" Margin="0,5"
                           Header="Players">
-                    <Slider AutoToolTipPlacement="TopLeft"
+                    <Slider Margin="0,5" AutoToolTipPlacement="TopLeft"
                             IsSnapToTickEnabled="True" Maximum="8"
                             Minimum="2" SmallChange="1"
                             TickPlacement="TopLeft"
@@ -125,11 +138,13 @@
                 <GroupBox Grid.Row="4" Margin="0,5"
                           Header="Booster Info">
                     <StackPanel>
-                        <mui:BBCodeBlock BBCode="{Binding CurrentBooster.Count, StringFormat='Total Cards: [b]{0}[/b]'}" />
+                        <mui:BBCodeBlock Margin="0,5" BBCode="{Binding CurrentBooster.Count, StringFormat='Booster: [b]{0}[/b]'}" />
+                        <mui:BBCodeBlock Margin="0,5" BBCode="{Binding Hand.Count, StringFormat='Hand: [b]{0}[/b]'}" />
+                        <CheckBox x:Name="HandCheckBox" IsChecked="True" />
                     </StackPanel>
                 </GroupBox>
                 <GroupBox Grid.Row="5" Margin="0,5">
-                    <Slider AutoToolTipPlacement="TopLeft"
+                    <Slider Margin="0,5" AutoToolTipPlacement="TopLeft"
                             AutoToolTipPrecision="2" LargeChange="0.1"
                             Maximum="1.0" Minimum="0.2"
                             Value="{Binding Ratio}" />
