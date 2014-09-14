@@ -11,7 +11,9 @@ namespace HyperMTG.Helper
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			return (bool) value ? Visibility.Visible : Visibility.Collapsed;
+			return parameter == null
+				? ((bool) value ? Visibility.Visible : Visibility.Collapsed)
+				: (!(bool) value ? Visibility.Visible : Visibility.Collapsed);
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

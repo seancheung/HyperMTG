@@ -66,7 +66,7 @@ namespace HyperMTG.ViewModel
 			}
 			catch (Exception ex)
 			{
-				Logger.Log(ex, typeof (DatabaseViewModel));
+				Logger.Log(ex, this);
 				throw;
 			}
 
@@ -244,7 +244,7 @@ namespace HyperMTG.ViewModel
 				}
 				catch (Exception ex)
 				{
-					Logger.Log(ex, typeof (DatabaseViewModel));
+					Logger.Log(ex, this);
 					throw;
 				}
 			});
@@ -273,7 +273,7 @@ namespace HyperMTG.ViewModel
 				}
 				catch (Exception ex)
 				{
-					Logger.Log(ex, typeof (DatabaseViewModel), _dbReader);
+					Logger.Log(ex, this, _dbReader);
 					throw;
 				}
 				result.AddRange(sets.Select(set => new CheckSetItem(false, set)));
@@ -301,7 +301,7 @@ namespace HyperMTG.ViewModel
 				}
 				catch (Exception ex)
 				{
-					Logger.Log(ex, typeof (DatabaseViewModel), _dbReader);
+					Logger.Log(ex, this, _dbReader);
 					throw;
 				}
 
@@ -314,7 +314,7 @@ namespace HyperMTG.ViewModel
 				}
 				catch (Exception ex)
 				{
-					Logger.Log(ex, typeof (DatabaseViewModel));
+					Logger.Log(ex, this);
 					throw;
 				}
 			});
@@ -343,7 +343,7 @@ namespace HyperMTG.ViewModel
 				}
 				catch (Exception ex)
 				{
-					Logger.Log(ex, typeof (DatabaseViewModel), _dataParse);
+					Logger.Log(ex, this, _dataParse);
 					throw;
 				}
 
@@ -353,7 +353,7 @@ namespace HyperMTG.ViewModel
 				}
 				catch (Exception ex)
 				{
-					Logger.Log(ex, typeof (DatabaseViewModel), _dbWriter);
+					Logger.Log(ex, this, _dbWriter);
 					throw;
 				}
 
@@ -388,7 +388,7 @@ namespace HyperMTG.ViewModel
 					}
 					catch (Exception ex)
 					{
-						Logger.Log(ex, typeof (DatabaseViewModel), _dataParse, checkSetItem.Content, Settings.Default.Language);
+						Logger.Log(ex, this, _dataParse, checkSetItem.Content, Settings.Default.Language);
 						throw;
 					}
 
@@ -411,7 +411,7 @@ namespace HyperMTG.ViewModel
 								}
 								catch (Exception ex)
 								{
-									Logger.Log(ex, typeof (DatabaseViewModel), _imageParse, _compressor, _dbWriter, Settings.Default.Language,
+									Logger.Log(ex, this, _imageParse, _compressor, _dbWriter, Settings.Default.Language,
 										card.ID);
 									throw;
 								}
@@ -433,7 +433,7 @@ namespace HyperMTG.ViewModel
 						}
 						catch (Exception ex)
 						{
-							Logger.Log(ex, typeof (DatabaseViewModel), _dbWriter);
+							Logger.Log(ex, this, _dbWriter);
 							throw;
 						}
 

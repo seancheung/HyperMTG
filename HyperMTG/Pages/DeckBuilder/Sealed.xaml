@@ -105,6 +105,7 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid Margin="5">
+                                <ProgressBar IsIndeterminate="True" />
                                 <Image Source="{Binding Image, IsAsync=True}" ToolTip="{Binding Card.Name}" />
                                 <CheckBox Width="{Binding Path=DataContext.CheckSize,
                                                           RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"

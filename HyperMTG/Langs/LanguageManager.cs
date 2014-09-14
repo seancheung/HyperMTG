@@ -82,7 +82,7 @@ namespace HyperMTG.Langs
 					}
 					catch (ArgumentException ex)
 					{
-						Logger.Log(ex, typeof (LanguageManager), source);
+						Logger.Log(ex, typeof(LanguageManager), source);
 					}
 				}
 

@@ -152,8 +152,8 @@ namespace HyperKore.Utilities
 		}
 
 		/// <summary>
-		/// Build Mana strings
-		/// e.g. 1(Black)(White) => {1}{Black}{White}
+		///     Build Mana strings
+		///     e.g. 1(Black)(White) => {1}{Black}{White}
 		/// </summary>
 		/// <param name="input"></param>
 		/// <returns></returns>
@@ -171,6 +171,14 @@ namespace HyperKore.Utilities
 			text = Regex.Replace(text, @"}{2,}", "}");
 
 			return text;
+		}
+
+		public static bool IsLegalIPAddress(this string input)
+		{
+			return !string.IsNullOrWhiteSpace(input) &&
+			       Regex.IsMatch(input,
+				       @"(localhost|((?:(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d))))):\d{4}",
+				       RegexOptions.IgnoreCase | RegexOptions.Multiline);
 		}
 	}
 }

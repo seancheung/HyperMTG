@@ -66,6 +66,8 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -130,6 +132,11 @@
     </Compile>
     <Compile Include="Model\CheckSetItem.cs" />
     <Compile Include="Model\CheckItem.cs" />
+    <Compile Include="Service References\DraftSVC\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="ViewModel\AnalyzerViewModel.cs" />
     <Compile Include="ViewModel\DatabaseViewModel.cs" />
@@ -144,6 +151,12 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Service References\DraftSVC\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\DraftSVC\configuration.svcinfo" />
+    <None Include="Service References\DraftSVC\configuration91.svcinfo" />
     <Page Include="Pages\Database\DatabaseOfficial.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -261,6 +274,16 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Service References\DraftSVC\HyperService.Draft.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DraftSVC\service.wsdl" />
+    <None Include="Service References\DraftSVC\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DraftSVC\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <Resource Include="Langs\lang.en.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -285,6 +308,10 @@
     <ProjectReference Include="..\HyperPlugin\HyperPlugin.csproj">
       <Project>{bef59a5b-5faf-405e-9e47-862da747ab4e}</Project>
       <Name>HyperPlugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HyperService\HyperService.csproj">
+      <Project>{b4e7091f-d2e8-4ffd-a7c9-920e7379431e}</Project>
+      <Name>HyperService</Name>
     </ProjectReference>
     <ProjectReference Include="..\HyperStyle\HyperStyle.csproj">
       <Project>{b5ed551c-cedd-40c7-a8fc-ac2dd757d16f}</Project>
@@ -313,7 +340,12 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\DraftSVC\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

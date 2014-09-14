@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:hp="clr-namespace:HyperMTG.Helper"
-             xmlns:hs="clr-namespace:HyperStyle.Controls;assembly=HyperStyle"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
              xmlns:vm="clr-namespace:HyperMTG.ViewModel"
@@ -13,19 +12,29 @@
         <vm:DraftViewModel />
     </UserControl.DataContext>
     <UserControl.Resources>
-        <hp:VisibaleConverter x:Key="VisibaleConverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Resources/ExpanderStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <hp:VisibaleConverter x:Key="VisibaleConverter" />
+        </ResourceDictionary>
     </UserControl.Resources>
     <Grid Style="{StaticResource ContentRoot}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="250" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <ScrollViewer Grid.Row="0">
+            <ProgressBar Grid.Row="0" Height="10"
+                         Margin="2" Background="Transparent"
+                         Maximum="30"
+                         Value="{Binding TimerTick}" />
+            <ScrollViewer Grid.Row="1">
                 <ItemsControl ItemsSource="{Binding CurrentBooster}">
                     <ItemsControl.Resources>
                         <hp:TriggerConverter x:Key="TriggerConverter" />
@@ -47,12 +56,6 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid Margin="5">
-                                <!--
-                                    <hs:CardControl CardName="{Binding Card.Name}"
-                                    Cost="{Binding Card.Cost}"
-                                    Text="{Binding Card.Text}"
-                                    Type="{Binding Card.Type}" />
-                                -->
                                 <ProgressBar IsIndeterminate="True" />
                                 <Image Source="{Binding Image, IsAsync=True}" ToolTip="{Binding Card.Name}">
                                     <Image.ContextMenu>
@@ -68,7 +71,7 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
-            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto"
+            <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto"
                           Visibility="{Binding ElementName=HandCheckBox,
                                                Path=IsChecked,
                                                Converter={StaticResource VisibaleConverter}}">
@@ -107,11 +110,13 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <ProgressBar Grid.Row="0" Height="10"
-                             Maximum="30"
-                             Value="{Binding TimerTick}" />
+                <mui:BBCodeBlock Grid.Row="0" Margin="0,5"
+                                 BBCode="{Binding TimerTick}" />
                 <GroupBox Grid.Row="1" Margin="0,5"
-                          Header="Packs">
+                          Header="Packs"
+                          Visibility="{Binding IsStarted,
+                                               Converter={StaticResource VisibaleConverter},
+                                               ConverterParameter=0}">
                     <StackPanel>
                         <ComboBox Margin="5"
                                   ItemsSource="{Binding SetSource}"
@@ -126,11 +131,82 @@
                 </GroupBox>
                 <GroupBox Grid.Row="2" Margin="0,5"
                           Header="Players">
-                    <Slider Margin="0,5" AutoToolTipPlacement="TopLeft"
-                            IsSnapToTickEnabled="True" Maximum="8"
-                            Minimum="2" SmallChange="1"
-                            TickPlacement="TopLeft"
-                            Value="{Binding PlayerAmount}" />
+                    <StackPanel>
+                        <Slider Margin="0,5" AutoToolTipPlacement="TopLeft"
+                                IsSnapToTickEnabled="True" Maximum="8"
+                                Minimum="2" SmallChange="1"
+                                TickPlacement="TopLeft"
+                                Visibility="{Binding IsStarted,
+                                                     Converter={StaticResource VisibaleConverter},
+                                                     ConverterParameter=0}"
+                                Value="{Binding PlayerAmount}" />
+                        <Grid Margin="0,5" Visibility="{Binding IsOnline, Converter={StaticResource VisibaleConverter}, ConverterParameter=0}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <mui:BBCodeBlock Grid.Row="0" Grid.Column="0"
+                                             VerticalAlignment="Center" BBCode="[b]IP[/b] " />
+                            <TextBox Grid.Row="0" Grid.Column="1"
+                                     Text="{Binding IP}" />
+                            <Button Grid.Row="1" Grid.Column="0"
+                                    Grid.ColumnSpan="2" Margin="0,2"
+                                    Command="{Binding HostCommand}"
+                                    Content="Host" />
+                        </Grid>
+                        <Grid Margin="0,5" Visibility="{Binding IsConnected, Converter={StaticResource VisibaleConverter}, ConverterParameter=0}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <mui:BBCodeBlock Grid.Row="0" Grid.Column="0"
+                                             VerticalAlignment="Center" BBCode="[b]Name[/b] " />
+                            <TextBox Grid.Row="0" Grid.Column="1"
+                                     Text="{Binding LocalClient.Name}" />
+                            <Button Grid.Row="1" Grid.Column="0"
+                                    Grid.ColumnSpan="2" Margin="0,2"
+                                    Command="{Binding JoinCommand}"
+                                    Content="Join" />
+                        </Grid>
+                        <Button Margin="0,5"
+                                Command="{Binding CloseCommand}"
+                                Content="Close"
+                                Visibility="{Binding IsOnline,
+                                                     Converter={StaticResource VisibaleConverter}}" />
+                        <Expander Margin="0,5" Focusable="False"
+                                  Header="Message"
+                                  Template="{StaticResource SimpleExpanderTemp}"
+                                  Visibility="{Binding IsConnected,
+                                                       Converter={StaticResource VisibaleConverter}}">
+                            <StackPanel>
+                                <ListBox Margin="0,5" IsHitTestVisible="False"
+                                         ItemsSource="{Binding OnlineClients}">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Content="{Binding Name}" IsChecked="{Binding IsDone}" />
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                                <Separator />
+                                <ScrollViewer MaxHeight="200" Margin="0,5">
+                                    <mui:BBCodeBlock BBCode="{Binding MessageContent}" Foreground="{StaticResource WindowText}" />
+                                </ScrollViewer>
+                                <TextBox Margin="0,5" MaxLength="50"
+                                         Text="{Binding Message}" />
+                                <mui:ModernButton Margin="0,5"
+                                                  Command="{Binding SendMsgCommand}"
+                                                  Content="Send" />
+                            </StackPanel>
+                        </Expander>
+                    </StackPanel>
                 </GroupBox>
                 <Button Grid.Row="3" Margin="0,5"
                         Command="{Binding StartCommand}"
@@ -140,14 +216,18 @@
                     <StackPanel>
                         <mui:BBCodeBlock Margin="0,5" BBCode="{Binding CurrentBooster.Count, StringFormat='Booster: [b]{0}[/b]'}" />
                         <mui:BBCodeBlock Margin="0,5" BBCode="{Binding Hand.Count, StringFormat='Hand: [b]{0}[/b]'}" />
-                        <CheckBox x:Name="HandCheckBox" IsChecked="True" />
                     </StackPanel>
                 </GroupBox>
-                <GroupBox Grid.Row="5" Margin="0,5">
-                    <Slider Margin="0,5" AutoToolTipPlacement="TopLeft"
-                            AutoToolTipPrecision="2" LargeChange="0.1"
-                            Maximum="1.0" Minimum="0.2"
-                            Value="{Binding Ratio}" />
+                <GroupBox Grid.Row="5" Margin="0,5"
+                          Header="Visual">
+                    <StackPanel>
+                        <Slider Margin="0,5" AutoToolTipPlacement="TopLeft"
+                                AutoToolTipPrecision="2" LargeChange="0.1"
+                                Maximum="1.0" Minimum="0.2"
+                                Value="{Binding Ratio}" />
+                        <CheckBox x:Name="HandCheckBox" Margin="0,5"
+                                  Content="Hand Visible" IsChecked="True" />
+                    </StackPanel>
                 </GroupBox>
                 <mui:ModernButton Grid.Row="6" Margin="0,5"
                                   Command="{Binding SyncCommand}"

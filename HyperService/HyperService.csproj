@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -41,16 +42,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HyperEventArgs.cs" />
-    <Compile Include="Kard.cs" />
-    <Compile Include="Player.cs" />
-    <Compile Include="HyperAction.cs" />
-    <Compile Include="IGame.cs" />
-    <Compile Include="IGameCallback.cs" />
-    <Compile Include="Message.cs" />
-    <Compile Include="MessageType.cs" />
+    <Compile Include="Draft\DraftService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Team.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HyperLogger\HyperLogger.csproj">
+      <Project>{ea84d043-5a33-4ca4-bc1d-78302d45a73e}</Project>
+      <Name>HyperLogger</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

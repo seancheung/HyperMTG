@@ -66,7 +66,7 @@ namespace HyperMTG.ViewModel
 			}
 			catch (Exception ex)
 			{
-				Logger.Log(ex, typeof (DatabaseViewModel));
+				Logger.Log(ex, this);
 				throw;
 			}
 
@@ -88,7 +88,7 @@ namespace HyperMTG.ViewModel
 					}
 					catch (Exception ex)
 					{
-						Logger.Log(ex, typeof (DatabaseViewModel), _dbReader, Settings.Default.Language);
+						Logger.Log(ex, this, _dbReader, Settings.Default.Language);
 						throw;
 					}
 				});
@@ -525,7 +525,7 @@ namespace HyperMTG.ViewModel
 				}
 				catch (Exception ex)
 				{
-					Logger.Log(ex, typeof (DeckBuiderViewModel), _deckReaders[dlg.FilterIndex - 1]);
+					Logger.Log(ex, this, _deckReaders[dlg.FilterIndex - 1]);
 					throw;
 				}
 			}
@@ -556,7 +556,7 @@ namespace HyperMTG.ViewModel
 				}
 				catch (Exception ex)
 				{
-					Logger.Log(ex, typeof (DeckBuiderViewModel), _deckWriters[dlg.FilterIndex - 1]);
+					Logger.Log(ex, this, _deckWriters[dlg.FilterIndex - 1]);
 					throw;
 				}
 
