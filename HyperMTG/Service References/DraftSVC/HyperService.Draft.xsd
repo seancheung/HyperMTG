@@ -4,6 +4,7 @@
   <xs:complexType name="Client">
     <xs:sequence>
       <xs:element minOccurs="0" name="ID" type="ser:guid" />
+      <xs:element minOccurs="0" name="IsBot" type="xs:boolean" />
       <xs:element minOccurs="0" name="IsDone" type="xs:boolean" />
       <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
     </xs:sequence>

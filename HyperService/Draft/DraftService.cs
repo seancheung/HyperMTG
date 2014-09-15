@@ -1,115 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using HyperKore.Logger;
 
 namespace HyperService.Draft
 {
-	[ServiceContract(CallbackContract = typeof (IDraftCallBack), SessionMode = SessionMode.Required)]
-	public interface IDraft
-	{
-		[OperationContract(IsInitiating = true)]
-		bool Connect(Client client);
-
-		[OperationContract(IsOneWay = true)]
-		void Say(Message msg);
-
-		[OperationContract(IsOneWay = true)]
-		void Pick(Client client, int index);
-
-		[OperationContract(IsOneWay = true,
-			IsTerminating = true)]
-		void Disconnect(Client client);
-	}
-
-	public interface IDraftCallBack
-	{
-		[OperationContract(IsOneWay = true)]
-		void RefreshClients(List<Client> clients);
-
-		[OperationContract(IsOneWay = true)]
-		void Receive(Message msg);
-
-		[OperationContract(IsOneWay = true)]
-		void UserJoin(Client client);
-
-		[OperationContract(IsOneWay = true)]
-		void UserLeave(Client client);
-
-		[OperationContract(IsOneWay = true)]
-		void Picked(Client client, int index);
-	}
-
-	[DataContract]
-	public class Client
-	{
-		[DataMember]
-		public Guid ID { get; private set; }
-
-		[DataMember]
-		public string Name { get; set; }
-
-		[DataMember]
-		public bool IsDone { get; set; }
-
-		[DataMember]
-		public bool IsBot { get; set; }
-
-		public Client()
-		{
-			ID = Guid.NewGuid();
-		}
-
-		public Client(string name)
-		{
-			Name = name;
-			ID = Guid.NewGuid();
-		}
-	}
-
-	[DataContract]
-	public class Message
-	{
-		[DataMember]
-		public Guid Sender { get; set; }
-
-		[DataMember]
-		public string Content { get; set; }
-
-		[DataMember]
-		public DateTime Time { get; set; }
-	}
-
 	[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single,
 		ConcurrencyMode = ConcurrencyMode.Multiple,
 		UseSynchronizationContext = false)]
 	public class DraftService : IDraft
 	{
-		private readonly List<Client> clientList = new List<Client>();
 		private readonly Dictionary<Client, IDraftCallBack> clientCallbacks = new Dictionary<Client, IDraftCallBack>();
+		private readonly List<Client> clientList = new List<Client>();
 		private readonly object syncObj = new object();
+		private IList<string> _setCodes;
+		private Dictionary<int, IList<string>> cardList;
 		private ServiceHost host;
+		private bool shiftLeft;
+		private int turn;
 
-		public IDraftCallBack CurrentCallback
+		private IDraftCallBack _currentCallback
 		{
 			get { return OperationContext.Current.GetCallbackChannel<IDraftCallBack>(); }
 		}
 
-		public bool Start(string ip, int port)
+		/// <summary>
+		/// UserStartDraft service
+		/// </summary>
+		/// <param name="ip"></param>
+		/// <param name="port"></param>
+		/// <returns></returns>
+		public bool StartService(string ip, int port)
 		{
-			var tcpAdrs = new Uri(string.Format("net.tcp://{0}:{1}/HyperService.Draft/", ip, port));
+			Uri tcpAdrs = new Uri(string.Format("net.tcp://{0}:{1}/HyperService.Draft/", ip, port));
 
-			var httpAdrs = new Uri(string.Format("http://{0}:{1}/HyperService.Draft/", ip, port + 1));
+			Uri httpAdrs = new Uri(string.Format("http://{0}:{1}/HyperService.Draft/", ip, port + 1));
 
 			Uri[] baseAdresses = {tcpAdrs, httpAdrs};
 
 			host = new ServiceHost(
 				typeof (DraftService), baseAdresses);
 
-			var tcpBinding =
+			NetTcpBinding tcpBinding =
 				new NetTcpBinding(SecurityMode.None, true);
 
 			tcpBinding.MaxConnections = 100;
@@ -133,7 +67,7 @@ namespace HyperService.Draft
 			host.AddServiceEndpoint(typeof (IDraft),
 				tcpBinding, "tcp");
 
-			var mBehave =
+			ServiceMetadataBehavior mBehave =
 				new ServiceMetadataBehavior();
 			host.Description.Behaviors.Add(mBehave);
 
@@ -153,7 +87,11 @@ namespace HyperService.Draft
 			}
 		}
 
-		public bool Stop()
+		/// <summary>
+		/// Stop service
+		/// </summary>
+		/// <returns></returns>
+		public bool StopService()
 		{
 			if (host != null)
 			{
@@ -173,13 +111,18 @@ namespace HyperService.Draft
 
 		#region Implementation of IDraft
 
+		/// <summary>
+		/// Connect to server
+		/// </summary>
+		/// <param name="client"></param>
+		/// <returns></returns>
 		public bool Connect(Client client)
 		{
-			if (!clientCallbacks.ContainsValue(CurrentCallback) && clientCallbacks.All(c => c.Key.ID != client.ID))
+			if (!clientCallbacks.ContainsValue(_currentCallback) && clientCallbacks.All(c => c.Key.ID != client.ID))
 			{
 				lock (syncObj)
 				{
-					clientCallbacks.Add(client, CurrentCallback);
+					clientCallbacks.Add(client, _currentCallback);
 					clientList.Add(client);
 
 					foreach (Client key in clientCallbacks.Keys)
@@ -202,7 +145,11 @@ namespace HyperService.Draft
 			return false;
 		}
 
-		public void Say(Message msg)
+		/// <summary>
+		/// Send message
+		/// </summary>
+		/// <param name="msg"></param>
+		public void SendMsg(Message msg)
 		{
 			lock (syncObj)
 			{
@@ -213,11 +160,120 @@ namespace HyperService.Draft
 			}
 		}
 
-		public void Pick(Client client, int index)
+		/// <summary>
+		/// Switch pack
+		/// </summary>
+		/// <param name="client"></param>
+		/// <param name="cardIDs"></param>
+		public void SwitchPack(Client client, IList<string> cardIDs)
 		{
-			throw new NotImplementedException();
+			lock (syncObj)
+			{
+				Client clnt = clientList.FirstOrDefault(c => c.ID == client.ID);
+				if (clnt != null)
+				{
+					clnt.IsDone = true;
+					clientCallbacks[clnt].UserWait();
+				}
+
+				cardList.Add(clientList.FindIndex(c => c.ID == client.ID), cardIDs);
+
+				foreach (IDraftCallBack callback in clientCallbacks.Values)
+				{
+					callback.RefreshClients(clientList);
+					callback.UserPick(client);
+				}
+
+				if (clientList.All(c => c.IsDone))
+				{
+					clientList.ForEach(c => c.IsDone = false);
+					foreach (IDraftCallBack callback in clientCallbacks.Values)
+					{
+						callback.RefreshClients(clientList);
+					}
+
+					if (cardList.Values.All(s => s.Any())) //if there are cards left, continue switching
+					{
+						foreach (KeyValuePair<Client, IDraftCallBack> clientCallback in clientCallbacks)
+						{
+							int index = clientList.IndexOf(clientCallback.Key) + (shiftLeft ? 1 : -1);
+
+							if (index >= clientList.Count)
+							{
+								index = 0;
+							}
+							else if (index < 0)
+							{
+								index = clientList.Count - 1;
+							}
+							clientCallback.Value.UserSwitchPack(cardList[index]);
+						}
+					}
+					else
+					{
+						_setCodes.RemoveAt(0);
+						if (_setCodes.Any()) //open new booster pack
+						{
+							shiftLeft = !shiftLeft;
+							foreach (IDraftCallBack callback in clientCallbacks.Values)
+							{
+								callback.UserOpenBooster(_setCodes.First());
+							}
+						}
+						else //Draft end
+						{
+							foreach (IDraftCallBack callback in clientCallbacks.Values)
+							{
+								callback.UserEndDraft();
+							}
+						}
+					}
+
+					cardList.Clear();
+				}
+			}
 		}
 
+		/// <summary>
+		/// Start draft
+		/// </summary>
+		/// <param name="setCodes"></param>
+		public void StartDraft(IList<string> setCodes)
+		{
+			_setCodes = setCodes;
+
+			lock (syncObj)
+			{
+				cardList = new Dictionary<int, IList<string>>();
+				shiftLeft = true;
+				clientList.ForEach(c => c.IsDone = false);
+				foreach (IDraftCallBack callback in clientCallbacks.Values)
+				{
+					callback.UserStartDraft();
+					callback.RefreshClients(clientList);
+					callback.UserOpenBooster(setCodes.First());
+				}
+			}
+		}
+
+		/// <summary>
+		/// End draft
+		/// </summary>
+		public void EndDraft()
+		{
+			lock (syncObj)
+			{
+				foreach (IDraftCallBack callback in clientCallbacks.Values)
+				{
+					callback.UserEndDraft();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Disconnect from server
+		/// </summary>
+		/// <param name="client"></param>
 		public void Disconnect(Client client)
 		{
 			foreach (Client c in clientCallbacks.Keys.Where(c => client.ID == c.ID))
@@ -230,6 +286,7 @@ namespace HyperService.Draft
 					{
 						callback.RefreshClients(clientList);
 						callback.UserLeave(client);
+						callback.UserEndDraft();
 					}
 				}
 				return;

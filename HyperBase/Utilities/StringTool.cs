@@ -109,7 +109,7 @@ namespace HyperKore.Utilities
 		public static string MatchCost(this string input)
 		{
 			MatchCollection matches = Regex.Matches(input, @"alt=""\w+""");
-			var sb = new StringBuilder();
+			StringBuilder sb = new StringBuilder();
 			foreach (Match match in matches)
 			{
 				string cost = match.Value.Remove(0, 4).Replace("\"", string.Empty).Replace("or", string.Empty);
@@ -173,6 +173,11 @@ namespace HyperKore.Utilities
 			return text;
 		}
 
+		/// <summary>
+		/// Whether it's a legal ip address e.g. 192.168.0.1:8001
+		/// </summary>
+		/// <param name="input"></param>
+		/// <returns></returns>
 		public static bool IsLegalIPAddress(this string input)
 		{
 			return !string.IsNullOrWhiteSpace(input) &&

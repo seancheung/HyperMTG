@@ -197,20 +197,5 @@ namespace HyperKore.Utilities
 			Int32.TryParse(card.CMC, out result);
 			return result;
 		}
-
-		public static IEnumerable<Card> GetRandoms(this IList<Card> cards, int count = 1)
-		{
-			if (cards == null)
-			{
-				throw new ArgumentNullException();
-			}
-
-			var ran = new Random();
-			for (int i = 0; i < count; i++)
-			{
-				int index = ran.Next(0, cards.Count);
-				yield return cards[index];
-			}
-		}
 	}
 }

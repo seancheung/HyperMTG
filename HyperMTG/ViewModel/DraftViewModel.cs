@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -21,7 +20,6 @@ namespace HyperMTG.ViewModel
 {
 	public class DraftViewModel : ObservableObject, IDraftCallback
 	{
-		private readonly List<ObservableCollection<ExCard>> _boosters;
 		private readonly ICompressor _compressor;
 		private readonly IDBReader _dbReader;
 		private readonly IDBWriter _dbWriter;
@@ -35,23 +33,25 @@ namespace HyperMTG.ViewModel
 		private bool _goRight;
 		private ObservableCollection<ExCard> _hand;
 		private string _ip;
+		private bool _isConnected;
+		private bool _isFree;
+		private bool _isHosted;
+		private bool _isStarted;
+		private Client _localClient;
+		private string _message;
 		private string _messages;
 		private ObservableCollection<Client> _onlineClients;
-		private Set[] _packs;
 		private int _playerAmount;
 		private double _ratio;
 		private List<Set> _setSource;
+		private Set[] _sets;
 		private PageSize _size;
 		private int _timerTick;
+		private string info;
+		private bool isWait;
 
 		private DraftClient proxy;
 		private Client receiver;
-		private string _message;
-		private Client _localClient;
-		private bool _isFree;
-		private bool _isConnected;
-		private bool _isHosted;
-		private bool _isStarted;
 
 		public DraftViewModel()
 		{
@@ -68,11 +68,10 @@ namespace HyperMTG.ViewModel
 			}
 			_timer = new DispatcherTimer {Interval = new TimeSpan(0, 0, 1)};
 			_timer.Tick += delegate { TimerTick++; };
-			_boosters = new List<ObservableCollection<ExCard>>();
 			Hand = new ObservableCollection<ExCard>();
 			CurrentBooster = new ObservableCollection<ExCard>();
 			OnlineClients = new ObservableCollection<Client>();
-			Packs = new Set[3];
+			Sets = new Set[3];
 			Size = new PageSize();
 			Ratio = 0.5;
 			_playerAmount = 2;
@@ -95,6 +94,9 @@ namespace HyperMTG.ViewModel
 
 		public static DraftViewModel Instance { get; private set; }
 
+		/// <summary>
+		/// Whether game is started
+		/// </summary>
 		public bool IsStarted
 		{
 			get { return _isStarted; }
@@ -105,6 +107,9 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// tick per second
+		/// </summary>
 		public int TimerTick
 		{
 			get { return _timerTick; }
@@ -116,6 +121,9 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// Current cards to choose from
+		/// </summary>
 		public ObservableCollection<ExCard> CurrentBooster
 		{
 			get { return _currentBooster; }
@@ -126,6 +134,9 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// Hand card pile
+		/// </summary>
 		public ObservableCollection<ExCard> Hand
 		{
 			get { return _hand; }
@@ -136,16 +147,22 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
-		public Set[] Packs
+		/// <summary>
+		/// Set selection slots
+		/// </summary>
+		public Set[] Sets
 		{
-			get { return _packs; }
+			get { return _sets; }
 			set
 			{
-				_packs = value;
-				RaisePropertyChanged("Packs");
+				_sets = value;
+				RaisePropertyChanged("Sets");
 			}
 		}
 
+		/// <summary>
+		/// Available sets
+		/// </summary>
 		public List<Set> SetSource
 		{
 			get { return _setSource; }
@@ -156,6 +173,9 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// Player amount to start a draft game(when hosting)
+		/// </summary>
 		public int PlayerAmount
 		{
 			get { return _playerAmount; }
@@ -166,6 +186,9 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// Size of cards
+		/// </summary>
 		public PageSize Size
 		{
 			get { return _size; }
@@ -176,6 +199,9 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// Zoom ratio of cards
+		/// </summary>
 		public double Ratio
 		{
 			get { return _ratio; }
@@ -187,6 +213,9 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// Server ip to host/connect to
+		/// </summary>
 		public string IP
 		{
 			get { return _ip; }
@@ -197,6 +226,9 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// Clients online
+		/// </summary>
 		public ObservableCollection<Client> OnlineClients
 		{
 			get { return _onlineClients; }
@@ -207,6 +239,9 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// Chatting messages
+		/// </summary>
 		public string MessageContent
 		{
 			get { return _messages; }
@@ -217,6 +252,9 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// Chatting message to send
+		/// </summary>
 		public string Message
 		{
 			get { return _message; }
@@ -227,6 +265,9 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// Local client
+		/// </summary>
 		public Client LocalClient
 		{
 			get { return _localClient; }
@@ -237,6 +278,9 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// Whether local client is connected to a remote server
+		/// </summary>
 		public bool IsConnected
 		{
 			get { return _isConnected; }
@@ -248,6 +292,9 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// Whether service is hosted
+		/// </summary>
 		public bool IsHosted
 		{
 			get { return _isHosted; }
@@ -259,45 +306,82 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// Whether client is onlie
+		/// </summary>
 		public bool IsOnline
 		{
 			get { return IsHosted || IsConnected; }
+		}
+
+		/// <summary>
+		/// Info message
+		/// </summary>
+		public string Info
+		{
+			get { return info; }
+			set
+			{
+				info = value;
+				RaisePropertyChanged("Info");
+			}
 		}
 
 		#endregion
 
 		#region Command
 
+		/// <summary>
+		/// Send chat message
+		/// </summary>
 		public ICommand SendMsgCommand
 		{
 			get { return new RelayCommand(SendMsgExecute, CanExecuteSendMsg); }
 		}
 
+		/// <summary>
+		/// Join draft room
+		/// </summary>
 		public ICommand JoinCommand
 		{
 			get { return new RelayCommand(JoinExecute, CanExecuteJoin); }
 		}
 
+		/// <summary>
+		/// Close connection
+		/// </summary>
 		public ICommand CloseCommand
 		{
 			get { return new RelayCommand(CloseExecute, CanExecuteClose); }
 		}
 
+		/// <summary>
+		/// Host draft room
+		/// </summary>
 		public ICommand HostCommand
 		{
 			get { return new RelayCommand(HostExecute, CanExecuteHost); }
 		}
 
+		/// <summary>
+		/// Pick card
+		/// </summary>
 		public ICommand PickCardCommand
 		{
 			get { return new RelayCommand<ExCard>(PickCardExecute, CanExecutePick); }
 		}
 
+		/// <summary>
+		/// Start draft
+		/// </summary>
 		public ICommand StartCommand
 		{
 			get { return new RelayCommand(StartExecute, CanExecuteStart); }
 		}
 
+		/// <summary>
+		/// Sync to deckbuilder
+		/// </summary>
 		public ICommand SyncCommand
 		{
 			get { return new RelayCommand(SyncExecute, CanExecuteSync); }
@@ -306,6 +390,38 @@ namespace HyperMTG.ViewModel
 		#endregion
 
 		#region Execute
+
+		public void JoinExecute()
+		{
+			InstanceContext context = new InstanceContext(this);
+			proxy = new DraftClient(context);
+			string servicePath = proxy.Endpoint.ListenUri.AbsolutePath;
+			//string serviceListenPort = proxy.Endpoint.Address.Uri.Port.ToString();
+			proxy.Endpoint.Address = new EndpointAddress("net.tcp://" + IP + servicePath);
+
+			try
+			{
+				proxy.Open();
+				proxy.ConnectAsync(LocalClient);
+				IsConnected = true;
+				Message = string.Empty;
+				Info = "Connected";
+			}
+			catch (EndpointNotFoundException)
+			{
+				Info = "Connection Timeout";
+			}
+		}
+
+		public void HostExecute()
+		{
+			string[] ip = IP.Split(':');
+			IsHosted = service.StartService(ip[0], Int32.Parse(ip[1]));
+			if (IsHosted)
+			{
+				Info = "Service Hosted";
+			}
+		}
 
 		public void SendMsgExecute()
 		{
@@ -321,29 +437,20 @@ namespace HyperMTG.ViewModel
 				Time = DateTime.Now
 			};
 
-			proxy.SayAsync(msg);
+			proxy.SendMsgAsync(msg);
 			Message = string.Empty;
 		}
 
-		public void JoinExecute()
+		public void StartExecute()
 		{
-			var context = new InstanceContext(this);
-			proxy = new DraftClient(context);
-			string servicePath = proxy.Endpoint.ListenUri.AbsolutePath;
-			string serviceListenPort = proxy.Endpoint.Address.Uri.Port.ToString();
-			proxy.Endpoint.Address = new EndpointAddress("net.tcp://" + IP + servicePath);
+			proxy.StartDraftAsync(Sets.Select(s => s.SetCode).ToList());
+		}
 
-			try
-			{
-				proxy.Open();
-				proxy.ConnectAsync(LocalClient);
-				IsConnected = true;
-				Message = string.Empty;
-			}
-			catch
-			{
-				OnMessage("System", DateTime.Now, "Connection Timeout");
-			}
+		public void PickCardExecute(ExCard exCard)
+		{
+			Hand.Add(exCard);
+			CurrentBooster.Remove(exCard);
+			proxy.SwitchPackAsync(LocalClient, CurrentBooster.Select(c => c.Card.ID).ToList());
 		}
 
 		public void CloseExecute()
@@ -355,63 +462,16 @@ namespace HyperMTG.ViewModel
 			}
 			if (IsHosted)
 			{
-				service.Stop();
+				service.StopService();
 				IsHosted = false;
 			}
+			if (IsStarted)
+			{
+				UserEndDraft();
+				IsStarted = false;
+			}
 			OnlineClients.Clear();
-		}
-
-		public void HostExecute()
-		{
-			string[] ip = IP.Split(':');
-			IsHosted = service.Start(ip[0], Int32.Parse(ip[1]));
-		}
-
-		public void PickCardExecute(ExCard exCard)
-		{
-			if (_currentBoosters == null)
-			{
-				_currentBoosters = _boosters.Take(_playerAmount).ToList();
-				_boosters.RemoveRange(0, _playerAmount);
-				_goRight = !_goRight;
-			}
-
-			var ran = new Random();
-
-			foreach (var pack in _currentBoosters)
-			{
-				if (pack != CurrentBooster)
-				{
-					pack.RemoveAt(ran.Next(0, pack.Count));
-				}
-			}
-
-			Hand.Add(exCard);
-			CurrentBooster.Remove(exCard);
-
-			if (_goRight)
-			{
-				ShiftRight(_currentBoosters);
-			}
-			else
-			{
-				ShiftLeft(_currentBoosters);
-			}
-
-			if (!_currentBoosters.All(b => b.Any()) && _boosters.Any())
-			{
-				_currentBoosters = _boosters.Take(_playerAmount).ToList();
-				_boosters.RemoveRange(0, _playerAmount);
-				_goRight = !_goRight;
-			}
-
-			CurrentBooster = _currentBoosters.First();
-			TimerTick = 0;
-			if (Hand.Count >= 45)
-			{
-				_currentBoosters = null;
-				_timer.Stop();
-			}
+			Info = "Disconnected";
 		}
 
 		public void SyncExecute()
@@ -423,71 +483,6 @@ namespace HyperMTG.ViewModel
 			{
 				DeckBuiderViewModel.Instance.Deck.MainBoard.Add(card);
 			}
-		}
-
-		public void StartExecute()
-		{
-			IEnumerable<Card> db = _dbReader.LoadCards();
-			_boosters.Clear();
-			CurrentBooster.Clear();
-			Hand.Clear();
-			IsStarted = true;
-
-			var task = new Task(() =>
-			{
-				foreach (Set pack in Packs)
-				{
-					for (int i = 0; i < PlayerAmount; i++)
-					{
-						var result = new List<Card>();
-						IEnumerable<Card> cards = db.Where(c => c.SetCode == pack.SetCode);
-
-						result.AddRange(cards.Where(c => c.GetRarity() == Rarity.Mythic || c.GetRarity() == Rarity.Rare)
-							.ToArray()
-							.GetRandoms());
-						result.AddRange(cards.Where(c => c.GetRarity() == Rarity.Uncommon)
-							.ToArray()
-							.GetRandoms(3));
-						if (cards.Any(c => c.IsBasicLand()))
-						{
-							result.AddRange(cards.Where(c => c.GetRarity() == Rarity.Common)
-								.ToArray()
-								.GetRandoms(10));
-							result.AddRange(cards.Where(c => c.IsBasicLand())
-								.ToArray()
-								.GetRandoms());
-						}
-						else
-						{
-							result.AddRange(cards.Where(c => c.GetRarity() == Rarity.Common)
-								.ToArray()
-								.GetRandoms(11));
-						}
-
-						var booster = new ObservableCollection<ExCard>();
-						foreach (Card card in result)
-						{
-							booster.Add(new ExCard(_compressor, _dbReader, card, _dbWriter, _imageParse));
-						}
-						_dispatcher.BeginInvoke(new Action(() => _boosters.Add(booster)));
-					}
-				}
-			});
-			task.Start();
-			task.ContinueWith(t =>
-			{
-				CurrentBooster = _boosters.FirstOrDefault();
-				TimerTick = 0;
-				if (Hand.Count >= 45) //finished
-				{
-					IsStarted = false;
-					_timer.Stop();
-				}
-				else
-				{
-					_timer.Start();
-				}
-			});
 		}
 
 		#endregion
@@ -506,27 +501,27 @@ namespace HyperMTG.ViewModel
 
 		public bool CanExecuteClose()
 		{
-			return IsConnected || IsHosted;
+			return IsOnline;
 		}
 
 		public bool CanExecuteHost()
 		{
-			return !IsHosted && !IsConnected && IP.IsLegalIPAddress();
+			return !IsOnline && IP.IsLegalIPAddress();
 		}
 
 		public bool CanExecutePick(ExCard exCard)
 		{
-			return CurrentBooster != null;
+			return CurrentBooster != null && CurrentBooster.Any() && !LocalClient.IsDone;
 		}
 
 		public bool CanExecuteStart()
 		{
-			return _dbReader != null && _dbWriter != null && Packs != null && Packs.All(p => p != null);
+			return Sets.All(p => p != null) && IsHosted && IsConnected;
 		}
 
 		public bool CanExecuteSync()
 		{
-			return Hand.Count >= 45 && DeckBuiderViewModel.Instance != null;
+			return !IsStarted && Hand.Count >= 45 && DeckBuiderViewModel.Instance != null;
 		}
 
 		#endregion
@@ -541,46 +536,6 @@ namespace HyperMTG.ViewModel
 				{
 					PickCardExecute(CurrentBooster.First());
 				}
-			}
-		}
-
-		private void ShiftRight(IList list, int k = 1)
-		{
-			if (list == null)
-			{
-				return;
-			}
-			int size = list.Count - 1;
-			Reverse(list, 0, size - k);
-			Reverse(list, size - k + 1, size);
-			Reverse(list, 0, size);
-		}
-
-		private void ShiftLeft(IList list, int k = 1)
-		{
-			if (list == null)
-			{
-				return;
-			}
-			int size = list.Count - 1;
-			Reverse(list, 0, k);
-			Reverse(list, k + 1, size);
-			Reverse(list, 0, size);
-		}
-
-		private void Reverse(IList list, int left, int right)
-		{
-			while (left <= right)
-			{
-				object l = list[left];
-				object r = list[right];
-				list.Insert(left, r);
-				list.RemoveAt(left + 1);
-				list.Insert(right, l);
-				list.RemoveAt(right + 1);
-
-				left++;
-				right--;
 			}
 		}
 
@@ -599,8 +554,111 @@ namespace HyperMTG.ViewModel
 			foreach (Client client in clients)
 			{
 				OnlineClients.Add(client);
+				if (client.ID == LocalClient.ID)
+				{
+					LocalClient = client;
+				}
 			}
 		}
+
+		public void Receive(Message msg)
+		{
+			Client sender = OnlineClients.FirstOrDefault(c => c.ID == msg.Sender);
+			if (sender != null)
+			{
+				OnMessage(sender.Name, msg.Time, msg.Content);
+			}
+		}
+
+		public void UserJoin(Client client)
+		{
+			OnMessage("System", DateTime.Now, string.Format("{0} Entered", client.Name));
+		}
+
+		public void UserLeave(Client client)
+		{
+			OnMessage("System", DateTime.Now, string.Format("{0} Left", client.Name));
+		}
+
+		public void UserPick(Client client)
+		{
+			Info = client.Name + " is ready to switch";
+		}
+
+		public void UserSwitchPack(List<string> cardIDs)
+		{
+			if (isWait)
+			{
+				_timer.Start();
+				isWait = false;
+			}
+
+			ObservableCollection<ExCard> booster = new ObservableCollection<ExCard>();
+
+			Task task = new Task(() =>
+			{
+				IEnumerable<Card> db = _dbReader.LoadCards();
+
+				IEnumerable<Card> cards = db.Where(c => cardIDs.Contains(c.ID));
+				foreach (Card card in cards)
+				{
+					booster.Add(new ExCard(_compressor, _dbReader, card, _dbWriter, _imageParse));
+				}
+			});
+			task.Start();
+			task.ContinueWith(t =>
+			{
+				CurrentBooster = booster;
+				TimerTick = 0;
+			});
+		}
+
+		public void UserWait()
+		{
+			_timer.Stop();
+			isWait = true;
+		}
+
+		public void UserOpenBooster(string setCode)
+		{
+			ObservableCollection<ExCard> booster = new ObservableCollection<ExCard>();
+
+			Task task = new Task(() =>
+			{
+				IEnumerable<Card> db = _dbReader.LoadCards();
+
+				IEnumerable<Card> cards = db.Where(c => c.SetCode == setCode);
+
+				foreach (Card card in BoosterTool.Generate(cards))
+				{
+					booster.Add(new ExCard(_compressor, _dbReader, card, _dbWriter, _imageParse));
+				}
+			});
+			task.Start();
+			task.ContinueWith(t =>
+			{
+				CurrentBooster = booster;
+				TimerTick = 0;
+			});
+		}
+
+		public void UserStartDraft()
+		{
+			CurrentBooster.Clear();
+			Hand.Clear();
+			IsStarted = true;
+			_timer.Start();
+		}
+
+		public void UserEndDraft()
+		{
+			CurrentBooster.Clear();
+			TimerTick = 0;
+			_timer.Stop();
+			IsStarted = false;
+		}
+
+		#region Async
 
 		public IAsyncResult BeginRefreshClients(List<Client> clients, AsyncCallback callback, object asyncState)
 		{
@@ -610,15 +668,6 @@ namespace HyperMTG.ViewModel
 		public void EndRefreshClients(IAsyncResult result)
 		{
 			throw new NotImplementedException();
-		}
-
-		public void Receive(Message msg)
-		{
-			Client sender = OnlineClients.FirstOrDefault(c => c.ID == msg.Sender);
-			if (sender != null)
-			{
-				OnMessage(sender.Name,msg.Time,msg.Content);
-			}
 		}
 
 		public IAsyncResult BeginReceive(Message msg, AsyncCallback callback, object asyncState)
@@ -631,11 +680,6 @@ namespace HyperMTG.ViewModel
 			throw new NotImplementedException();
 		}
 
-		public void UserJoin(Client client)
-		{
-			OnMessage("System", DateTime.Now, string.Format("{0} Entered", client.Name));
-		}
-
 		public IAsyncResult BeginUserJoin(Client client, AsyncCallback callback, object asyncState)
 		{
 			throw new NotImplementedException();
@@ -644,11 +688,6 @@ namespace HyperMTG.ViewModel
 		public void EndUserJoin(IAsyncResult result)
 		{
 			throw new NotImplementedException();
-		}
-
-		public void UserLeave(Client client)
-		{
-			OnMessage("System", DateTime.Now, string.Format("{0} Left", client.Name));
 		}
 
 		public IAsyncResult BeginUserLeave(Client client, AsyncCallback callback, object asyncState)
@@ -661,20 +700,67 @@ namespace HyperMTG.ViewModel
 			throw new NotImplementedException();
 		}
 
-		public void Picked(Client client, int index)
-		{
-			 
-		}
-
-		public IAsyncResult BeginPicked(Client client, int index, AsyncCallback callback, object asyncState)
+		public IAsyncResult BeginUserPick(Client client, AsyncCallback callback, object asyncState)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void EndPicked(IAsyncResult result)
+		public void EndUserPick(IAsyncResult result)
 		{
 			throw new NotImplementedException();
 		}
+
+		public IAsyncResult BeginUserWait(AsyncCallback callback, object asyncState)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void EndUserWait(IAsyncResult result)
+		{
+			throw new NotImplementedException();
+		}
+
+		public IAsyncResult BeginUserSwitchPack(List<string> cardIDs, AsyncCallback callback, object asyncState)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void EndUserSwitchPack(IAsyncResult result)
+		{
+			throw new NotImplementedException();
+		}
+
+		public IAsyncResult BeginUserOpenBooster(string setCode, AsyncCallback callback, object asyncState)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void EndUserOpenBooster(IAsyncResult result)
+		{
+			throw new NotImplementedException();
+		}
+
+		public IAsyncResult BeginUserEndDraft(AsyncCallback callback, object asyncState)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void EndUserEndDraft(IAsyncResult result)
+		{
+			throw new NotImplementedException();
+		}
+
+		public IAsyncResult BeginUserStartDraft(AsyncCallback callback, object asyncState)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void EndUserStartDraft(IAsyncResult result)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
 
 		#endregion
 	}

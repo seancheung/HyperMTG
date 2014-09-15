@@ -32,22 +32,22 @@
                     <StackPanel>
                         <ComboBox Margin="5"
                                   ItemsSource="{Binding SetSource}"
-                                  SelectedValue="{Binding Packs[0]}" />
+                                  SelectedValue="{Binding Sets[0]}" />
                         <ComboBox Margin="5"
                                   ItemsSource="{Binding SetSource}"
-                                  SelectedValue="{Binding Packs[1]}" />
+                                  SelectedValue="{Binding Sets[1]}" />
                         <ComboBox Margin="5"
                                   ItemsSource="{Binding SetSource}"
-                                  SelectedValue="{Binding Packs[2]}" />
+                                  SelectedValue="{Binding Sets[2]}" />
                         <ComboBox Margin="5"
                                   ItemsSource="{Binding SetSource}"
-                                  SelectedValue="{Binding Packs[3]}" />
+                                  SelectedValue="{Binding Sets[3]}" />
                         <ComboBox Margin="5"
                                   ItemsSource="{Binding SetSource}"
-                                  SelectedValue="{Binding Packs[4]}" />
+                                  SelectedValue="{Binding Sets[4]}" />
                         <ComboBox Margin="5"
                                   ItemsSource="{Binding SetSource}"
-                                  SelectedValue="{Binding Packs[5]}" />
+                                  SelectedValue="{Binding Sets[5]}" />
                     </StackPanel>
                 </GroupBox>
                 <GroupBox Grid.Row="1" Margin="0,5"

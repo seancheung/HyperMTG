@@ -27,6 +27,7 @@
     <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="a93eb6f7-40e9-4ec6-922a-60302bcd33ed" SourceId="1" SourceUrl="net.tcp://localhost:7996/HyperService.Draft/mex" />
     <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="3d231681-1d8e-48d1-8e5f-166132f58035" SourceId="1" SourceUrl="net.tcp://localhost:7996/HyperService.Draft/mex" />
     <MetadataFile FileName="HyperService.Draft.xsd" MetadataType="Schema" ID="d69e0870-042f-4c17-b71d-03dc71383fe9" SourceId="1" SourceUrl="net.tcp://localhost:7996/HyperService.Draft/mex" />
+    <MetadataFile FileName="Arrays.xsd" MetadataType="Schema" ID="0e3bbfe3-3aed-4e12-b121-28f8beeae41b" SourceId="1" SourceUrl="net.tcp://localhost:7996/HyperService.Draft/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

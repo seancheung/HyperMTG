@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:import namespace="http://schemas.datacontract.org/2004/07/HyperService.Draft" />
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
   <xs:element name="Connect">
     <xs:complexType>
       <xs:sequence>
@@ -15,62 +16,142 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="Say">
+  <xs:element name="SendMsg">
     <xs:complexType>
       <xs:sequence>
         <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/HyperService.Draft" minOccurs="0" name="msg" nillable="true" type="q2:Message" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="Pick">
+  <xs:element name="StartDraft">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/HyperService.Draft" minOccurs="0" name="client" nillable="true" type="q3:Client" />
-        <xs:element minOccurs="0" name="index" type="xs:int" />
+        <xs:element xmlns:q3="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="setCodes" nillable="true" type="q3:ArrayOfstring" />
       </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="StartDraftResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SwitchPack">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/HyperService.Draft" minOccurs="0" name="client" nillable="true" type="q4:Client" />
+        <xs:element xmlns:q5="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="cardIDs" nillable="true" type="q5:ArrayOfstring" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SwitchPackResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EndDraft">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EndDraftResponse">
+    <xs:complexType>
+      <xs:sequence />
     </xs:complexType>
   </xs:element>
   <xs:element name="Disconnect">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/HyperService.Draft" minOccurs="0" name="client" nillable="true" type="q4:Client" />
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/HyperService.Draft" minOccurs="0" name="client" nillable="true" type="q6:Client" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="RefreshClients">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/HyperService.Draft" minOccurs="0" name="clients" nillable="true" type="q5:ArrayOfClient" />
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/HyperService.Draft" minOccurs="0" name="clients" nillable="true" type="q7:ArrayOfClient" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="Receive">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/HyperService.Draft" minOccurs="0" name="msg" nillable="true" type="q6:Message" />
+        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/HyperService.Draft" minOccurs="0" name="msg" nillable="true" type="q8:Message" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="UserJoin">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/HyperService.Draft" minOccurs="0" name="client" nillable="true" type="q7:Client" />
+        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/HyperService.Draft" minOccurs="0" name="client" nillable="true" type="q9:Client" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="UserLeave">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/HyperService.Draft" minOccurs="0" name="client" nillable="true" type="q8:Client" />
+        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/HyperService.Draft" minOccurs="0" name="client" nillable="true" type="q10:Client" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="Picked">
+  <xs:element name="UserPick">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/HyperService.Draft" minOccurs="0" name="client" nillable="true" type="q9:Client" />
-        <xs:element minOccurs="0" name="index" type="xs:int" />
+        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/HyperService.Draft" minOccurs="0" name="client" nillable="true" type="q11:Client" />
       </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UserPickResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UserWait">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UserWaitResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UserSwitchPack">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q12="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="cardIDs" nillable="true" type="q12:ArrayOfstring" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UserSwitchPackResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UserOpenBooster">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="setCode" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UserOpenBoosterResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UserStartDraft">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UserStartDraftResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UserEndDraft">
+    <xs:complexType>
+      <xs:sequence />
     </xs:complexType>
   </xs:element>
 </xs:schema>

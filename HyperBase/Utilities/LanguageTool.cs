@@ -5,7 +5,7 @@ namespace HyperKore.Utilities
 	public static class LanguageTool
 	{
 		/// <summary>
-		///     Get language code ISO-6391
+		///     Get language code
 		/// </summary>
 		/// <param name="lang"></param>
 		/// <returns></returns>
@@ -48,6 +48,11 @@ namespace HyperKore.Utilities
 			}
 		}
 
+		/// <summary>
+		/// Get language full name
+		/// </summary>
+		/// <param name="lang"></param>
+		/// <returns></returns>
 		public static string GetLangName(this Language lang)
 		{
 			switch (lang)
@@ -61,6 +66,11 @@ namespace HyperKore.Utilities
 			}
 		}
 
+		/// <summary>
+		/// Get language form language code
+		/// </summary>
+		/// <param name="code"></param>
+		/// <returns></returns>
 		public static Language GetLangugeByCode(string code)
 		{
 			switch (code)

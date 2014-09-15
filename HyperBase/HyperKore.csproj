@@ -47,6 +47,7 @@
     <Compile Include="Common\GlobalEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\Set.cs" />
+    <Compile Include="Utilities\BoosterTool.cs" />
     <Compile Include="Utilities\CardTool.cs" />
     <Compile Include="Utilities\LanguageTool.cs" />
     <Compile Include="Utilities\StringTool.cs" />

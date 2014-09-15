@@ -24,7 +24,11 @@
             <ColumnDefinition Width="250" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="1">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -98,7 +102,7 @@
                 </ItemsControl>
             </ScrollViewer>
         </Grid>
-        <ScrollViewer Grid.Column="0">
+        <ScrollViewer Grid.Row="0" Grid.Column="0">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -117,16 +121,16 @@
                           Visibility="{Binding IsStarted,
                                                Converter={StaticResource VisibaleConverter},
                                                ConverterParameter=0}">
-                    <StackPanel>
+                    <StackPanel Visibility="{Binding IsHosted, Converter={StaticResource VisibaleConverter}}">
                         <ComboBox Margin="5"
                                   ItemsSource="{Binding SetSource}"
-                                  SelectedValue="{Binding Packs[0]}" />
+                                  SelectedValue="{Binding Sets[0]}" />
                         <ComboBox Margin="5"
                                   ItemsSource="{Binding SetSource}"
-                                  SelectedValue="{Binding Packs[1]}" />
+                                  SelectedValue="{Binding Sets[1]}" />
                         <ComboBox Margin="5"
                                   ItemsSource="{Binding SetSource}"
-                                  SelectedValue="{Binding Packs[2]}" />
+                                  SelectedValue="{Binding Sets[2]}" />
                     </StackPanel>
                 </GroupBox>
                 <GroupBox Grid.Row="2" Margin="0,5"
@@ -234,6 +238,11 @@
                                   Content="Sync To Deckbuilder" />
             </Grid>
         </ScrollViewer>
-
+        <StackPanel Grid.Row="1" Grid.Column="0"
+                    Grid.ColumnSpan="2" Height="20">
+            <mui:BBCodeBlock HorizontalAlignment="Right"
+                             FontSize="{DynamicResource DefaultFontSize}"
+                             Text="{Binding Info}" />
+        </StackPanel>
     </Grid>
 </UserControl>

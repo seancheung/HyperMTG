@@ -151,6 +151,9 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Service References\DraftSVC\Arrays.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\DraftSVC\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>

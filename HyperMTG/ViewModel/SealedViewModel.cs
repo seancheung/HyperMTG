@@ -24,12 +24,13 @@ namespace HyperMTG.ViewModel
 		private readonly IImageParse _imageParse;
 		private readonly double originalCheckSize = 40;
 		private ObservableCollection<ExCard> _cards;
-		private Set[] _packs;
+		private Set[] _sets;
 		private double _ratio;
 		private List<Set> _setSource;
 		private PageSize _size;
 		private bool isCheckVisible;
 		private string[] sorts;
+		private double checkSize;
 
 		public SealedViewModel()
 		{
@@ -39,7 +40,7 @@ namespace HyperMTG.ViewModel
 			_imageParse = PluginManager.Instance.GetPlugin<IImageParse>();
 			_dispatcher = Application.Current.Dispatcher;
 			Size = new PageSize();
-			Packs = new Set[6];
+			Sets = new Set[6];
 			Sorts = new string[2];
 			Cards = new ObservableCollection<ExCard>();
 
@@ -62,16 +63,22 @@ namespace HyperMTG.ViewModel
 			Instance = this;
 		}
 
-		public Set[] Packs
+		/// <summary>
+		/// Set selection slots
+		/// </summary>
+		public Set[] Sets
 		{
-			get { return _packs; }
+			get { return _sets; }
 			set
 			{
-				_packs = value;
-				RaisePropertyChanged("Packs");
+				_sets = value;
+				RaisePropertyChanged("Sets");
 			}
 		}
 
+		/// <summary>
+		/// Cards which are generated
+		/// </summary>
 		public ObservableCollection<ExCard> Cards
 		{
 			get { return _cards; }
@@ -82,6 +89,9 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// Card size
+		/// </summary>
 		public PageSize Size
 		{
 			get { return _size; }
@@ -92,8 +102,22 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
-		public double CheckSize { get; set; }
+		/// <summary>
+		/// Card check size
+		/// </summary>
+		public double CheckSize
+		{
+			get { return checkSize; }
+			set
+			{
+				checkSize = value;
+				RaisePropertyChanged("CheckSize");
+			}
+		}
 
+		/// <summary>
+		/// Is card check visible
+		/// </summary>
 		public bool IsCheckVisible
 		{
 			get { return isCheckVisible; }
@@ -104,6 +128,9 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// Card zoom ratio
+		/// </summary>
 		public double Ratio
 		{
 			get { return _ratio; }
@@ -113,10 +140,12 @@ namespace HyperMTG.ViewModel
 				RaisePropertyChanged("Ratio");
 				Size.SetRatio(value);
 				CheckSize = originalCheckSize*value;
-				RaisePropertyChanged("CheckSize");
 			}
 		}
 
+		/// <summary>
+		/// Available set selections
+		/// </summary>
 		public List<Set> SetSource
 		{
 			get { return _setSource; }
@@ -127,8 +156,14 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// Sorting selections
+		/// </summary>
 		public List<string> SortSource { get; set; }
 
+		/// <summary>
+		/// Sorting selection slots
+		/// </summary>
 		public string[] Sorts
 		{
 			get { return sorts; }
@@ -139,24 +174,33 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
+		public static SealedViewModel Instance { get; private set; }
+
 		#region Command
 
+		/// <summary>
+		/// Generate booster packs
+		/// </summary>
 		public ICommand GenerateCommand
 		{
 			get { return new RelayCommand(GenerateExecute, CanExecuteGenerate); }
 		}
 
+		/// <summary>
+		/// Sort cards
+		/// </summary>
 		public ICommand SortCommand
 		{
 			get { return new RelayCommand(SortExecute, CanExecuteSort); }
 		}
 
+		/// <summary>
+		/// Sync to deckbuilder
+		/// </summary>
 		public ICommand SyncCommand
 		{
 			get { return new RelayCommand(SyncExecute, CanExecuteSync); }
 		}
-
-		public static SealedViewModel Instance { get; private set; }
 
 		#endregion
 
@@ -170,31 +214,11 @@ namespace HyperMTG.ViewModel
 
 			Task task = new Task(() =>
 			{
-				foreach (Set pack in Packs)
+				foreach (Set pack in Sets)
 				{
 					IEnumerable<Card> cards = db.Where(c => c.SetCode == pack.SetCode);
 
-					result.AddRange(cards.Where(c => c.GetRarity() == Rarity.Mythic || c.GetRarity() == Rarity.Rare)
-						.ToArray()
-						.GetRandoms());
-					result.AddRange(cards.Where(c => c.GetRarity() == Rarity.Uncommon)
-						.ToArray()
-						.GetRandoms(3));
-					if (cards.Any(c => c.IsBasicLand()))
-					{
-						result.AddRange(cards.Where(c => c.GetRarity() == Rarity.Common)
-							.ToArray()
-							.GetRandoms(10));
-						result.AddRange(cards.Where(c => c.IsBasicLand())
-							.ToArray()
-							.GetRandoms());
-					}
-					else
-					{
-						result.AddRange(cards.Where(c => c.GetRarity() == Rarity.Common)
-							.ToArray()
-							.GetRandoms(11));
-					}
+					result.AddRange(BoosterTool.Generate(cards));
 				}
 			});
 			task.Start();
@@ -253,7 +277,7 @@ namespace HyperMTG.ViewModel
 
 		public bool CanExecuteGenerate()
 		{
-			return _dbReader != null && _dbWriter != null && Packs != null && Packs.All(p => p != null);
+			return _dbReader != null && _dbWriter != null && Sets != null && Sets.All(p => p != null);
 		}
 
 		public bool CanExecuteSort()

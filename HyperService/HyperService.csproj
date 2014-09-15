@@ -42,10 +42,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Draft\Client.cs" />
     <Compile Include="Draft\DraftService.cs" />
+    <Compile Include="Draft\IDraft.cs" />
+    <Compile Include="Draft\IDraftCallBack.cs" />
+    <Compile Include="Draft\Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HyperBase\HyperKore.csproj">
+      <Project>{74f65d7f-c999-4a0b-8316-9c093660dcf7}</Project>
+      <Name>HyperKore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HyperLogger\HyperLogger.csproj">
       <Project>{ea84d043-5a33-4ca4-bc1d-78302d45a73e}</Project>
       <Name>HyperLogger</Name>
