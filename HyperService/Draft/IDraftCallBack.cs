@@ -37,33 +37,33 @@ namespace HyperService.Draft
 		/// Called when a user picked card
 		/// </summary>
 		/// <param name="client"></param>
-		[OperationContract]
+		[OperationContract(IsOneWay = true)]
 		void UserPick(Client client);
 
 		/// <summary>
 		/// Wait for server
 		/// </summary>
-		[OperationContract]
+		[OperationContract(IsOneWay = true)]
 		void UserWait();
 
 		/// <summary>
 		/// User got switched pack
 		/// </summary>
 		/// <param name="cardIDs"></param>
-		[OperationContract]
+		[OperationContract(IsOneWay = true)]
 		void UserSwitchPack(IList<string> cardIDs);
 
 		/// <summary>
 		/// Open booster pack of specified set
 		/// </summary>
 		/// <param name="setCode"></param>
-		[OperationContract]
+		[OperationContract(IsOneWay = true)]
 		void UserOpenBooster(string setCode);
 
 		/// <summary>
 		/// Start draft
 		/// </summary>
-		[OperationContract]
+		[OperationContract(IsOneWay = true)]
 		void UserStartDraft();
 
 		/// <summary>

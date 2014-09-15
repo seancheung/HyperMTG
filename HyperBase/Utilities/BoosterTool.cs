@@ -192,5 +192,28 @@ namespace HyperKore.Utilities
 				right--;
 			}
 		}
+
+		/// <summary>
+		/// Get cards by ids
+		/// </summary>
+		/// <param name="db"></param>
+		/// <param name="ids"></param>
+		/// <returns></returns>
+		public static IEnumerable<Card> GetCards(IEnumerable<Card> db, IEnumerable<string> ids)
+		{
+			if (db == null)
+			{
+				yield break;
+			}
+
+			foreach (string id in ids)
+			{
+				Card card = db.FirstOrDefault(c => c.ID == id);
+				if (card != null)
+				{
+					yield return card;
+				}
+			}
+		} 
 	}
 }

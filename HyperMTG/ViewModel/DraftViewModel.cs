@@ -437,20 +437,20 @@ namespace HyperMTG.ViewModel
 				Time = DateTime.Now
 			};
 
-			proxy.SendMsgAsync(msg);
+			proxy.SendMsg(msg);
 			Message = string.Empty;
 		}
 
 		public void StartExecute()
 		{
-			proxy.StartDraftAsync(Sets.Select(s => s.SetCode).ToList());
+			proxy.StartDraft(Sets.Select(s => s.SetCode).ToList());
 		}
 
 		public void PickCardExecute(ExCard exCard)
 		{
 			Hand.Add(exCard);
 			CurrentBooster.Remove(exCard);
-			proxy.SwitchPackAsync(LocalClient, CurrentBooster.Select(c => c.Card.ID).ToList());
+			proxy.SwitchPack(LocalClient, CurrentBooster.Select(c => c.Card.ID).ToList());
 		}
 
 		public void CloseExecute()
@@ -511,12 +511,12 @@ namespace HyperMTG.ViewModel
 
 		public bool CanExecutePick(ExCard exCard)
 		{
-			return CurrentBooster != null && CurrentBooster.Any() && !LocalClient.IsDone;
+			return CurrentBooster != null && CurrentBooster.Any() && !isWait;
 		}
 
 		public bool CanExecuteStart()
 		{
-			return Sets.All(p => p != null) && IsHosted && IsConnected;
+			return Sets.All(p => p != null) && IsHosted && IsConnected & !IsStarted;
 		}
 
 		public bool CanExecuteSync()
@@ -554,10 +554,6 @@ namespace HyperMTG.ViewModel
 			foreach (Client client in clients)
 			{
 				OnlineClients.Add(client);
-				if (client.ID == LocalClient.ID)
-				{
-					LocalClient = client;
-				}
 			}
 		}
 
@@ -587,19 +583,12 @@ namespace HyperMTG.ViewModel
 
 		public void UserSwitchPack(List<string> cardIDs)
 		{
-			if (isWait)
-			{
-				_timer.Start();
-				isWait = false;
-			}
-
 			ObservableCollection<ExCard> booster = new ObservableCollection<ExCard>();
 
 			Task task = new Task(() =>
 			{
 				IEnumerable<Card> db = _dbReader.LoadCards();
-
-				IEnumerable<Card> cards = db.Where(c => cardIDs.Contains(c.ID));
+				IEnumerable<Card> cards = BoosterTool.GetCards(db, cardIDs);
 				foreach (Card card in cards)
 				{
 					booster.Add(new ExCard(_compressor, _dbReader, card, _dbWriter, _imageParse));
@@ -610,6 +599,8 @@ namespace HyperMTG.ViewModel
 			{
 				CurrentBooster = booster;
 				TimerTick = 0;
+				_timer.Start();
+				isWait = false;
 			});
 		}
 

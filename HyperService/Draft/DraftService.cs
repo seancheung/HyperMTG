@@ -165,7 +165,7 @@ namespace HyperService.Draft
 		/// </summary>
 		/// <param name="client"></param>
 		/// <param name="cardIDs"></param>
-		public void SwitchPack(Client client, IList<string> cardIDs)
+		public void SwitchPack(Client client, List<string> cardIDs)
 		{
 			lock (syncObj)
 			{
@@ -238,7 +238,7 @@ namespace HyperService.Draft
 		/// Start draft
 		/// </summary>
 		/// <param name="setCodes"></param>
-		public void StartDraft(IList<string> setCodes)
+		public void StartDraft(List<string> setCodes)
 		{
 			_setCodes = setCodes;
 

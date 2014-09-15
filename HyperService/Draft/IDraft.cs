@@ -25,21 +25,21 @@ namespace HyperService.Draft
 		/// Start draft
 		/// </summary>
 		/// <param name="setCodes"></param>
-		[OperationContract]
-		void StartDraft(IList<string> setCodes);
+		[OperationContract(IsOneWay = true)]
+		void StartDraft(List<string> setCodes);
 
 		/// <summary>
 		/// Switch pack
 		/// </summary>
 		/// <param name="client"></param>
 		/// <param name="cardIDs"></param>
-		[OperationContract]
-		void SwitchPack(Client client, IList<string> cardIDs);
+		[OperationContract(IsOneWay = true)]
+		void SwitchPack(Client client, List<string> cardIDs);
 
 		/// <summary>
 		/// End draft
 		/// </summary>
-		[OperationContract]
+		[OperationContract(IsOneWay = true)]
 		void EndDraft();
 
 		/// <summary>
