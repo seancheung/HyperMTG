@@ -2,7 +2,7 @@
 {
 	public class FilterViewModel
 	{
-		private static FilterViewModel instance;
+		private static FilterViewModel _instance;
 
 		private FilterViewModel()
 		{
@@ -10,7 +10,7 @@
 
 		internal static FilterViewModel Instance
 		{
-			get { return instance ?? (instance = new FilterViewModel()); }
+			get { return _instance ?? (_instance = new FilterViewModel()); }
 		}
 	}
 }

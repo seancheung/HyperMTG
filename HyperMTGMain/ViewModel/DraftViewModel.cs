@@ -2,7 +2,7 @@
 {
 	public class DraftViewModel
 	{
-		private static DraftViewModel instance;
+		private static DraftViewModel _instance;
 
 		private DraftViewModel()
 		{
@@ -10,7 +10,7 @@
 
 		internal static DraftViewModel Instance
 		{
-			get { return instance ?? (instance = new DraftViewModel()); }
+			get { return _instance ?? (_instance = new DraftViewModel()); }
 		}
 	}
 }

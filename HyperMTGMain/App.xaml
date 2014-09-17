@@ -5,6 +5,10 @@
              StartupUri="View/Launcher.xaml">
     <Application.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/HyperStyle;component/Assets/Magic.xaml" />
+                <ResourceDictionary Source="Helper/Converter/ConverterResource.xaml" />
+            </ResourceDictionary.MergedDictionaries>
             <vm:ViewModelManager x:Key="ViewModelManager" />
         </ResourceDictionary>
     </Application.Resources>

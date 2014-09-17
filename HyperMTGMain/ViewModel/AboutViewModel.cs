@@ -2,7 +2,7 @@
 {
 	public class AboutViewModel
 	{
-		private static AboutViewModel instance;
+		private static AboutViewModel _instance;
 
 		private AboutViewModel()
 		{
@@ -10,7 +10,7 @@
 
 		internal static AboutViewModel Instance
 		{
-			get { return instance ?? (instance = new AboutViewModel()); }
+			get { return _instance ?? (_instance = new AboutViewModel()); }
 		}
 	}
 }

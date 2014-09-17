@@ -4,6 +4,7 @@
         Title="DraftWindow" Width="300"
         Height="300"
         DataContext="{Binding Source={StaticResource ViewModelManager},
-                              Path=DraftViewModel}">
+                              Path=DraftViewModel}"
+        WindowStartupLocation="CenterScreen">
     <Grid />
 </Window>

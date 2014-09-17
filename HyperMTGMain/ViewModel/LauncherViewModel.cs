@@ -1,8 +1,12 @@
-﻿namespace HyperMTGMain.ViewModel
+﻿using System.Windows.Input;
+using HyperMTGMain.Helper;
+using HyperMTGMain.View;
+
+namespace HyperMTGMain.ViewModel
 {
-	public class LauncherViewModel
+	public class LauncherViewModel : ObservableClass
 	{
-		private static LauncherViewModel instance;
+		private static LauncherViewModel _instance;
 
 		private LauncherViewModel()
 		{
@@ -10,7 +14,47 @@
 
 		internal static LauncherViewModel Instance
 		{
-			get { return instance ?? (instance = new LauncherViewModel()); }
+			get { return _instance ?? (_instance = new LauncherViewModel()); }
+		}
+
+		public ICommand OpenAboutCommand
+		{
+			get { return new RelayCommand(() => ViewManager.AboutWindow.ShowDialog()); }
+		}
+
+		public ICommand OpenAnalyzerCommand
+		{
+			get { return new RelayCommand(() => ViewManager.AnalyzerWindow.ShowDialog()); }
+		}
+
+		public ICommand OpenDatabaseCommand
+		{
+			get { return new RelayCommand(() => ViewManager.DatabaseWindow.ShowDialog()); }
+		}
+
+		public ICommand OpenDeckEditorCommand
+		{
+			get { return new RelayCommand(() => ViewManager.DeckEditorWindow.ShowDialog()); }
+		}
+
+		public ICommand OpenDraftCommand
+		{
+			get { return new RelayCommand(() => ViewManager.DraftWindow.ShowDialog()); }
+		}
+
+		public ICommand OpenFilterCommand
+		{
+			get { return new RelayCommand(() => ViewManager.FilterWindow.ShowDialog()); }
+		}
+
+		public ICommand OpenPreferenceCommand
+		{
+			get { return new RelayCommand(() => ViewManager.PreferenceWindow.ShowDialog()); }
+		}
+
+		public ICommand OpenSealedCommand
+		{
+			get { return new RelayCommand(() => ViewManager.SealedWindow.ShowDialog()); }
 		}
 	}
 }

@@ -34,8 +34,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MahApps.Metro">
+      <HintPath>..\net40\MahApps.Metro.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\net40\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -53,6 +60,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helper\ObservableClass.cs" />
+    <Compile Include="Helper\RelayCommand.cs" />
+    <Compile Include="Helper\Converter\VisibilityConverter.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewModel\AboutViewModel.cs" />
     <Compile Include="ViewModel\AnalyzerViewModel.cs" />
     <Compile Include="ViewModel\DatabaseViewModel.cs" />
@@ -95,6 +106,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Helper\Converter\ConverterResource.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -160,6 +175,10 @@
     <ProjectReference Include="..\HyperBase\HyperKore.csproj">
       <Project>{74f65d7f-c999-4a0b-8316-9c093660dcf7}</Project>
       <Name>HyperKore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HyperStyle\HyperStyle.csproj">
+      <Project>{b5ed551c-cedd-40c7-a8fc-ac2dd757d16f}</Project>
+      <Name>HyperStyle</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

@@ -2,7 +2,7 @@
 {
 	public class PreferenceViewModel
 	{
-		private static PreferenceViewModel instance;
+		private static PreferenceViewModel _instance;
 
 		private PreferenceViewModel()
 		{
@@ -10,7 +10,7 @@
 
 		internal static PreferenceViewModel Instance
 		{
-			get { return instance ?? (instance = new PreferenceViewModel()); }
+			get { return _instance ?? (_instance = new PreferenceViewModel()); }
 		}
 	}
 }

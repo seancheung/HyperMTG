@@ -2,7 +2,7 @@
 {
 	public class AnalyzerViewModel
 	{
-		private static AnalyzerViewModel instance;
+		private static AnalyzerViewModel _instance;
 
 		private AnalyzerViewModel()
 		{
@@ -10,7 +10,7 @@
 
 		internal static AnalyzerViewModel Instance
 		{
-			get { return instance ?? (instance = new AnalyzerViewModel()); }
+			get { return _instance ?? (_instance = new AnalyzerViewModel()); }
 		}
 	}
 }

@@ -2,7 +2,7 @@
 {
 	public class DatabaseViewModel
 	{
-		private static DatabaseViewModel instance;
+		private static DatabaseViewModel _instance;
 
 		private DatabaseViewModel()
 		{
@@ -10,7 +10,7 @@
 
 		internal static DatabaseViewModel Instance
 		{
-			get { return instance ?? (instance = new DatabaseViewModel()); }
+			get { return _instance ?? (_instance = new DatabaseViewModel()); }
 		}
 	}
 }

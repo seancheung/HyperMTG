@@ -1,8 +1,188 @@
-﻿<Window x:Class="HyperMTGMain.View.Launcher"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Launcher" Height="300" Width="300">
-    <Grid>
-        
+﻿<metro:MetroWindow x:Class="HyperMTGMain.View.Launcher"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                   Title="Launcher" Width="720"
+                   Height="720"
+                   DataContext="{Binding Source={StaticResource ViewModelManager},
+                                         Path=LauncherViewModel}"
+                   EnableDWMDropShadow="True"
+                   ShowIconOnTitleBar="False" ShowTitleBar="True"
+                   SnapsToDevicePixels="True" TitleCaps="True"
+                   WindowStartupLocation="CenterScreen"
+                   WindowStyle="None">
+    <metro:MetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="/MahApps.Metro;component/Styles/Accents/basedark.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style BasedOn="{StaticResource {x:Type metro:Tile}}" TargetType="{x:Type metro:Tile}">
+                <Setter Property="Width" Value="Auto" />
+                <Setter Property="Height" Value="Auto" />
+                <Setter Property="Margin" Value="3" />
+                <Style.Triggers>
+                    <EventTrigger RoutedEvent="MouseEnter">
+                        <BeginStoryboard>
+                            <Storyboard TargetProperty="Margin">
+                                <ThicknessAnimation Duration="0:0:0.3" To="1" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="MouseLeave">
+                        <BeginStoryboard>
+                            <Storyboard TargetProperty="Margin">
+                                <ThicknessAnimation Duration="0:0:0.3" To="3" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </metro:MetroWindow.Resources>
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <metro:Tile Title="SEALED" Grid.Row="0"
+                    Grid.Column="0"
+                    Background="{StaticResource MetroBrushViolet}"
+                    Command="{Binding OpenSealedCommand}">
+            <metro:Tile.Content>
+                <Path Margin="5"
+                      Fill="{Binding Background,
+                                     RelativeSource={RelativeSource FindAncestor,
+                                                                    AncestorType={x:Type metro:Tile}}}"
+                      Style="{StaticResource PathB}" />
+            </metro:Tile.Content>
+        </metro:Tile>
+        <metro:Tile Title="DRAFT" Grid.Row="0"
+                    Grid.Column="1"
+                    Background="{StaticResource MetroBrushEmerald}"
+                    Command="{Binding OpenDraftCommand}">
+            <metro:Tile.Content>
+                <Path Margin="5"
+                      Fill="{Binding Background,
+                                     RelativeSource={RelativeSource FindAncestor,
+                                                                    AncestorType={x:Type metro:Tile}}}"
+                      Style="{StaticResource PathG}" />
+            </metro:Tile.Content>
+        </metro:Tile>
+        <metro:Tile Title="ANALYZER" Grid.Row="1"
+                    Grid.Column="0" Grid.ColumnSpan="2"
+                    Background="{StaticResource MetroBrushOrange}"
+                    Command="{Binding OpenAnalyzerCommand}">
+            <metro:Tile.Content>
+                <Path Margin="5"
+                      Fill="{Binding Background,
+                                     RelativeSource={RelativeSource FindAncestor,
+                                                                    AncestorType={x:Type metro:Tile}}}"
+                      Style="{StaticResource PathW}" />
+            </metro:Tile.Content>
+        </metro:Tile>
+        <metro:Tile Title="GALLARY" Grid.Row="2"
+                    Grid.Column="1"
+                    Background="{StaticResource MetroBrushMagenta}">
+            <metro:Tile.Content>
+                <Path Margin="5"
+                      Fill="{Binding Background,
+                                     RelativeSource={RelativeSource FindAncestor,
+                                                                    AncestorType={x:Type metro:Tile}}}"
+                      Style="{StaticResource PathR}" />
+            </metro:Tile.Content>
+        </metro:Tile>
+        <metro:Tile Title="DATABASE" Grid.Row="2"
+                    Grid.RowSpan="2" Grid.Column="0"
+                    Background="{StaticResource MetroBrushCyan}"
+                    Command="{Binding OpenDatabaseCommand}">
+            <metro:Tile.Content>
+                <Path Margin="5"
+                      Fill="{Binding Background,
+                                     RelativeSource={RelativeSource FindAncestor,
+                                                                    AncestorType={x:Type metro:Tile}}}"
+                      Style="{StaticResource PathUB}" />
+            </metro:Tile.Content>
+        </metro:Tile>
+        <metro:Tile Title="PREFERENCE" Grid.Row="3"
+                    Grid.Column="1"
+                    Background="{StaticResource MetroBrushYellow}"
+                    Command="{Binding OpenPreferenceCommand}">
+            <metro:Tile.Content>
+                <Path Margin="5"
+                      Fill="{Binding Background,
+                                     RelativeSource={RelativeSource FindAncestor,
+                                                                    AncestorType={x:Type metro:Tile}}}"
+                      Style="{StaticResource PathGU}" />
+            </metro:Tile.Content>
+        </metro:Tile>
+        <metro:Tile Title="DECK EDITOR" Grid.Row="0"
+                    Grid.RowSpan="2" Grid.Column="2"
+                    Grid.ColumnSpan="2"
+                    Background="{StaticResource MetroBrushRed}"
+                    Command="{Binding OpenDeckEditorCommand}"
+                    TitleFontSize="25">
+            <metro:Tile.Content>
+                <Path Margin="5"
+                      Fill="{Binding Background,
+                                     RelativeSource={RelativeSource FindAncestor,
+                                                                    AncestorType={x:Type metro:Tile}}}"
+                      Style="{StaticResource PathRW}" />
+            </metro:Tile.Content>
+        </metro:Tile>
+        <metro:Tile Title="ABOUT" Grid.Row="2"
+                    Grid.Column="2"
+                    Background="{StaticResource MetroBrushGreen}"
+                    Command="{Binding OpenAboutCommand}">
+            <metro:Tile.Content>
+                <Path Margin="5"
+                      Fill="{Binding Background,
+                                     RelativeSource={RelativeSource FindAncestor,
+                                                                    AncestorType={x:Type metro:Tile}}}"
+                      Style="{StaticResource PathBG}" />
+            </metro:Tile.Content>
+        </metro:Tile>
+        <metro:Tile Title="HELP" Grid.Row="2"
+                    Grid.Column="3"
+                    Background="{StaticResource MetroBrushCobalt}">
+            <metro:Tile.Content>
+                <Path Margin="5"
+                      Fill="{Binding Background,
+                                     RelativeSource={RelativeSource FindAncestor,
+                                                                    AncestorType={x:Type metro:Tile}}}"
+                      Style="{StaticResource PathU}" />
+            </metro:Tile.Content>
+        </metro:Tile>
+        <metro:Tile Grid.Row="3" Grid.Column="2"
+                    Background="{StaticResource MetroBrushCrimson}">
+            <metro:Tile.Content>
+                <Path Margin="5"
+                      Fill="{Binding Background,
+                                     RelativeSource={RelativeSource FindAncestor,
+                                                                    AncestorType={x:Type metro:Tile}}}"
+                      Style="{StaticResource PathUR}" />
+            </metro:Tile.Content>
+        </metro:Tile>
+        <metro:Tile Title="QUIT" Grid.Row="3"
+                    Grid.Column="3"
+                    Background="{StaticResource MetroBrushIndigo}">
+            <metro:Tile.Content>
+                <Path Margin="5"
+                      Fill="{Binding Background,
+                                     RelativeSource={RelativeSource FindAncestor,
+                                                                    AncestorType={x:Type metro:Tile}}}"
+                      Style="{StaticResource PathBR}" />
+            </metro:Tile.Content>
+        </metro:Tile>
     </Grid>
-</Window>
+</metro:MetroWindow>

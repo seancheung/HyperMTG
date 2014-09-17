@@ -2,7 +2,7 @@
 {
 	public class DeckEditorViewModel
 	{
-		private static DeckEditorViewModel instance;
+		private static DeckEditorViewModel _instance;
 
 		private DeckEditorViewModel()
 		{
@@ -10,7 +10,7 @@
 
 		internal static DeckEditorViewModel Instance
 		{
-			get { return instance ?? (instance = new DeckEditorViewModel()); }
+			get { return _instance ?? (_instance = new DeckEditorViewModel()); }
 		}
 	}
 }
