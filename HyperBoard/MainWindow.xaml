@@ -3,20 +3,83 @@
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:lc="clr-namespace:HyperBoard"
                    xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-                   Title="MainWindow" Width="525"
-                   Height="350" EnableDWMDropShadow="True">
+                   Width="600" Height="600"
+                   EnableDWMDropShadow="True"
+                   SaveWindowPosition="True"
+                   ShowIconOnTitleBar="False" ShowTitleBar="False"
+                   SnapsToDevicePixels="True" WindowStyle="None">
+    <metro:MetroWindow.Resources>
+        <Style BasedOn="{StaticResource {x:Type metro:Tile}}" TargetType="{x:Type metro:Tile}">
+            <Setter Property="Width" Value="Auto" />
+            <Setter Property="Height" Value="Auto" />
+            <Setter Property="Margin" Value="3" />
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard TargetProperty="Margin">
+                            <ThicknessAnimation Duration="0:0:0.3" To="1" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard TargetProperty="Margin">
+                            <ThicknessAnimation Duration="0:0:0.3" To="3" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+    </metro:MetroWindow.Resources>
     <metro:MetroWindow.DataContext>
         <lc:MainWindowViewModel />
     </metro:MetroWindow.DataContext>
-    <metro:MetroWindow.RightWindowCommands>
-        <metro:WindowCommands>
-            <Button Content="Fly" />
-        </metro:WindowCommands>
-    </metro:MetroWindow.RightWindowCommands>
-    <Canvas>
-        <Ellipse Canvas.Left="{Binding Position[0]}"
-                 Canvas.Top="{Binding Position[1]}"
-                 Width="50" Height="50"
-                 Fill="Black" />
-    </Canvas>
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <metro:Tile Title="SEALED" Grid.Row="0"
+                    Grid.Column="0"
+                    Background="{StaticResource MetroBrushViolet}" />
+        <metro:Tile Title="DRAFT" Grid.Row="0"
+                    Grid.Column="1"
+                    Background="{StaticResource MetroBrushEmerald}" />
+        <metro:Tile Title="ANALYZER" Grid.Row="1"
+                    Grid.Column="0" Grid.ColumnSpan="2"
+                    Background="{StaticResource MetroBrushOrange}" />
+        <metro:Tile Title="GALLARY" Grid.Row="2"
+                    Grid.Column="1"
+                    Background="{StaticResource MetroBrushMagenta}" />
+        <metro:Tile Title="DATABASE" Grid.Row="2"
+                    Grid.RowSpan="2" Grid.Column="0"
+                    Background="{StaticResource MetroBrushCyan}" />
+        <metro:Tile Title="PREFERENCE" Grid.Row="3"
+                    Grid.Column="1"
+                    Background="{StaticResource MetroBrushYellow}" />
+        <metro:Tile Title="DECK EDITOR" Grid.Row="0"
+                    Grid.RowSpan="2" Grid.Column="2"
+                    Grid.ColumnSpan="2"
+                    Background="{StaticResource MetroBrushRed}"
+                    TitleFontSize="25" />
+        <metro:Tile Title="ABOUT" Grid.Row="2"
+                    Grid.Column="2"
+                    Background="{StaticResource MetroBrushGreen}" />
+        <metro:Tile Title="HELP" Grid.Row="2"
+                    Grid.Column="3"
+                    Background="{StaticResource MetroBrushCobalt}" />
+        <metro:Tile Grid.Row="3" Grid.Column="2"
+                    Background="{StaticResource MetroBrushCrimson}" />
+        <metro:Tile Title="QUIT" Grid.Row="3"
+                    Grid.Column="3"
+                    Background="{StaticResource MetroBrushIndigo}"/>
+    </Grid>
 </metro:MetroWindow>

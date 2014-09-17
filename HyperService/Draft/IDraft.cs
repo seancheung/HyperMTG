@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ServiceModel;
+using HyperService.Common;
 
 namespace HyperService.Draft
 {
@@ -12,7 +13,14 @@ namespace HyperService.Draft
 		/// <param name="client"></param>
 		/// <returns></returns>
 		[OperationContract(IsInitiating = true)]
-		bool Connect(Client client);
+		void Connect(Client client);
+
+		/// <summary>
+		/// Set max player amount
+		/// </summary>
+		/// <param name="count"></param>
+		[OperationContract(IsOneWay = true)]
+		void SetMaxPlayers(int count);
 
 		/// <summary>
 		/// Send message

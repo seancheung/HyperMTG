@@ -1,13 +1,13 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace HyperService.Draft
+namespace HyperService.Common
 {
 	[DataContract]
 	public class Message
 	{
 		/// <summary>
-		/// ID of the sender client
+		/// ID of the sender player
 		/// </summary>
 		[DataMember]
 		public Guid Sender { get; set; }

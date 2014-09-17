@@ -14,6 +14,7 @@ using HyperMTG.Helper;
 using HyperMTG.Model;
 using HyperMTG.Properties;
 using HyperPlugin;
+using HyperService.Common;
 using HyperService.Draft;
 
 namespace HyperMTG.ViewModel
@@ -51,7 +52,6 @@ namespace HyperMTG.ViewModel
 		private bool isWait;
 
 		private DraftClient proxy;
-		private Client receiver;
 
 		public DraftViewModel()
 		{
@@ -75,7 +75,7 @@ namespace HyperMTG.ViewModel
 			Size = new PageSize();
 			Ratio = 0.5;
 			_playerAmount = 2;
-			IP = "localhost:7997";
+			IP = "localhost";
 			MessageContent = string.Empty;
 			service = new DraftService();
 			LocalClient = new Client("Guest");
@@ -181,8 +181,15 @@ namespace HyperMTG.ViewModel
 			get { return _playerAmount; }
 			set
 			{
-				_playerAmount = value;
-				RaisePropertyChanged("PlayerAmount");
+				if (_playerAmount != value)
+				{
+					_playerAmount = value;
+					RaisePropertyChanged("PlayerAmount");
+					if (IsConnected)
+					{
+						proxy.SetMaxPlayersAsync(value);
+					}
+				}
 			}
 		}
 
@@ -266,7 +273,7 @@ namespace HyperMTG.ViewModel
 		}
 
 		/// <summary>
-		/// Local client
+		/// Local player
 		/// </summary>
 		public Client LocalClient
 		{
@@ -279,7 +286,7 @@ namespace HyperMTG.ViewModel
 		}
 
 		/// <summary>
-		/// Whether local client is connected to a remote server
+		/// Whether local player is connected to a remote server
 		/// </summary>
 		public bool IsConnected
 		{
@@ -307,7 +314,7 @@ namespace HyperMTG.ViewModel
 		}
 
 		/// <summary>
-		/// Whether client is onlie
+		/// Whether player is onlie
 		/// </summary>
 		public bool IsOnline
 		{
@@ -396,16 +403,14 @@ namespace HyperMTG.ViewModel
 			InstanceContext context = new InstanceContext(this);
 			proxy = new DraftClient(context);
 			string servicePath = proxy.Endpoint.ListenUri.AbsolutePath;
-			//string serviceListenPort = proxy.Endpoint.Address.Uri.Port.ToString();
-			proxy.Endpoint.Address = new EndpointAddress("net.tcp://" + IP + servicePath);
+			string serviceListenPort = proxy.Endpoint.Address.Uri.Port.ToString();
+			proxy.Endpoint.Address =
+				new EndpointAddress(string.Format("net.tcp://{0}:{1}{2}", IP, serviceListenPort, servicePath));
 
 			try
 			{
 				proxy.Open();
 				proxy.ConnectAsync(LocalClient);
-				IsConnected = true;
-				Message = string.Empty;
-				Info = "Connected";
 			}
 			catch (EndpointNotFoundException)
 			{
@@ -415,10 +420,10 @@ namespace HyperMTG.ViewModel
 
 		public void HostExecute()
 		{
-			string[] ip = IP.Split(':');
-			IsHosted = service.StartService(ip[0], Int32.Parse(ip[1]));
+			IsHosted = service.StartService();
 			if (IsHosted)
 			{
+				service.SetMaxPlayers(PlayerAmount);
 				Info = "Service Hosted";
 			}
 		}
@@ -467,7 +472,7 @@ namespace HyperMTG.ViewModel
 			}
 			if (IsStarted)
 			{
-				UserEndDraft();
+				OnEndDraft();
 				IsStarted = false;
 			}
 			OnlineClients.Clear();
@@ -548,6 +553,11 @@ namespace HyperMTG.ViewModel
 
 		#region Implementation of IDraftCallback
 
+		public void RefreshMaxPlayers(int count)
+		{
+			PlayerAmount = count;
+		}
+
 		public void RefreshClients(List<Client> clients)
 		{
 			OnlineClients.Clear();
@@ -557,7 +567,31 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
-		public void Receive(Message msg)
+		public void OnConnect(ConnectionResult result)
+		{
+			switch (result)
+			{
+				case ConnectionResult.Success:
+					IsConnected = true;
+					Message = string.Empty;
+					Info = "Connected";
+					break;
+				case ConnectionResult.RoomFull:
+					break;
+				case ConnectionResult.AlreadyStarted:
+					break;
+				case ConnectionResult.UserExist:
+					break;
+				case ConnectionResult.Banned:
+					break;
+				case ConnectionResult.Unkown:
+					break;
+				default:
+					throw new ArgumentOutOfRangeException("result");
+			}
+		}
+
+		public void OnReceive(Message msg)
 		{
 			Client sender = OnlineClients.FirstOrDefault(c => c.ID == msg.Sender);
 			if (sender != null)
@@ -566,22 +600,28 @@ namespace HyperMTG.ViewModel
 			}
 		}
 
-		public void UserJoin(Client client)
+		public void OnJoin(Client client)
 		{
 			OnMessage("System", DateTime.Now, string.Format("{0} Entered", client.Name));
 		}
 
-		public void UserLeave(Client client)
+		public void OnLeave(Client client)
 		{
 			OnMessage("System", DateTime.Now, string.Format("{0} Left", client.Name));
 		}
 
-		public void UserPick(Client client)
+		public void OnPick(Client client)
 		{
-			Info = client.Name + " is ready to switch";
+			OnMessage("System", DateTime.Now, string.Format("{0} picked", client.Name));
 		}
 
-		public void UserSwitchPack(List<string> cardIDs)
+		public void OnWait()
+		{
+			_timer.Stop();
+			isWait = true;
+		}
+
+		public void OnSwitchPack(List<string> cardIDs)
 		{
 			ObservableCollection<ExCard> booster = new ObservableCollection<ExCard>();
 
@@ -604,13 +644,7 @@ namespace HyperMTG.ViewModel
 			});
 		}
 
-		public void UserWait()
-		{
-			_timer.Stop();
-			isWait = true;
-		}
-
-		public void UserOpenBooster(string setCode)
+		public void OnOpenBooster(string setCode)
 		{
 			ObservableCollection<ExCard> booster = new ObservableCollection<ExCard>();
 
@@ -630,18 +664,19 @@ namespace HyperMTG.ViewModel
 			{
 				CurrentBooster = booster;
 				TimerTick = 0;
+				_timer.Start();
+				isWait = false;
 			});
 		}
 
-		public void UserStartDraft()
+		public void OnStartDraft()
 		{
 			CurrentBooster.Clear();
 			Hand.Clear();
 			IsStarted = true;
-			_timer.Start();
 		}
 
-		public void UserEndDraft()
+		public void OnEndDraft()
 		{
 			CurrentBooster.Clear();
 			TimerTick = 0;
@@ -661,92 +696,113 @@ namespace HyperMTG.ViewModel
 			throw new NotImplementedException();
 		}
 
-		public IAsyncResult BeginReceive(Message msg, AsyncCallback callback, object asyncState)
+		public IAsyncResult BeginOnConnect(ConnectionResult result, AsyncCallback callback, object asyncState)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void EndReceive(IAsyncResult result)
+		public void EndOnConnect(IAsyncResult result)
 		{
 			throw new NotImplementedException();
 		}
 
-		public IAsyncResult BeginUserJoin(Client client, AsyncCallback callback, object asyncState)
+		public IAsyncResult BeginOnJoin(Client client, AsyncCallback callback, object asyncState)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void EndUserJoin(IAsyncResult result)
+		public void EndOnJoin(IAsyncResult result)
 		{
 			throw new NotImplementedException();
 		}
 
-		public IAsyncResult BeginUserLeave(Client client, AsyncCallback callback, object asyncState)
+		public IAsyncResult BeginOnReceive(Message msg, AsyncCallback callback, object asyncState)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void EndUserLeave(IAsyncResult result)
+		public void EndOnReceive(IAsyncResult result)
 		{
 			throw new NotImplementedException();
 		}
 
-		public IAsyncResult BeginUserPick(Client client, AsyncCallback callback, object asyncState)
+		public IAsyncResult BeginOnLeave(Client client, AsyncCallback callback, object asyncState)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void EndUserPick(IAsyncResult result)
+		public void EndOnLeave(IAsyncResult result)
 		{
 			throw new NotImplementedException();
 		}
 
-		public IAsyncResult BeginUserWait(AsyncCallback callback, object asyncState)
+		public IAsyncResult BeginOnPick(Client client, AsyncCallback callback, object asyncState)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void EndUserWait(IAsyncResult result)
+		public void EndOnPick(IAsyncResult result)
 		{
 			throw new NotImplementedException();
 		}
 
-		public IAsyncResult BeginUserSwitchPack(List<string> cardIDs, AsyncCallback callback, object asyncState)
+		public IAsyncResult BeginOnWait(AsyncCallback callback, object asyncState)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void EndUserSwitchPack(IAsyncResult result)
+		public void EndOnWait(IAsyncResult result)
 		{
 			throw new NotImplementedException();
 		}
 
-		public IAsyncResult BeginUserOpenBooster(string setCode, AsyncCallback callback, object asyncState)
+		public IAsyncResult BeginOnSwitchPack(List<string> cardIDs, AsyncCallback callback, object asyncState)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void EndUserOpenBooster(IAsyncResult result)
+		public void EndOnSwitchPack(IAsyncResult result)
 		{
 			throw new NotImplementedException();
 		}
 
-		public IAsyncResult BeginUserEndDraft(AsyncCallback callback, object asyncState)
+		public IAsyncResult BeginOnOpenBooster(string setCode, AsyncCallback callback, object asyncState)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void EndUserEndDraft(IAsyncResult result)
+		public void EndOnOpenBooster(IAsyncResult result)
 		{
 			throw new NotImplementedException();
 		}
 
-		public IAsyncResult BeginUserStartDraft(AsyncCallback callback, object asyncState)
+		public IAsyncResult BeginOnStartDraft(AsyncCallback callback, object asyncState)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void EndUserStartDraft(IAsyncResult result)
+		public void EndOnStartDraft(IAsyncResult result)
+		{
+			throw new NotImplementedException();
+		}
+
+
+		public IAsyncResult BeginOnEndDraft(AsyncCallback callback, object asyncState)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void EndOnEndDraft(IAsyncResult result)
+		{
+			throw new NotImplementedException();
+		}
+
+		public IAsyncResult BeginRefreshMaxPlayers(int count, AsyncCallback callback, object asyncState)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void EndRefreshMaxPlayers(IAsyncResult result)
 		{
 			throw new NotImplementedException();
 		}

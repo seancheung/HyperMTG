@@ -8,7 +8,8 @@
                 <ResourceDictionary Source="/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="/MahApps.Metro;component/Styles/Colors.xaml" />
-                <ResourceDictionary Source="/MahApps.Metro;component/Styles/Accents/orange.xaml" />
+                <ResourceDictionary Source="/MahApps.Metro;component/Styles/Accents/basedark.xaml" />
+                <ResourceDictionary Source="/HyperStyle;component/Assets/Magic.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

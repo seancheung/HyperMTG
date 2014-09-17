@@ -137,6 +137,7 @@
                           Header="Players">
                     <StackPanel>
                         <Slider Margin="0,5" AutoToolTipPlacement="TopLeft"
+                                IsEnabled="{Binding IsHosted}"
                                 IsSnapToTickEnabled="True" Maximum="8"
                                 Minimum="2" SmallChange="1"
                                 TickPlacement="TopLeft"

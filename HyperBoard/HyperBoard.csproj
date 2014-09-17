@@ -107,6 +107,10 @@
       <Project>{6aea2c23-af08-46d1-b887-302a6f860b84}</Project>
       <Name>HyperGame</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HyperStyle\HyperStyle.csproj">
+      <Project>{b5ed551c-cedd-40c7-a8fc-ac2dd757d16f}</Project>
+      <Name>HyperStyle</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

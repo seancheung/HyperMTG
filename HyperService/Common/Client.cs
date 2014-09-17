@@ -1,16 +1,18 @@
-using System;
 using System.Runtime.Serialization;
 
-namespace HyperService.Draft
+namespace HyperService.Common
 {
 	[DataContract]
-	public class Client
+	public class Client : Entity
 	{
-		/// <summary>
-		/// Client ID
-		/// </summary>
-		[DataMember]
-		public Guid ID { get; private set; }
+		public Client()
+		{
+		}
+
+		public Client(string name)
+		{
+			Name = name;
+		}
 
 		/// <summary>
 		/// Client name
@@ -29,16 +31,5 @@ namespace HyperService.Draft
 		/// </summary>
 		[DataMember]
 		public bool IsBot { get; set; }
-
-		public Client()
-		{
-			ID = Guid.NewGuid();
-		}
-
-		public Client(string name)
-		{
-			Name = name;
-			ID = Guid.NewGuid();
-		}
 	}
 }

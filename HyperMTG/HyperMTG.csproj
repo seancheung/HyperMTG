@@ -151,9 +151,6 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Service References\DraftSVC\Arrays.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Service References\DraftSVC\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -277,7 +274,10 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Service References\DraftSVC\HyperService.Draft.xsd">
+    <None Include="Service References\DraftSVC\Arrays.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DraftSVC\HyperService.Common.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\DraftSVC\service.wsdl" />

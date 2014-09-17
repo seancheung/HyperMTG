@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B4E7091F-D2E8-4FFD-A7C9-920E7379431E}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{64A87445-660C-4FF3-9AC7-2F94845AC6CE}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HyperService</RootNamespace>
-    <AssemblyName>HyperService</AssemblyName>
+    <RootNamespace>HyperHost</RootNamespace>
+    <AssemblyName>HyperHost</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -20,9 +21,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -42,28 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\Client.cs" />
-    <Compile Include="Common\ConnectionError.cs" />
-    <Compile Include="Common\Entity.cs" />
-    <Compile Include="Common\Service.cs" />
-    <Compile Include="Draft\DraftService.cs" />
-    <Compile Include="Draft\IDraft.cs" />
-    <Compile Include="Draft\IDraftCallBack.cs" />
-    <Compile Include="Common\Message.cs" />
-    <Compile Include="Game\ActionType.cs" />
-    <Compile Include="Game\GameService.cs" />
-    <Compile Include="Game\GameCard.cs" />
-    <Compile Include="Game\CounterType.cs" />
-    <Compile Include="Game\CardInterfaces.cs" />
-    <Compile Include="Game\GameMode.cs" />
-    <Compile Include="Game\IGame.cs" />
-    <Compile Include="Game\IGameCallback.cs" />
-    <Compile Include="Game\Player.cs" />
-    <Compile Include="Game\Status.cs" />
-    <Compile Include="Game\Step.cs" />
-    <Compile Include="Game\Team.cs" />
-    <Compile Include="Game\TeamStatus.cs" />
-    <Compile Include="Game\Zone.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -71,10 +51,16 @@
       <Project>{74f65d7f-c999-4a0b-8316-9c093660dcf7}</Project>
       <Name>HyperKore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HyperLogger\HyperLogger.csproj">
-      <Project>{ea84d043-5a33-4ca4-bc1d-78302d45a73e}</Project>
-      <Name>HyperLogger</Name>
+    <ProjectReference Include="..\HyperService\HyperService.csproj">
+      <Project>{b4e7091f-d2e8-4ffd-a7c9-920e7379431e}</Project>
+      <Name>HyperService</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

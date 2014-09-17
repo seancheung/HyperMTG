@@ -182,7 +182,7 @@ namespace HyperKore.Utilities
 		{
 			return !string.IsNullOrWhiteSpace(input) &&
 			       Regex.IsMatch(input,
-				       @"(localhost|((?:(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d))))):\d{4}",
+				       @"(localhost|((?:(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))))",
 				       RegexOptions.IgnoreCase | RegexOptions.Multiline);
 		}
 	}

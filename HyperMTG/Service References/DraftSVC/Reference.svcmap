@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="0d8291fe-23c9-47d5-bbaa-55be9ce05e40" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="bef73f99-7b32-4177-ab3f-f546a7cdbaa2" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>true</GenerateAsynchronousMethods>
     <EnableDataBinding>true</EnableDataBinding>
@@ -20,14 +20,14 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="net.tcp://localhost:7996/HyperService.Draft/mex" Protocol="mex" SourceId="1" />
+    <MetadataSource Address="net.tcp://localhost:5932/HyperService/mex" Protocol="mex" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="4f0b633e-17d0-4b72-baef-08ae8529e8fc" SourceId="1" SourceUrl="net.tcp://localhost:7996/HyperService.Draft/mex" />
-    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="a93eb6f7-40e9-4ec6-922a-60302bcd33ed" SourceId="1" SourceUrl="net.tcp://localhost:7996/HyperService.Draft/mex" />
-    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="3d231681-1d8e-48d1-8e5f-166132f58035" SourceId="1" SourceUrl="net.tcp://localhost:7996/HyperService.Draft/mex" />
-    <MetadataFile FileName="HyperService.Draft.xsd" MetadataType="Schema" ID="d69e0870-042f-4c17-b71d-03dc71383fe9" SourceId="1" SourceUrl="net.tcp://localhost:7996/HyperService.Draft/mex" />
-    <MetadataFile FileName="Arrays.xsd" MetadataType="Schema" ID="0e3bbfe3-3aed-4e12-b121-28f8beeae41b" SourceId="1" SourceUrl="net.tcp://localhost:7996/HyperService.Draft/mex" />
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="faa94322-c19c-4919-aa66-b784326630d7" SourceId="1" SourceUrl="net.tcp://localhost:5932/HyperService/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="ecc4fd80-39e1-453e-8e8c-7308d4419ba2" SourceId="1" SourceUrl="net.tcp://localhost:5932/HyperService/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="31a252b9-aadb-4322-9bd2-1245ebfd88b6" SourceId="1" SourceUrl="net.tcp://localhost:5932/HyperService/mex" />
+    <MetadataFile FileName="HyperService.Common.xsd" MetadataType="Schema" ID="0487d6eb-7110-4b10-a7f4-d2e6d315b196" SourceId="1" SourceUrl="net.tcp://localhost:5932/HyperService/mex" />
+    <MetadataFile FileName="Arrays.xsd" MetadataType="Schema" ID="31d2f920-0e04-42ce-bed7-a2c9b2d59674" SourceId="1" SourceUrl="net.tcp://localhost:5932/HyperService/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

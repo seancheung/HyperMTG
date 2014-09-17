@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperBoard", "HyperBoard\Hy
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperService", "HyperService\HyperService.csproj", "{B4E7091F-D2E8-4FFD-A7C9-920E7379431E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperHost", "HyperHost\HyperHost.csproj", "{64A87445-660C-4FF3-9AC7-2F94845AC6CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -119,6 +121,10 @@ Global
 		{B4E7091F-D2E8-4FFD-A7C9-920E7379431E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4E7091F-D2E8-4FFD-A7C9-920E7379431E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4E7091F-D2E8-4FFD-A7C9-920E7379431E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64A87445-660C-4FF3-9AC7-2F94845AC6CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64A87445-660C-4FF3-9AC7-2F94845AC6CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64A87445-660C-4FF3-9AC7-2F94845AC6CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64A87445-660C-4FF3-9AC7-2F94845AC6CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

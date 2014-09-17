@@ -20,7 +20,7 @@
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
       <xsd:import namespace="http://tempuri.org/" />
       <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-      <xsd:import namespace="http://schemas.datacontract.org/2004/07/HyperService.Draft" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/HyperService.Common" />
       <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
     </xsd:schema>
   </wsdl:types>
@@ -29,6 +29,9 @@
   </wsdl:message>
   <wsdl:message name="IDraft_Connect_OutputMessage">
     <wsdl:part name="parameters" element="tns:ConnectResponse" />
+  </wsdl:message>
+  <wsdl:message name="IDraft_SetMaxPlayers_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetMaxPlayers" />
   </wsdl:message>
   <wsdl:message name="IDraft_SendMsg_InputMessage">
     <wsdl:part name="parameters" element="tns:SendMsg" />
@@ -45,40 +48,49 @@
   <wsdl:message name="IDraft_Disconnect_InputMessage">
     <wsdl:part name="parameters" element="tns:Disconnect" />
   </wsdl:message>
+  <wsdl:message name="IDraft_RefreshMaxPlayers_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:RefreshMaxPlayers" />
+  </wsdl:message>
   <wsdl:message name="IDraft_RefreshClients_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:RefreshClients" />
   </wsdl:message>
-  <wsdl:message name="IDraft_Receive_OutputCallbackMessage">
-    <wsdl:part name="parameters" element="tns:Receive" />
+  <wsdl:message name="IDraft_OnConnect_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnConnect" />
   </wsdl:message>
-  <wsdl:message name="IDraft_UserJoin_OutputCallbackMessage">
-    <wsdl:part name="parameters" element="tns:UserJoin" />
+  <wsdl:message name="IDraft_OnReceive_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnReceive" />
   </wsdl:message>
-  <wsdl:message name="IDraft_UserLeave_OutputCallbackMessage">
-    <wsdl:part name="parameters" element="tns:UserLeave" />
+  <wsdl:message name="IDraft_OnJoin_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnJoin" />
   </wsdl:message>
-  <wsdl:message name="IDraft_UserPick_OutputCallbackMessage">
-    <wsdl:part name="parameters" element="tns:UserPick" />
+  <wsdl:message name="IDraft_OnLeave_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnLeave" />
   </wsdl:message>
-  <wsdl:message name="IDraft_UserWait_OutputCallbackMessage">
-    <wsdl:part name="parameters" element="tns:UserWait" />
+  <wsdl:message name="IDraft_OnPick_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnPick" />
   </wsdl:message>
-  <wsdl:message name="IDraft_UserSwitchPack_OutputCallbackMessage">
-    <wsdl:part name="parameters" element="tns:UserSwitchPack" />
+  <wsdl:message name="IDraft_OnWait_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnWait" />
   </wsdl:message>
-  <wsdl:message name="IDraft_UserOpenBooster_OutputCallbackMessage">
-    <wsdl:part name="parameters" element="tns:UserOpenBooster" />
+  <wsdl:message name="IDraft_OnSwitchPack_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnSwitchPack" />
   </wsdl:message>
-  <wsdl:message name="IDraft_UserStartDraft_OutputCallbackMessage">
-    <wsdl:part name="parameters" element="tns:UserStartDraft" />
+  <wsdl:message name="IDraft_OnOpenBooster_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnOpenBooster" />
   </wsdl:message>
-  <wsdl:message name="IDraft_UserEndDraft_OutputCallbackMessage">
-    <wsdl:part name="parameters" element="tns:UserEndDraft" />
+  <wsdl:message name="IDraft_OnStartDraft_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnStartDraft" />
+  </wsdl:message>
+  <wsdl:message name="IDraft_OnEndDraft_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnEndDraft" />
   </wsdl:message>
   <wsdl:portType msc:usingSession="true" name="IDraft">
     <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Connect">
       <wsdl:input wsaw:Action="http://tempuri.org/IDraft/Connect" message="tns:IDraft_Connect_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IDraft/ConnectResponse" message="tns:IDraft_Connect_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="SetMaxPlayers">
+      <wsdl:input wsaw:Action="http://tempuri.org/IDraft/SetMaxPlayers" message="tns:IDraft_SetMaxPlayers_InputMessage" />
     </wsdl:operation>
     <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="SendMsg">
       <wsdl:input wsaw:Action="http://tempuri.org/IDraft/SendMsg" message="tns:IDraft_SendMsg_InputMessage" />
@@ -95,35 +107,41 @@
     <wsdl:operation msc:isInitiating="true" msc:isTerminating="true" name="Disconnect">
       <wsdl:input wsaw:Action="http://tempuri.org/IDraft/Disconnect" message="tns:IDraft_Disconnect_InputMessage" />
     </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="RefreshMaxPlayers">
+      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/RefreshMaxPlayers" message="tns:IDraft_RefreshMaxPlayers_OutputCallbackMessage" />
+    </wsdl:operation>
     <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="RefreshClients">
       <wsdl:output wsaw:Action="http://tempuri.org/IDraft/RefreshClients" message="tns:IDraft_RefreshClients_OutputCallbackMessage" />
     </wsdl:operation>
-    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Receive">
-      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/Receive" message="tns:IDraft_Receive_OutputCallbackMessage" />
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnConnect">
+      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/OnConnect" message="tns:IDraft_OnConnect_OutputCallbackMessage" />
     </wsdl:operation>
-    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="UserJoin">
-      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/UserJoin" message="tns:IDraft_UserJoin_OutputCallbackMessage" />
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnReceive">
+      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/OnReceive" message="tns:IDraft_OnReceive_OutputCallbackMessage" />
     </wsdl:operation>
-    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="UserLeave">
-      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/UserLeave" message="tns:IDraft_UserLeave_OutputCallbackMessage" />
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnJoin">
+      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/OnJoin" message="tns:IDraft_OnJoin_OutputCallbackMessage" />
     </wsdl:operation>
-    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="UserPick">
-      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/UserPick" message="tns:IDraft_UserPick_OutputCallbackMessage" />
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnLeave">
+      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/OnLeave" message="tns:IDraft_OnLeave_OutputCallbackMessage" />
     </wsdl:operation>
-    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="UserWait">
-      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/UserWait" message="tns:IDraft_UserWait_OutputCallbackMessage" />
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnPick">
+      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/OnPick" message="tns:IDraft_OnPick_OutputCallbackMessage" />
     </wsdl:operation>
-    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="UserSwitchPack">
-      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/UserSwitchPack" message="tns:IDraft_UserSwitchPack_OutputCallbackMessage" />
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnWait">
+      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/OnWait" message="tns:IDraft_OnWait_OutputCallbackMessage" />
     </wsdl:operation>
-    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="UserOpenBooster">
-      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/UserOpenBooster" message="tns:IDraft_UserOpenBooster_OutputCallbackMessage" />
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnSwitchPack">
+      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/OnSwitchPack" message="tns:IDraft_OnSwitchPack_OutputCallbackMessage" />
     </wsdl:operation>
-    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="UserStartDraft">
-      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/UserStartDraft" message="tns:IDraft_UserStartDraft_OutputCallbackMessage" />
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnOpenBooster">
+      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/OnOpenBooster" message="tns:IDraft_OnOpenBooster_OutputCallbackMessage" />
     </wsdl:operation>
-    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="UserEndDraft">
-      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/UserEndDraft" message="tns:IDraft_UserEndDraft_OutputCallbackMessage" />
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnStartDraft">
+      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/OnStartDraft" message="tns:IDraft_OnStartDraft_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnEndDraft">
+      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/OnEndDraft" message="tns:IDraft_OnEndDraft_OutputCallbackMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="NetTcpBinding_IDraft" type="tns:IDraft">
@@ -138,6 +156,12 @@
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetMaxPlayers">
+      <soap12:operation soapAction="http://tempuri.org/IDraft/SetMaxPlayers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
     </wsdl:operation>
     <wsdl:operation name="SendMsg">
       <soap12:operation soapAction="http://tempuri.org/IDraft/SendMsg" style="document" />
@@ -169,62 +193,74 @@
         <soap12:body use="literal" />
       </wsdl:input>
     </wsdl:operation>
+    <wsdl:operation name="RefreshMaxPlayers">
+      <soap12:operation soapAction="http://tempuri.org/IDraft/RefreshMaxPlayers" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="RefreshClients">
       <soap12:operation soapAction="http://tempuri.org/IDraft/RefreshClients" style="document" />
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="Receive">
-      <soap12:operation soapAction="http://tempuri.org/IDraft/Receive" style="document" />
+    <wsdl:operation name="OnConnect">
+      <soap12:operation soapAction="http://tempuri.org/IDraft/OnConnect" style="document" />
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="UserJoin">
-      <soap12:operation soapAction="http://tempuri.org/IDraft/UserJoin" style="document" />
+    <wsdl:operation name="OnReceive">
+      <soap12:operation soapAction="http://tempuri.org/IDraft/OnReceive" style="document" />
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="UserLeave">
-      <soap12:operation soapAction="http://tempuri.org/IDraft/UserLeave" style="document" />
+    <wsdl:operation name="OnJoin">
+      <soap12:operation soapAction="http://tempuri.org/IDraft/OnJoin" style="document" />
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="UserPick">
-      <soap12:operation soapAction="http://tempuri.org/IDraft/UserPick" style="document" />
+    <wsdl:operation name="OnLeave">
+      <soap12:operation soapAction="http://tempuri.org/IDraft/OnLeave" style="document" />
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="UserWait">
-      <soap12:operation soapAction="http://tempuri.org/IDraft/UserWait" style="document" />
+    <wsdl:operation name="OnPick">
+      <soap12:operation soapAction="http://tempuri.org/IDraft/OnPick" style="document" />
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="UserSwitchPack">
-      <soap12:operation soapAction="http://tempuri.org/IDraft/UserSwitchPack" style="document" />
+    <wsdl:operation name="OnWait">
+      <soap12:operation soapAction="http://tempuri.org/IDraft/OnWait" style="document" />
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="UserOpenBooster">
-      <soap12:operation soapAction="http://tempuri.org/IDraft/UserOpenBooster" style="document" />
+    <wsdl:operation name="OnSwitchPack">
+      <soap12:operation soapAction="http://tempuri.org/IDraft/OnSwitchPack" style="document" />
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="UserStartDraft">
-      <soap12:operation soapAction="http://tempuri.org/IDraft/UserStartDraft" style="document" />
+    <wsdl:operation name="OnOpenBooster">
+      <soap12:operation soapAction="http://tempuri.org/IDraft/OnOpenBooster" style="document" />
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="UserEndDraft">
-      <soap12:operation soapAction="http://tempuri.org/IDraft/UserEndDraft" style="document" />
+    <wsdl:operation name="OnStartDraft">
+      <soap12:operation soapAction="http://tempuri.org/IDraft/OnStartDraft" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OnEndDraft">
+      <soap12:operation soapAction="http://tempuri.org/IDraft/OnEndDraft" style="document" />
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>
@@ -232,9 +268,9 @@
   </wsdl:binding>
   <wsdl:service name="DraftService">
     <wsdl:port name="NetTcpBinding_IDraft" binding="tns:NetTcpBinding_IDraft">
-      <soap12:address location="net.tcp://localhost:7997/HyperService.Draft/tcp" />
+      <soap12:address location="net.tcp://localhost:5933/HyperService/tcp" />
       <wsa10:EndpointReference>
-        <wsa10:Address>net.tcp://localhost:7997/HyperService.Draft/tcp</wsa10:Address>
+        <wsa10:Address>net.tcp://localhost:5933/HyperService/tcp</wsa10:Address>
       </wsa10:EndpointReference>
     </wsdl:port>
   </wsdl:service>
