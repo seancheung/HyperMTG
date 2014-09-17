@@ -43,6 +43,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperService", "HyperServic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperHost", "HyperHost\HyperHost.csproj", "{64A87445-660C-4FF3-9AC7-2F94845AC6CE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperMTGMain", "HyperMTGMain\HyperMTGMain.csproj", "{E16FD086-286C-4ED5-A6A9-ED05E5507986}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,6 +127,10 @@ Global
 		{64A87445-660C-4FF3-9AC7-2F94845AC6CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64A87445-660C-4FF3-9AC7-2F94845AC6CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64A87445-660C-4FF3-9AC7-2F94845AC6CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E16FD086-286C-4ED5-A6A9-ED05E5507986}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E16FD086-286C-4ED5-A6A9-ED05E5507986}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E16FD086-286C-4ED5-A6A9-ED05E5507986}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E16FD086-286C-4ED5-A6A9-ED05E5507986}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
