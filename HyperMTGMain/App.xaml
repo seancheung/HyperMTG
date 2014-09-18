@@ -6,12 +6,10 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Helper/IgTheme/IG.MSControls.Core.Implicit.xaml" />
+                <ResourceDictionary Source="Helper/IgTheme/IG.MSControls.Toolkit.Implicit.xaml" />
                 <ResourceDictionary Source="/HyperStyle;component/Assets/Magic.xaml" />
                 <ResourceDictionary Source="Helper/Converter/ConverterResource.xaml" />
-                <ResourceDictionary Source="/MahApps.Metro;component/Styles/Controls.xaml" />
-                <ResourceDictionary Source="/MahApps.Metro;component/Styles/Fonts.xaml" />
-                <ResourceDictionary Source="/MahApps.Metro;component/Styles/Colors.xaml" />
-                <ResourceDictionary Source="/MahApps.Metro;component/Styles/Accents/baselight.xaml" />
                 <ResourceDictionary Source="Helper/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <vm:ViewModelManager x:Key="ViewModelManager" />

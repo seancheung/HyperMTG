@@ -1,22 +1,17 @@
-﻿<metro:MetroWindow x:Class="HyperMTGMain.View.DatabaseWindow"
-                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                   xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-                   Title="DatabaseWindow" Width="720"
-                   Height="720"
-                   Background="{StaticResource MetroBrushSteel}"
-                   DataContext="{Binding Source={StaticResource ViewModelManager},
-                                         Path=DatabaseViewModel}"
-                   EnableDWMDropShadow="True"
-                   Loaded="DatabaseWindow_OnLoaded"
-                   ShowIconOnTitleBar="False" ShowTitleBar="True"
-                   SnapsToDevicePixels="True" TitleCaps="True"
-                   WindowStartupLocation="CenterScreen"
-                   WindowStyle="None">
+﻿<Window x:Class="HyperMTGMain.View.DatabaseWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="DatabaseWindow" Width="720"
+        Height="720"
+        DataContext="{Binding Source={StaticResource ViewModelManager},
+                              Path=DatabaseViewModel}"
+        Loaded="DatabaseWindow_OnLoaded"
+        SnapsToDevicePixels="True"
+        WindowStartupLocation="CenterScreen">
     <Grid Margin="12">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <ListBox Grid.Column="0"
                  ItemsSource="{Binding ProgressChecks}"
@@ -42,59 +37,28 @@
                                   FontWeight="{Binding IsLocal,
                                                        Converter={StaticResource FontConverter}}"
                                   IsChecked="{Binding IsChecked}" />
-                        <metro:MetroProgressBar HorizontalAlignment="Stretch"
-                                                Maximum="{Binding Max}"
-                                                Opacity="0.5"
-                                                Visibility="{Binding IsProcessing,
-                                                                     Converter={StaticResource VisibilityConverter}}"
-                                                Value="{Binding Prog}" />
+                        <ProgressBar HorizontalAlignment="Stretch"
+                                     Maximum="{Binding Max}"
+                                     Opacity="0.5"
+                                     Visibility="{Binding IsProcessing,
+                                                          Converter={StaticResource VisibilityConverter}}"
+                                     Value="{Binding Prog}" />
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Grid Grid.Column="1" Margin="12,0,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <metro:Tile Title="DOWNLOAD &#13; SELECTED" Grid.Row="0"
-                        Grid.RowSpan="2" Grid.Column="0"
-                        Grid.ColumnSpan="2"
-                        Command="{Binding UpdateCardsCommand}"
-                        TitleFontSize="18" />
-            <metro:Tile Grid.Row="0" Grid.RowSpan="2"
-                        Grid.Column="2"
-                        HorizontalContentAlignment="Center" />
-            <metro:Tile Grid.Row="2" Grid.Column="0" />
-            <metro:Tile Title="UPDATE SET LIST" Grid.Row="2"
-                        Grid.Column="1" Grid.ColumnSpan="2"
-                        Command="{Binding UpdateSetsCommand}"
-                        TitleFontSize="22" />
-            <Border Grid.Row="3" Grid.Column="0"
-                    Grid.ColumnSpan="3" HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
-                <StackPanel>
-                    <metro:ToggleSwitch ContentDirection="RightToLeft" Foreground="White"
-                                        Header="DOWNLOAD IMAGE"
-                                        IsChecked="{Binding DownloadImage}"
-                                        SwitchForeground="{StaticResource MetroBrushCyan}" />
-                    <TextBlock Margin="0,10" Foreground="White"
-                               Text="{Binding Info}" />
-                </StackPanel>
-            </Border>
-            <metro:Tile Title="CANCEL" Grid.Row="4"
-                        Grid.Column="0" Grid.ColumnSpan="2"
-                        Command="{Binding CancelCommand}"
-                        TitleFontSize="25" />
-            <metro:Tile Grid.Row="4" Grid.Column="2" />
-        </Grid>
+        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+            <Button Margin="10"
+                    Command="{Binding UpdateSetsCommand}"
+                    Content="Update Set List" />
+            <Button Margin="10"
+                    Command="{Binding UpdateCardsCommand}"
+                    Content="Download Selected" />
+            <CheckBox Margin="10" Content="Download Image"
+                      IsChecked="{Binding DownloadImage}" />
+            <Button Margin="10"
+                    Command="{Binding CancelCommand}"
+                    Content="Cancel" />
+        </StackPanel>
     </Grid>
-</metro:MetroWindow>
+</Window>
