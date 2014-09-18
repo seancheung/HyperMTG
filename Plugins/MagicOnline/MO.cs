@@ -34,7 +34,7 @@ namespace HyperPlugin
 
 		public Deck Read(Stream input, IEnumerable<Card> database)
 		{
-			var deck = new Deck();
+			Deck deck = new Deck();
 			MODeck odeck = Open(input);
 			if (odeck.MainBoard.Count + odeck.SideBoard.Count > 0)
 			{
@@ -89,20 +89,20 @@ namespace HyperPlugin
 
 		private MODeck Convert(Deck deck)
 		{
-			var odeck = new MODeck();
+			MODeck odeck = new MODeck();
 			ILookup<string, Card> lpM = deck.MainBoard.ToLookup(c => c.ID);
-			foreach (var gp in lpM)
+			foreach (IGrouping<string, Card> gp in lpM)
 			{
 				Card tcard = gp.First();
-				var ocard = new MOCard {Name = tcard.Name, Count = gp.Count()};
+				MOCard ocard = new MOCard {Name = tcard.Name, Count = gp.Count()};
 				odeck.MainBoard.Add(ocard);
 			}
 
 			ILookup<string, Card> lpS = deck.SideBoard.ToLookup(c => c.ID);
-			foreach (var gp in lpS)
+			foreach (IGrouping<string, Card> gp in lpS)
 			{
 				Card tcard = gp.First();
-				var ocard = new MOCard {Name = tcard.Name, Count = gp.Count()};
+				MOCard ocard = new MOCard {Name = tcard.Name, Count = gp.Count()};
 				odeck.SideBoard.Add(ocard);
 			}
 
@@ -115,7 +115,7 @@ namespace HyperPlugin
 		{
 			try
 			{
-				var sw = new StreamWriter(stream);
+				StreamWriter sw = new StreamWriter(stream);
 
 				deck.MainBoard.ForEach(c => sw.WriteLine("{0} {1}", c.Count, c.Name));
 
@@ -135,9 +135,9 @@ namespace HyperPlugin
 		{
 			try
 			{
-				var sr = new StreamReader(input);
+				StreamReader sr = new StreamReader(input);
 				sr.BaseStream.Seek(0L, SeekOrigin.Begin);
-				var deck = new MODeck();
+				MODeck deck = new MODeck();
 
 				string line = sr.ReadLine();
 				int partID = 0; // 0 - main, 1 - side
@@ -149,7 +149,7 @@ namespace HyperPlugin
 					}
 					else if (!string.IsNullOrWhiteSpace(line))
 					{
-						var card = new MOCard();
+						MOCard card = new MOCard();
 
 						if (partID == 0)
 						{

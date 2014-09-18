@@ -127,7 +127,7 @@ namespace HyperKore.Common
 		{
 			if (ReferenceEquals(null, obj)) return false;
 			if (ReferenceEquals(this, obj)) return true;
-			var other = obj as Card;
+			Card other = obj as Card;
 			return other != null && Equals(other);
 		}
 

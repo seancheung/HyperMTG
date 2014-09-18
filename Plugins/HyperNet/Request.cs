@@ -17,7 +17,7 @@ namespace HyperPlugin
 		/// <returns>Data from the response</returns>
 		public string GetWebData(string url, int maxTryTimes = 10)
 		{
-			var httpWebRequest = (HttpWebRequest) WebRequest.Create(url);
+			HttpWebRequest httpWebRequest = (HttpWebRequest) WebRequest.Create(url);
 			httpWebRequest.AllowAutoRedirect = false;
 			string data = string.Empty;
 
@@ -28,11 +28,11 @@ namespace HyperPlugin
 			{
 				try
 				{
-					using (var httpWebResponse = (HttpWebResponse) httpWebRequest.GetResponse())
+					using (HttpWebResponse httpWebResponse = (HttpWebResponse) httpWebRequest.GetResponse())
 					{
 						if (!httpWebResponse.StatusDescription.Equals("Found"))
 						{
-							var streamReader = new StreamReader(httpWebResponse.GetResponseStream());
+							StreamReader streamReader = new StreamReader(httpWebResponse.GetResponseStream());
 							data = streamReader.ReadToEnd();
 						}
 					}

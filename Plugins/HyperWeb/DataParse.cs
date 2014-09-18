@@ -78,7 +78,7 @@ namespace HyperPlugin
 				yield break;
 			}
 
-			var html = new HtmlDocument();
+			HtmlDocument html = new HtmlDocument();
 			html.LoadHtml(webdata);
 
 			string select =
@@ -111,14 +111,14 @@ namespace HyperPlugin
 				yield break;
 			}
 
-			var html = new HtmlDocument();
+			HtmlDocument html = new HtmlDocument();
 			html.LoadHtml(webdata);
 
 			IEnumerable<HtmlNode> tds = html.DocumentNode.CssSelect("td").Where(t => t.Attributes["valign"] != null);
 
 			foreach (HtmlNode td in tds)
 			{
-				var card = new Card { Set = set.SetName, SetCode = set.SetCode };
+				Card card = new Card { Set = set.SetName, SetCode = set.SetCode };
 
 				HtmlNode span = td.CssSelect("span").FirstOrDefault();
 				if (span == null)

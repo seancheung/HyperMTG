@@ -24,8 +24,8 @@ namespace HyperPlugin
 
 		public byte[] Compress(byte[] data)
 		{
-			var ms = new MemoryStream();
-			var zipStream = new GZipStream(ms, CompressionMode.Compress);
+			MemoryStream ms = new MemoryStream();
+			GZipStream zipStream = new GZipStream(ms, CompressionMode.Compress);
 			zipStream.Write(data, 0, data.Length);
 			zipStream.Close();
 			return ms.ToArray();
@@ -33,10 +33,10 @@ namespace HyperPlugin
 
 		public byte[] Decompress(byte[] data, int length)
 		{
-			var srcMs = new MemoryStream(data);
-			var zipStream = new GZipStream(srcMs, CompressionMode.Decompress);
-			var ms = new MemoryStream();
-			var bytes = new byte[length];
+			MemoryStream srcMs = new MemoryStream(data);
+			GZipStream zipStream = new GZipStream(srcMs, CompressionMode.Decompress);
+			MemoryStream ms = new MemoryStream();
+			byte[] bytes = new byte[length];
 			int n;
 			while ((n = zipStream.Read(bytes, 0, bytes.Length)) > 0)
 			{

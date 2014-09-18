@@ -12,12 +12,12 @@ namespace HyperMTG.Helper
 		public static string ToRTF(this FlowDocument document)
 		{
 			string rtf = string.Empty;
-			var textRange = new TextRange(document.ContentStart, document.ContentEnd);
-			using (var ms = new MemoryStream())
+			TextRange textRange = new TextRange(document.ContentStart, document.ContentEnd);
+			using (MemoryStream ms = new MemoryStream())
 			{
 				textRange.Save(ms, DataFormats.Rtf);
 				ms.Seek(0, SeekOrigin.Begin);
-				var sr = new StreamReader(ms);
+				StreamReader sr = new StreamReader(ms);
 				rtf = sr.ReadToEnd();
 			}
 
@@ -30,10 +30,10 @@ namespace HyperMTG.Helper
 			{
 				throw new ArgumentNullException();
 			}
-			var textRange = new TextRange(document.ContentStart, document.ContentEnd);
-			using (var ms = new MemoryStream())
+			TextRange textRange = new TextRange(document.ContentStart, document.ContentEnd);
+			using (MemoryStream ms = new MemoryStream())
 			{
-				using (var sw = new StreamWriter(ms))
+				using (StreamWriter sw = new StreamWriter(ms))
 				{
 					sw.Write(rtf);
 					sw.Flush();

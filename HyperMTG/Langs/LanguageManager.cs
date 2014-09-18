@@ -110,9 +110,9 @@ namespace HyperMTG.Langs
 
 					try
 					{
-						using (var fs = new FileStream(filePath, FileMode.Open))
+						using (FileStream fs = new FileStream(filePath, FileMode.Open))
 						{
-							var dict = XamlReader.Load(fs) as ResourceDictionary;
+							ResourceDictionary dict = XamlReader.Load(fs) as ResourceDictionary;
 							Application.Current.Resources.MergedDictionaries[0] = dict;
 						}
 					}

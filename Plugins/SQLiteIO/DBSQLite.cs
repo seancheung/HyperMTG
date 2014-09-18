@@ -72,7 +72,7 @@ namespace HyperPlugin
 			//use lock(this) for singleton class
 			lock (this)
 			{
-				using (var datacontext = new DataContext(_conn))
+				using (DataContext datacontext = new DataContext(_conn))
 				{
 					Table<Card> tab = datacontext.GetTable<Card>();
 					return tab.ToList();
@@ -84,7 +84,7 @@ namespace HyperPlugin
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(_conn))
+				using (DataContext datacontext = new DataContext(_conn))
 				{
 					Table<Bin> tab = datacontext.GetTable<Bin>();
 					Bin[] datas = tab.Where(i => i.ID == id).ToArray();
@@ -103,7 +103,7 @@ namespace HyperPlugin
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(_conn))
+				using (DataContext datacontext = new DataContext(_conn))
 				{
 					Table<Set> tab = datacontext.GetTable<Set>();
 					return tab.ToList();
@@ -119,7 +119,7 @@ namespace HyperPlugin
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(_conn))
+				using (DataContext datacontext = new DataContext(_conn))
 				{
 					Table<Card> tab = datacontext.GetTable<Card>();
 					IQueryable<Card> que = tab.Where(c => c.ID == card.ID);
@@ -141,7 +141,7 @@ namespace HyperPlugin
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(_conn))
+				using (DataContext datacontext = new DataContext(_conn))
 				{
 					Table<Bin> tab = datacontext.GetTable<Bin>();
 					IQueryable<Bin> que = tab.Where(i => i.ID == id);
@@ -163,7 +163,7 @@ namespace HyperPlugin
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(_conn))
+				using (DataContext datacontext = new DataContext(_conn))
 				{
 					Table<Card> tab = datacontext.GetTable<Card>();
 					IQueryable<Card> que = tab.Where(c => c.ID == card.ID);
@@ -189,7 +189,7 @@ namespace HyperPlugin
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(_conn))
+				using (DataContext datacontext = new DataContext(_conn))
 				{
 					Table<Card> tab = datacontext.GetTable<Card>();
 
@@ -218,7 +218,7 @@ namespace HyperPlugin
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(_conn))
+				using (DataContext datacontext = new DataContext(_conn))
 				{
 					Table<Set> tab = datacontext.GetTable<Set>();
 					foreach (Set set in sets)
@@ -237,7 +237,7 @@ namespace HyperPlugin
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(_conn))
+				using (DataContext datacontext = new DataContext(_conn))
 				{
 					Table<Bin> tab = datacontext.GetTable<Bin>();
 					byte[] compdata = compressor == null ? data : compressor.Compress(data);
@@ -258,7 +258,7 @@ namespace HyperPlugin
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(_conn))
+				using (DataContext datacontext = new DataContext(_conn))
 				{
 					Table<Card> tab = datacontext.GetTable<Card>();
 					IQueryable<Card> que = tab.Where(c => c.ID == card.ID);
@@ -282,7 +282,7 @@ namespace HyperPlugin
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(_conn))
+				using (DataContext datacontext = new DataContext(_conn))
 				{
 					Table<Bin> tab = datacontext.GetTable<Bin>();
 					byte[] compdata = compressor == null ? data : compressor.Compress(data);
@@ -308,7 +308,7 @@ namespace HyperPlugin
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(_conn))
+				using (DataContext datacontext = new DataContext(_conn))
 				{
 					Table<Set> tab = datacontext.GetTable<Set>();
 					IQueryable<Set> que = tab.Where(c => c.SetName == set.SetName);
@@ -336,7 +336,7 @@ namespace HyperPlugin
 		{
 			lock (this)
 			{
-				using (var datacontext = new DataContext(_conn))
+				using (DataContext datacontext = new DataContext(_conn))
 				{
 					Table<Set> tab = datacontext.GetTable<Set>();
 					if (tab.Any())
@@ -361,7 +361,7 @@ namespace HyperPlugin
 				_connectionStringBuilder.Password = "5AEB55D5-F169-4EB2-A768-B20EBD20151E";
 				_conn.ConnectionString = _connectionStringBuilder.ConnectionString;
 
-				using (var datacontext = new DataContext(_conn))
+				using (DataContext datacontext = new DataContext(_conn))
 				{
 					datacontext.ExecuteCommand(BuildCmd);
 				}

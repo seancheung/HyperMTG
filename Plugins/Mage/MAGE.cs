@@ -34,7 +34,7 @@ namespace HyperPlugin
 
 		public Deck Read(Stream input, IEnumerable<Card> database)
 		{
-			var deck = new Deck();
+			Deck deck = new Deck();
 			MAGEDeck gdeck = Open(input);
 			if (gdeck.MainBoard.Count + gdeck.SideBoard.Count > 0)
 			{
@@ -89,20 +89,20 @@ namespace HyperPlugin
 
 		private MAGEDeck Convert(Deck deck)
 		{
-			var gdeck = new MAGEDeck();
+			MAGEDeck gdeck = new MAGEDeck();
 			ILookup<string, Card> lpM = deck.MainBoard.ToLookup(c => c.ID);
-			foreach (var gp in lpM)
+			foreach (IGrouping<string, Card> gp in lpM)
 			{
 				Card tcard = gp.First();
-				var gcard = new MAGECard {Name = tcard.Name, SetCode = tcard.SetCode, Number = tcard.Number, Count = gp.Count()};
+				MAGECard gcard = new MAGECard {Name = tcard.Name, SetCode = tcard.SetCode, Number = tcard.Number, Count = gp.Count()};
 				gdeck.MainBoard.Add(gcard);
 			}
 
 			ILookup<string, Card> lpS = deck.SideBoard.ToLookup(c => c.ID);
-			foreach (var gp in lpS)
+			foreach (IGrouping<string, Card> gp in lpS)
 			{
 				Card tcard = gp.First();
-				var gcard = new MAGECard {Name = tcard.Name, SetCode = tcard.SetCode, Number = tcard.Number, Count = gp.Count()};
+				MAGECard gcard = new MAGECard {Name = tcard.Name, SetCode = tcard.SetCode, Number = tcard.Number, Count = gp.Count()};
 				gdeck.SideBoard.Add(gcard);
 			}
 
@@ -115,7 +115,7 @@ namespace HyperPlugin
 		{
 			try
 			{
-				var sw = new StreamWriter(stream);
+				StreamWriter sw = new StreamWriter(stream);
 
 				sw.WriteLine("NAME: " + deck.Name);
 
@@ -135,9 +135,9 @@ namespace HyperPlugin
 		{
 			try
 			{
-				var sr = new StreamReader(input);
+				StreamReader sr = new StreamReader(input);
 				sr.BaseStream.Seek(0L, SeekOrigin.Begin);
-				var deck = new MAGEDeck();
+				MAGEDeck deck = new MAGEDeck();
 
 				string line = sr.ReadLine();
 
@@ -145,7 +145,7 @@ namespace HyperPlugin
 				{
 					if (line.Contains("["))
 					{
-						var card = new MAGECard();
+						MAGECard card = new MAGECard();
 
 						if (line.Contains("SB:"))
 						{

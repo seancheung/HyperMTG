@@ -28,8 +28,8 @@ namespace HyperMTG.Pages
 		private void OpenBook(double durationSeconds)
 		{
 			// Transform3D_LeftRotation
-			var rot = (RotateTransform3D) TryFindResource("Transform3D_LeftRotation");
-			var da = new DoubleAnimation(15, new Duration(TimeSpan.FromSeconds(durationSeconds)));
+			RotateTransform3D rot = (RotateTransform3D) TryFindResource("Transform3D_LeftRotation");
+			DoubleAnimation da = new DoubleAnimation(15, new Duration(TimeSpan.FromSeconds(durationSeconds)));
 			da.DecelerationRatio = 1;
 			rot.Rotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, da);
 
@@ -44,12 +44,12 @@ namespace HyperMTG.Pages
 			rot.Rotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, da);
 
 			// Transform3D_SpineCoverTranslation
-			var trans = (TranslateTransform3D) TryFindResource("Transform3D_SpineCoverTranslation");
+			TranslateTransform3D trans = (TranslateTransform3D) TryFindResource("Transform3D_SpineCoverTranslation");
 			da = new DoubleAnimation(0, new Duration(TimeSpan.FromSeconds(0.8333*durationSeconds)));
 			trans.BeginAnimation(TranslateTransform3D.OffsetXProperty, da);
 
 			// _Main3D.Camera
-			var pa = new Point3DAnimation(new Point3D(0, -2.5, 6.5),
+			Point3DAnimation pa = new Point3DAnimation(new Point3D(0, -2.5, 6.5),
 				new Duration(TimeSpan.FromSeconds(durationSeconds)));
 			pa.AccelerationRatio = 0.5;
 			pa.DecelerationRatio = 0.5;
@@ -66,8 +66,8 @@ namespace HyperMTG.Pages
 		private void CloseBook(double durationSeconds)
 		{
 			// Transform3D_LeftRotation
-			var rot = (RotateTransform3D) TryFindResource("Transform3D_LeftRotation");
-			var da = new DoubleAnimation(180, new Duration(TimeSpan.FromSeconds(durationSeconds)));
+			RotateTransform3D rot = (RotateTransform3D) TryFindResource("Transform3D_LeftRotation");
+			DoubleAnimation da = new DoubleAnimation(180, new Duration(TimeSpan.FromSeconds(durationSeconds)));
 			da.DecelerationRatio = 1;
 			rot.Rotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, da);
 
@@ -82,12 +82,12 @@ namespace HyperMTG.Pages
 			rot.Rotation.BeginAnimation(AxisAngleRotation3D.AngleProperty, da);
 
 			// Transform3D_SpineCoverTranslation
-			var trans = (TranslateTransform3D) TryFindResource("Transform3D_SpineCoverTranslation");
+			TranslateTransform3D trans = (TranslateTransform3D) TryFindResource("Transform3D_SpineCoverTranslation");
 			da = new DoubleAnimation(-0.125, new Duration(TimeSpan.FromSeconds(0.8333*durationSeconds)));
 			trans.BeginAnimation(TranslateTransform3D.OffsetXProperty, da);
 
 			// _Main3D.Camera
-			var pa = new Point3DAnimation(new Point3D(0.72, -2.5, 6.5),
+			Point3DAnimation pa = new Point3DAnimation(new Point3D(0.72, -2.5, 6.5),
 				new Duration(TimeSpan.FromSeconds(durationSeconds)));
 			pa.AccelerationRatio = 0.5;
 			pa.DecelerationRatio = 0.5;
@@ -102,7 +102,7 @@ namespace HyperMTG.Pages
 			CloseBook(0); // Book starts closed
 
 			// Make book fade in
-			var da = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromSeconds(2)));
+			DoubleAnimation da = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromSeconds(2)));
 			da.DecelerationRatio = 1;
 			_Main3D.BeginAnimation(OpacityProperty, da);
 		}

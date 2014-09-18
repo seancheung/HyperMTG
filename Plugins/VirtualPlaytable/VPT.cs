@@ -36,7 +36,7 @@ namespace HyperPlugin
 
 		public Deck Read(Stream input, IEnumerable<Card> database)
 		{
-			var deck = new Deck();
+			Deck deck = new Deck();
 			VPTDeck vdeck = Open(input);
 			foreach (VPTItem item in vdeck.Sections[0].Items)
 			{
@@ -100,29 +100,29 @@ namespace HyperPlugin
 
 		private VPTDeck Convert(Deck deck)
 		{
-			var sectionM = new VPTSection {ID = "main"};
+			VPTSection sectionM = new VPTSection {ID = "main"};
 			ILookup<string, Card> lpM = deck.MainBoard.ToLookup(c => c.ID);
-			foreach (var gp in lpM)
+			foreach (IGrouping<string, Card> gp in lpM)
 			{
 				Card tcard = gp.First();
-				var vcard = new VPTCard(tcard.SetCode, Language.English.GetLangCode(), tcard.IsBasicLand() ? "1" : null, gp.Count());
-				var vitem = new VPTItem {Name = tcard.Name};
+				VPTCard vcard = new VPTCard(tcard.SetCode, Language.English.GetLangCode(), tcard.IsBasicLand() ? "1" : null, gp.Count());
+				VPTItem vitem = new VPTItem {Name = tcard.Name};
 				vitem.Cards.Add(vcard);
 				sectionM.Items.Add(vitem);
 			}
 
-			var sectionS = new VPTSection {ID = "sideboard"};
+			VPTSection sectionS = new VPTSection {ID = "sideboard"};
 			ILookup<string, Card> lpS = deck.SideBoard.ToLookup(c => c.ID);
-			foreach (var gp in lpS)
+			foreach (IGrouping<string, Card> gp in lpS)
 			{
 				Card tcard = gp.First();
-				var vcard = new VPTCard(tcard.SetCode, Language.English.GetLangCode(), tcard.IsBasicLand() ? "1" : null, gp.Count());
-				var vitem = new VPTItem {Name = tcard.Name};
+				VPTCard vcard = new VPTCard(tcard.SetCode, Language.English.GetLangCode(), tcard.IsBasicLand() ? "1" : null, gp.Count());
+				VPTItem vitem = new VPTItem {Name = tcard.Name};
 				vitem.Cards.Add(vcard);
 				sectionS.Items.Add(vitem);
 			}
 
-			var vdeck = new VPTDeck("mtg", deck.Mode.ToString(), deck.Format.ToString(), deck.Name, new List<VPTSection>
+			VPTDeck vdeck = new VPTDeck("mtg", deck.Mode.ToString(), deck.Format.ToString(), deck.Name, new List<VPTSection>
 			{
 				sectionM,
 				sectionS
@@ -135,8 +135,8 @@ namespace HyperPlugin
 		{
 			try
 			{
-				var serializer = new XmlSerializer(typeof (VPTDeck));
-				var nas = new XmlSerializerNamespaces();
+				XmlSerializer serializer = new XmlSerializer(typeof (VPTDeck));
+				XmlSerializerNamespaces nas = new XmlSerializerNamespaces();
 				nas.Add(string.Empty, string.Empty);
 				serializer.Serialize(output, deck, nas);
 			}
@@ -150,8 +150,8 @@ namespace HyperPlugin
 		{
 			try
 			{
-				var serializer = new XmlSerializer(typeof (VPTDeck));
-				var data = serializer.Deserialize(input) as VPTDeck;
+				XmlSerializer serializer = new XmlSerializer(typeof (VPTDeck));
+				VPTDeck data = serializer.Deserialize(input) as VPTDeck;
 				return data;
 			}
 			catch (Exception ex)

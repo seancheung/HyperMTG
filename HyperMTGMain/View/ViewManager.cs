@@ -11,6 +11,7 @@
 		private static FilterWindow _filterWindow;
 		private static PreferenceWindow _preferenceWindow;
 		private static Launcher _launcher;
+		private static MessageWindow _messageWindow;
 
 		public static SealedWindow SealedWindow
 		{
@@ -126,6 +127,19 @@
 					_launcher.Closed += delegate { _launcher = null; };
 				}
 				return _launcher;
+			}
+		}
+
+		public static MessageWindow MessageWindow
+		{
+			get
+			{
+				if (_messageWindow == null)
+				{
+					_messageWindow = new MessageWindow();
+					_messageWindow.Closed += delegate { _messageWindow = null; };
+				}
+				return _messageWindow;
 			}
 		}
 	}

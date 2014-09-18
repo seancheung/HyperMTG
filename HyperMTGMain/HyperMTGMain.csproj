@@ -60,17 +60,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helper\Converter\FontConverter.cs" />
+    <Compile Include="Helper\Converter\DateTimeConverter.cs" />
     <Compile Include="Helper\ObservableClass.cs" />
     <Compile Include="Helper\RelayCommand.cs" />
     <Compile Include="Helper\Converter\VisibilityConverter.cs" />
+    <Compile Include="Helper\TaskManager.cs" />
+    <Compile Include="Model\ProgressCheck.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewModel\AboutViewModel.cs" />
     <Compile Include="ViewModel\AnalyzerViewModel.cs" />
+    <Compile Include="Helper\PluginFactory.cs" />
     <Compile Include="ViewModel\DatabaseViewModel.cs" />
     <Compile Include="ViewModel\DeckEditorViewModel.cs" />
     <Compile Include="ViewModel\DraftViewModel.cs" />
     <Compile Include="ViewModel\FilterViewModel.cs" />
     <Compile Include="ViewModel\LauncherViewModel.cs" />
+    <Compile Include="ViewModel\MessageViewModel.cs" />
     <Compile Include="ViewModel\PreferenceViewModel.cs" />
     <Compile Include="ViewModel\SealedViewModel.cs" />
     <Compile Include="ViewModel\ViewModelManager.cs" />
@@ -94,6 +100,9 @@
     </Compile>
     <Compile Include="View\Launcher.xaml.cs">
       <DependentUpon>Launcher.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\MessageWindow.xaml.cs">
+      <DependentUpon>MessageWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\PreferenceWindow.xaml.cs">
       <DependentUpon>PreferenceWindow.xaml</DependentUpon>
@@ -138,6 +147,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\MessageWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\PreferenceWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -165,6 +178,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -175,6 +189,14 @@
     <ProjectReference Include="..\HyperBase\HyperKore.csproj">
       <Project>{74f65d7f-c999-4a0b-8316-9c093660dcf7}</Project>
       <Name>HyperKore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HyperLogger\HyperLogger.csproj">
+      <Project>{ea84d043-5a33-4ca4-bc1d-78302d45a73e}</Project>
+      <Name>HyperLogger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HyperPlugin\HyperPlugin.csproj">
+      <Project>{bef59a5b-5faf-405e-9e47-862da747ab4e}</Project>
+      <Name>HyperPlugin</Name>
     </ProjectReference>
     <ProjectReference Include="..\HyperStyle\HyperStyle.csproj">
       <Project>{b5ed551c-cedd-40c7-a8fc-ac2dd757d16f}</Project>

@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
+using HyperKore.Common;
 using HyperMTG.Helper;
 using HyperMTG.Model;
 using HyperMTG.Properties;
@@ -50,7 +51,7 @@ namespace HyperMTG.ViewModel
 		private void LoadData()
 		{
 			Cards = new ObservableCollection<ExCard>();
-			foreach (var card in _dbReader.LoadCards().Take(10))
+			foreach (Card card in _dbReader.LoadCards().Take(10))
 			{
 				Cards.Add(new ExCard(_compressor, _dbReader, card,_dbWriter, _imageParse));
 			}

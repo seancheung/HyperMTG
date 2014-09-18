@@ -34,7 +34,7 @@ namespace HyperPlugin
 
 		public Deck Read(Stream input, IEnumerable<Card> database)
 		{
-			var deck = new Deck();
+			Deck deck = new Deck();
 			MWSDeck mdeck = Open(input);
 			foreach (MWSCard item in mdeck.MainBoardLands)
 			{
@@ -96,12 +96,12 @@ namespace HyperPlugin
 
 		private MWSDeck Convert(Deck deck)
 		{
-			var mdeck = new MWSDeck();
+			MWSDeck mdeck = new MWSDeck();
 			ILookup<string, Card> lpM = deck.MainBoard.ToLookup(c => c.ID);
-			foreach (var gp in lpM)
+			foreach (IGrouping<string, Card> gp in lpM)
 			{
 				Card tcard = gp.First();
-				var mcard = new MWSCard {Name = tcard.Name, SetCode = tcard.SetCode, Var = "1", Count = gp.Count()};
+				MWSCard mcard = new MWSCard {Name = tcard.Name, SetCode = tcard.SetCode, Var = "1", Count = gp.Count()};
 				if (tcard.Type.Contains("Land"))
 				{
 					mdeck.MainBoardLands.Add(mcard);
@@ -113,10 +113,10 @@ namespace HyperPlugin
 			}
 
 			ILookup<string, Card> lpS = deck.SideBoard.ToLookup(c => c.ID);
-			foreach (var gp in lpS)
+			foreach (IGrouping<string, Card> gp in lpS)
 			{
 				Card tcard = gp.First();
-				var mcard = new MWSCard {Name = tcard.Name, SetCode = tcard.SetCode, Var = "1", Count = gp.Count()};
+				MWSCard mcard = new MWSCard {Name = tcard.Name, SetCode = tcard.SetCode, Var = "1", Count = gp.Count()};
 				mdeck.SideBoard.Add(mcard);
 			}
 
@@ -130,7 +130,7 @@ namespace HyperPlugin
 		{
 			try
 			{
-				var sw = new StreamWriter(stream);
+				StreamWriter sw = new StreamWriter(stream);
 
 				sw.WriteLine("// Comments\n");
 				sw.WriteLine(deck.Name);
@@ -160,9 +160,9 @@ namespace HyperPlugin
 		{
 			try
 			{
-				var sr = new StreamReader(input);
+				StreamReader sr = new StreamReader(input);
 				sr.BaseStream.Seek(0L, SeekOrigin.Begin);
-				var deck = new MWSDeck();
+				MWSDeck deck = new MWSDeck();
 
 				int partID = 1; // 0 - comment,1 - mainlands, 2 - mainspells, 3 - side
 
@@ -195,7 +195,7 @@ namespace HyperPlugin
 
 								if (idxa > 0 && idxb > idxa)
 								{
-									var card = new MWSCard();
+									MWSCard card = new MWSCard();
 
 									string count = line.Remove(idxa).Trim();
 									card.Count = System.Convert.ToInt32(count);
@@ -217,7 +217,7 @@ namespace HyperPlugin
 
 								if (idxa > 0 && idxb > idxa)
 								{
-									var card = new MWSCard();
+									MWSCard card = new MWSCard();
 
 									string count = line.Remove(idxa).Trim();
 									card.Count = System.Convert.ToInt32(count);
@@ -247,7 +247,7 @@ namespace HyperPlugin
 
 								if (idxa > 0 && idxb > idxa)
 								{
-									var card = new MWSCard();
+									MWSCard card = new MWSCard();
 
 									string count = line.Remove(idxa).Replace("SB:", string.Empty).Trim();
 									card.Count = System.Convert.ToInt32(count);

@@ -24,7 +24,7 @@ namespace HyperPlugin
 			{
 				try
 				{
-					using (var webClient = new WebClient())
+					using (WebClient webClient = new WebClient())
 					{
 						webClient.Headers.Add("User_Agent", "Chrome");
 						webClient.DownloadFile(url, path);
@@ -62,7 +62,7 @@ namespace HyperPlugin
 			{
 				try
 				{
-					var req = WebRequest.Create(url) as HttpWebRequest;
+					HttpWebRequest req = WebRequest.Create(url) as HttpWebRequest;
 					if (req != null)
 					{
 						req.AllowAutoRedirect = true;
@@ -70,13 +70,13 @@ namespace HyperPlugin
 
 						req.UserAgent = "Mozilla/5.0 (Windows; U; Windows NT 6.1; zh-CN; rv:1.9.2.13) Gecko/20101203 Firefox/3.6.13";
 
-						var res = req.GetResponse() as HttpWebResponse;
+						HttpWebResponse res = req.GetResponse() as HttpWebResponse;
 
 						if (res != null)
 						{
 							Stream stream = res.GetResponseStream();
-							var memoryStream = new MemoryStream();
-							var buffer = new byte[32*1024];
+							MemoryStream memoryStream = new MemoryStream();
+							byte[] buffer = new byte[32*1024];
 							int bytes;
 							while (stream != null && (bytes = stream.Read(buffer, 0, buffer.Length)) > 0)
 							{

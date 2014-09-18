@@ -22,7 +22,7 @@ namespace HyperMTG.Pages
 
 		private void FrameworkElement_OnTargetUpdated(object sender, DataTransferEventArgs e)
 		{
-			var block = sender as BBCodeBlock;
+			BBCodeBlock block = sender as BBCodeBlock;
 			if (block == null)
 			{
 				return;
@@ -39,10 +39,10 @@ namespace HyperMTG.Pages
 			{
 				if (Regex.IsMatch(str, "[{.+}]"))
 				{
-					var style = Application.Current.TryFindResource("Mana" + Regex.Replace(str, "{|}", "").ToUpper()) as Style;
+					Style style = Application.Current.TryFindResource("Mana" + Regex.Replace(str, "{|}", "").ToUpper()) as Style;
 					if (style != null)
 					{
-						var control = new UserControl
+						UserControl control = new UserControl
 						{
 							Style = style,
 							Width = block.FontSize,
@@ -64,7 +64,7 @@ namespace HyperMTG.Pages
 
 		private void TextBoxBase_OnTextChanged(object sender, TextChangedEventArgs e)
 		{
-			var deckBuiderViewModel = DataContext as DeckBuiderViewModel;
+			DeckBuiderViewModel deckBuiderViewModel = DataContext as DeckBuiderViewModel;
 			if (deckBuiderViewModel == null) return;
 			if (deckBuiderViewModel.FilterCommand.CanExecute(null))
 			{

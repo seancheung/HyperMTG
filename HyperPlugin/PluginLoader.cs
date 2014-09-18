@@ -62,7 +62,7 @@ namespace HyperPlugin
 				ICollection<T> plugins = new List<T>(pluginTypes.Count);
 				foreach (Type type in pluginTypes)
 				{
-					var plugin = (T) Activator.CreateInstance(type);
+					T plugin = (T) Activator.CreateInstance(type);
 					plugins.Add(plugin);
 				}
 

@@ -50,7 +50,7 @@ namespace HyperPlugin
 		/// <returns></returns>
 		public Deck Read(Stream input, IEnumerable<Card> database)
 		{
-			var deck = new Deck();
+			Deck deck = new Deck();
 			HyperDeck xdeck = Open(input);
 			if (xdeck.MainBoard.Count + xdeck.SideBoard.Count <= 0) return deck;
 
@@ -98,7 +98,7 @@ namespace HyperPlugin
 		{
 			try
 			{
-				var sw = new StreamWriter(stream);
+				StreamWriter sw = new StreamWriter(stream);
 				string data = JsonMapper.ToJson(deck);
 				sw.Write(data);
 				sw.Flush();
@@ -111,7 +111,7 @@ namespace HyperPlugin
 
 		private HyperDeck Open(Stream input)
 		{
-			var sr = new StreamReader(input);
+			StreamReader sr = new StreamReader(input);
 			sr.BaseStream.Seek(0L, SeekOrigin.Begin);
 			string json = sr.ReadToEnd();
 			return JsonMapper.ToObject<HyperDeck>(json);

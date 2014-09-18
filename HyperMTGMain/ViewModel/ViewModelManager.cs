@@ -46,5 +46,10 @@
 		{
 			get { return LauncherViewModel.Instance; }
 		}
+
+		public static MessageViewModel MessageViewModel
+		{
+			get { return MessageViewModel.Instance; }
+		}
 	}
 }

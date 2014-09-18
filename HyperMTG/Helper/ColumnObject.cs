@@ -55,7 +55,7 @@ namespace HyperMTG.Helper
 
 		private static void OnIsVisibleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
-			var cobj = (ColumnObject) d;
+			ColumnObject cobj = (ColumnObject) d;
 
 			if ((bool) e.NewValue)
 			{
