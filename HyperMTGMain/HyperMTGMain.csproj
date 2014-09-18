@@ -15,7 +15,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -119,6 +119,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Helper\Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -201,6 +205,42 @@
     <ProjectReference Include="..\HyperStyle\HyperStyle.csproj">
       <Project>{b5ed551c-cedd-40c7-a8fc-ac2dd757d16f}</Project>
       <Name>HyperStyle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\GZipIO\GZipIO.csproj">
+      <Project>{627ea647-d295-4354-85a6-83b7dc9adec6}</Project>
+      <Name>GZipIO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\HyperDeck\HyperDeck.csproj">
+      <Project>{af2155d5-bfa6-4f24-8582-7f5c7ebc41f4}</Project>
+      <Name>HyperDeck</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\HyperNet\HyperNet.csproj">
+      <Project>{fa840418-4e6b-4c4f-b859-f69cb99957be}</Project>
+      <Name>HyperNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\HyperWeb\HyperWeb.csproj">
+      <Project>{4308b3c1-27ec-4b3d-b197-15398a11d069}</Project>
+      <Name>HyperWeb</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Mage\Mage.csproj">
+      <Project>{53787fbc-488c-44a8-aa26-cf5ccc610b45}</Project>
+      <Name>Mage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\MagicOnline\MagicOnline.csproj">
+      <Project>{10fdeb2c-e172-4590-aaa6-06fbf612a4e1}</Project>
+      <Name>MagicOnline</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\MagicWorkstation\MagicWorkstation.csproj">
+      <Project>{bf270f15-df51-4fdb-ac49-c14180ece490}</Project>
+      <Name>MagicWorkstation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\SQLiteIO\SQLiteIO.csproj">
+      <Project>{5a2aa5cd-1cd0-4196-9aaf-11e61042bce7}</Project>
+      <Name>SQLiteIO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\VirtualPlaytable\VirtualPlaytable.csproj">
+      <Project>{991d3fd3-fc25-42fb-ac21-f31096cee7ff}</Project>
+      <Name>VirtualPlaytable</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

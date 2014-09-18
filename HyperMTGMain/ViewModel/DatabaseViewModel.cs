@@ -126,7 +126,8 @@ namespace HyperMTGMain.ViewModel
 
 		private bool CanUpdateCards()
 		{
-			return TaskManager.Count <= 0 && PluginFactory.ComponentsAvailable;
+			return TaskManager.Count <= 0 && PluginFactory.ComponentsAvailable && ProgressChecks != null &&
+			       ProgressChecks.Any(p => p.IsChecked);
 		}
 
 		private void UpdateCards()
@@ -229,8 +230,13 @@ namespace HyperMTGMain.ViewModel
 
 		public void LoadSets()
 		{
+			if (!PluginFactory.ComponentsAvailable)
+			{
+				return;
+			}
 			try
 			{
+				PluginFactory.SetLanguage(Language.English);
 				IEnumerable<Set> sets = PluginFactory.DbReader.LoadSets();
 				ProgressChecks = new List<ProgressCheck>(sets.Select(p => new ProgressCheck(false, p)));
 			}

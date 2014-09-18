@@ -14,32 +14,8 @@
     <metro:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/MahApps.Metro;component/Styles/Controls.xaml" />
-                <ResourceDictionary Source="/MahApps.Metro;component/Styles/Fonts.xaml" />
-                <ResourceDictionary Source="/MahApps.Metro;component/Styles/Colors.xaml" />
                 <ResourceDictionary Source="/MahApps.Metro;component/Styles/Accents/basedark.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <Style BasedOn="{StaticResource {x:Type metro:Tile}}" TargetType="{x:Type metro:Tile}">
-                <Setter Property="Width" Value="Auto" />
-                <Setter Property="Height" Value="Auto" />
-                <Setter Property="Margin" Value="3" />
-                <Style.Triggers>
-                    <EventTrigger RoutedEvent="MouseEnter">
-                        <BeginStoryboard>
-                            <Storyboard TargetProperty="Margin">
-                                <ThicknessAnimation Duration="0:0:0.3" To="1" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-                    <EventTrigger RoutedEvent="MouseLeave">
-                        <BeginStoryboard>
-                            <Storyboard TargetProperty="Margin">
-                                <ThicknessAnimation Duration="0:0:0.3" To="3" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-                </Style.Triggers>
-            </Style>
         </ResourceDictionary>
     </metro:MetroWindow.Resources>
     <Grid Margin="12">

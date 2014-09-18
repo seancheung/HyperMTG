@@ -1,0 +1,31 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls">
+    <Style BasedOn="{StaticResource {x:Type metro:Tile}}" TargetType="{x:Type metro:Tile}">
+        <Setter Property="Width" Value="Auto" />
+        <Setter Property="Height" Value="Auto" />
+        <Setter Property="Margin" Value="3" />
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect x:Name="Effect" ShadowDepth="2" />
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <EventTrigger RoutedEvent="MouseEnter">
+                <BeginStoryboard>
+                    <Storyboard TargetProperty="Margin">
+                        <ThicknessAnimation Duration="0:0:0.3" To="1" />
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="MouseLeave">
+                <BeginStoryboard>
+                    <Storyboard TargetProperty="Margin">
+                        <ThicknessAnimation Duration="0:0:0.3" To="3" />
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Style.Triggers>
+
+    </Style>
+</ResourceDictionary>
