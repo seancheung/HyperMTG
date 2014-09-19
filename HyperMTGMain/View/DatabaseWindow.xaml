@@ -12,7 +12,7 @@
     <Window.Resources>
         <CollectionViewSource x:Key="SetSource" Source="{Binding ProgressChecks}">
             <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="Group" />
+                <PropertyGroupDescription PropertyName="Content.Group" />
             </CollectionViewSource.GroupDescriptions>
         </CollectionViewSource>
     </Window.Resources>

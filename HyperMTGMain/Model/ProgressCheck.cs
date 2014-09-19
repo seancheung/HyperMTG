@@ -49,11 +49,6 @@ namespace HyperMTGMain.Model
 
 		public Set Content { get; private set; }
 
-		public string Group
-		{
-			get { return Content.Group; }
-		}
-
 		public bool IsLocal
 		{
 			get { return Content.Local; }

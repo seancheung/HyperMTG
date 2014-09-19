@@ -75,6 +75,7 @@
     <Compile Include="Helper\Converter\VisibilityConverter.cs" />
     <Compile Include="Helper\TaskManager.cs" />
     <Compile Include="Helper\Converter\TriggerConverter.cs" />
+    <Compile Include="Model\CheckItem.cs" />
     <Compile Include="Model\ImgCard.cs" />
     <Compile Include="Model\ProgressCheck.cs" />
     <Compile Include="Properties\Annotations.cs" />
@@ -129,10 +130,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Helper\Styles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Helper\IgTheme\IG.MSControls.Core.Implicit.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -158,6 +155,10 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Page Include="Helper\Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -1,7 +1,6 @@
 ﻿<Window x:Class="HyperMTGMain.View.DeckEditorWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:helper="clr-namespace:HyperMTG.Helper"
         Title="DeckEditorWindow" Width="1120"
         Height="720"
@@ -15,19 +14,11 @@
             <CollectionViewSource.GroupDescriptions>
                 <PropertyGroupDescription PropertyName="Name" />
             </CollectionViewSource.GroupDescriptions>
-            <CollectionViewSource.SortDescriptions>
-                <componentModel:SortDescription PropertyName="TypeCode" />
-                <componentModel:SortDescription PropertyName="CMC" />
-            </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
         <CollectionViewSource x:Key="SideboardSource" Source="{Binding Deck.SideBoard}">
             <CollectionViewSource.GroupDescriptions>
                 <PropertyGroupDescription PropertyName="Name" />
             </CollectionViewSource.GroupDescriptions>
-            <CollectionViewSource.SortDescriptions>
-                <componentModel:SortDescription PropertyName="TypeCode" />
-                <componentModel:SortDescription PropertyName="CMC" />
-            </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
     </Window.Resources>
     <Grid Margin="12">
@@ -46,6 +37,8 @@
                 <MenuItem Command="{Binding ClipboardExportCommand}" Header="{DynamicResource CopyToClipboard}" />
                 <MenuItem Command="{Binding ClipboardImportCommand}" Header="{DynamicResource ImportFromClipboard}" />
             </MenuItem>
+            <MenuItem Command="{Binding Source={StaticResource ViewModelManager}, Path=LauncherViewModel.OpenFilterCommand}" Header="{DynamicResource Filter}" />
+            <MenuItem Command="{Binding Source={StaticResource ViewModelManager}, Path=LauncherViewModel.OpenAnalyzerCommand}" Header="{DynamicResource Analyzer}" />
         </Menu>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>

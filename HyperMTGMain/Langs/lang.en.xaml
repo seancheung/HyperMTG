@@ -25,4 +25,9 @@
     <sys:String x:Key="CopyToClipboard">Copy To Clipboard</sys:String>
     <sys:String x:Key="Edit">Edit</sys:String>
     <sys:String x:Key="CopyImageToClipboard">Copy Image To Clipboard</sys:String>
+    <sys:String x:Key="OK">OK</sys:String>
+    <sys:String x:Key="Set">Set</sys:String>
+    <sys:String x:Key="Type">Type</sys:String>
+    <sys:String x:Key="Color">Color</sys:String>
+    <sys:String x:Key="Rarity">Rarity</sys:String>
 </ResourceDictionary>

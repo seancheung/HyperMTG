@@ -51,5 +51,6 @@ namespace HyperKore.Utilities
 		{
 			return source.Where(GetWhereInExpression(propertySelector, values));
 		}
+
 	}
 }
