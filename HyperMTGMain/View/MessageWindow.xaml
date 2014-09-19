@@ -1,8 +1,42 @@
 ﻿<Window x:Class="HyperMTGMain.View.MessageWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MessageWindow" Height="300" Width="300">
-    <Grid>
-        
-    </Grid>
+        Title="{Binding Title}"
+        Width="auto" Height="auto"
+        MaxWidth="400" MaxHeight="200"
+        DataContext="{Binding Source={StaticResource ViewModelManager},
+                              Path=MessageViewModel}"
+        WindowStartupLocation="CenterScreen">
+    <Border>
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center" Orientation="Vertical">
+            <TextBlock HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Text="{Binding Caption}" />
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                <Button Margin="5"
+                        Command="{Binding YesCommand}"
+                        Content="YES" FontSize="18"
+                        Visibility="{Binding IsYesVisible,
+                                             Converter={StaticResource VisibilityConverter}}" />
+                <Button Margin="5"
+                        Command="{Binding NoCommand}"
+                        Content="NO" FontSize="18"
+                        Visibility="{Binding IsNoVisible,
+                                             Converter={StaticResource VisibilityConverter}}" />
+                <Button Margin="5"
+                        Command="{Binding OkCommand}"
+                        Content="OK" FontSize="18"
+                        Visibility="{Binding IsOKVisible,
+                                             Converter={StaticResource VisibilityConverter}}" />
+                <Button Margin="5"
+                        Command="{Binding CancelCommand}"
+                        Content="CANCEL" FontSize="18"
+                        Visibility="{Binding IsCancelVisible,
+                                             Converter={StaticResource VisibilityConverter}}" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
 </Window>

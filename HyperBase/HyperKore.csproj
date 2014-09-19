@@ -50,6 +50,7 @@
     <Compile Include="Utilities\BoosterTool.cs" />
     <Compile Include="Utilities\CardTool.cs" />
     <Compile Include="Utilities\LanguageTool.cs" />
+    <Compile Include="Utilities\QueryableExtension.cs" />
     <Compile Include="Utilities\StringTool.cs" />
     <Compile Include="Exception\AssamlyMissingException.cs" />
     <Compile Include="Exception\CardMissingException.cs" />

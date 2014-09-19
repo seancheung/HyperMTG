@@ -65,12 +65,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helper\CommandReference.cs" />
     <Compile Include="Helper\Converter\FontConverter.cs" />
     <Compile Include="Helper\Converter\DateTimeConverter.cs" />
+    <Compile Include="Helper\ImageHelper.cs" />
+    <Compile Include="Helper\LanguageManager.cs" />
     <Compile Include="Helper\ObservableClass.cs" />
     <Compile Include="Helper\RelayCommand.cs" />
     <Compile Include="Helper\Converter\VisibilityConverter.cs" />
     <Compile Include="Helper\TaskManager.cs" />
+    <Compile Include="Helper\Converter\TriggerConverter.cs" />
+    <Compile Include="Model\ImgCard.cs" />
     <Compile Include="Model\ProgressCheck.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewModel\AboutViewModel.cs" />
@@ -148,6 +153,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Resource Include="Langs\lang.en.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Page Include="View\AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

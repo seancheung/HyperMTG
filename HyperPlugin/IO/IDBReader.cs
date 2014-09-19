@@ -11,7 +11,7 @@ namespace HyperPlugin
 		string DBType { get; }
 
 		/// <summary>
-		/// Language of the database
+		///     Language of the database
 		/// </summary>
 		Language Language { get; set; }
 
@@ -27,6 +27,13 @@ namespace HyperPlugin
 		/// <param name="id"></param>
 		/// <returns></returns>
 		byte[] LoadFile(string id, ICompressor compressor);
+
+		/// <summary>
+		///     Check card images in database then return those which are not found
+		/// </summary>
+		/// <param name="cards"></param>
+		/// <returns></returns>
+		IEnumerable<Card> CheckFiles(IEnumerable<Card> cards);
 
 		/// <summary>
 		///     Load sets

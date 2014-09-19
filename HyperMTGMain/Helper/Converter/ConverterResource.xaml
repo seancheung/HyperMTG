@@ -4,4 +4,5 @@
     <converter:VisibilityConverter x:Key="VisibilityConverter" />
     <converter:FontConverter x:Key="FontConverter" />
     <converter:DateTimeConverter x:Key="DateTimeConverter" />
+    <converter:TriggerConverter x:Key="TriggerConverter" />
 </ResourceDictionary>

@@ -2,10 +2,11 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:HyperMTGMain.ViewModel"
-             StartupUri="View/Launcher.xaml">
+             Startup="App_OnStartup">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Langs/lang.en.xaml" />
                 <ResourceDictionary Source="Helper/IgTheme/IG.MSControls.Core.Implicit.xaml" />
                 <ResourceDictionary Source="Helper/IgTheme/IG.MSControls.Toolkit.Implicit.xaml" />
                 <ResourceDictionary Source="/HyperStyle;component/Assets/Magic.xaml" />

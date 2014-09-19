@@ -10,8 +10,8 @@
 		private static DeckEditorWindow _deckEditorWindow;
 		private static FilterWindow _filterWindow;
 		private static PreferenceWindow _preferenceWindow;
-		private static Launcher _launcher;
 		private static MessageWindow _messageWindow;
+		public static Launcher Launcher = new Launcher();
 
 		public static SealedWindow SealedWindow
 		{
@@ -20,7 +20,12 @@
 				if (_sealedWindow == null)
 				{
 					_sealedWindow = new SealedWindow();
-					_sealedWindow.Closed += delegate { _sealedWindow = null; };
+					_sealedWindow.Closed += delegate
+					{
+						_sealedWindow = null;
+						Launcher.Show();
+					};
+					_sealedWindow.Loaded += delegate { Launcher.Hide(); };
 				}
 				return _sealedWindow;
 			}
@@ -33,7 +38,12 @@
 				if (_draftWindow == null)
 				{
 					_draftWindow = new DraftWindow();
-					_draftWindow.Closed += delegate { _draftWindow = null; };
+					_draftWindow.Closed += delegate
+					{
+						_draftWindow = null;
+						Launcher.Show();
+					};
+					_draftWindow.Loaded += delegate { Launcher.Hide(); };
 				}
 				return _draftWindow;
 			}
@@ -46,7 +56,12 @@
 				if (_aboutWindow == null)
 				{
 					_aboutWindow = new AboutWindow();
-					_aboutWindow.Closed += delegate { _aboutWindow = null; };
+					_aboutWindow.Closed += delegate
+					{
+						_aboutWindow = null;
+						Launcher.Show();
+					};
+					_aboutWindow.Loaded += delegate { Launcher.Hide(); };
 				}
 				return _aboutWindow;
 			}
@@ -56,7 +71,7 @@
 		{
 			get
 			{
-				if (_aboutWindow == null)
+				if (_analyzerWindow == null)
 				{
 					_analyzerWindow = new AnalyzerWindow();
 					_analyzerWindow.Closed += delegate { _analyzerWindow = null; };
@@ -72,7 +87,12 @@
 				if (_databaseWindow == null)
 				{
 					_databaseWindow = new DatabaseWindow();
-					_databaseWindow.Closed += delegate { _databaseWindow = null; };
+					_databaseWindow.Closed += delegate
+					{
+						_databaseWindow = null;
+						Launcher.Show();
+					};
+					_databaseWindow.Loaded += delegate { Launcher.Hide(); };
 				}
 				return _databaseWindow;
 			}
@@ -85,7 +105,12 @@
 				if (_deckEditorWindow == null)
 				{
 					_deckEditorWindow = new DeckEditorWindow();
-					_deckEditorWindow.Closed += delegate { _deckEditorWindow = null; };
+					_deckEditorWindow.Closed += delegate
+					{
+						_deckEditorWindow = null;
+						Launcher.Show();
+					};
+					_deckEditorWindow.Loaded += delegate { Launcher.Hide(); };
 				}
 				return _deckEditorWindow;
 			}
@@ -111,22 +136,14 @@
 				if (_preferenceWindow == null)
 				{
 					_preferenceWindow = new PreferenceWindow();
-					_preferenceWindow.Closed += delegate { _preferenceWindow = null; };
+					_preferenceWindow.Closed += delegate
+					{
+						_preferenceWindow = null;
+						Launcher.Show();
+					};
+					_preferenceWindow.Loaded += delegate { Launcher.Hide(); };
 				}
 				return _preferenceWindow;
-			}
-		}
-
-		public static Launcher Launcher
-		{
-			get
-			{
-				if (_launcher == null)
-				{
-					_launcher = new Launcher();
-					_launcher.Closed += delegate { _launcher = null; };
-				}
-				return _launcher;
 			}
 		}
 

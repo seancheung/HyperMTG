@@ -1,64 +1,78 @@
 ﻿<Window x:Class="HyperMTGMain.View.DatabaseWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="DatabaseWindow" Width="720"
-        Height="720"
+        Title="{DynamicResource Database}" Width="480"
+        Height="480"
         DataContext="{Binding Source={StaticResource ViewModelManager},
                               Path=DatabaseViewModel}"
         Loaded="DatabaseWindow_OnLoaded"
         SnapsToDevicePixels="True"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen" Closing="DatabaseWindow_OnClosing">
     <Grid Margin="12">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <ListBox Grid.Column="0"
-                 ItemsSource="{Binding ProgressChecks}"
-                 SnapsToDevicePixels="True">
-            <ListBox.ItemContainerStyle>
-                <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="ListBoxItem">
-                    <Setter Property="Margin" Value="1,2,1,1" />
-                    <Setter Property="HorizontalAlignment" Value="Stretch" />
-                    <Setter Property="Focusable" Value="False" />
-                </Style>
-            </ListBox.ItemContainerStyle>
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.ToolTip>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Last update time: " />
-                                <TextBlock Text="{Binding Content.LastUpdate, Converter={StaticResource DateTimeConverter}}" />
-                            </StackPanel>
-                        </Grid.ToolTip>
-                        <CheckBox HorizontalAlignment="Stretch"
-                                  Content="{Binding Content.FullName}"
-                                  FontWeight="{Binding IsLocal,
-                                                       Converter={StaticResource FontConverter}}"
-                                  IsChecked="{Binding IsChecked}" />
-                        <ProgressBar HorizontalAlignment="Stretch"
-                                     Maximum="{Binding Max}"
-                                     Opacity="0.5"
-                                     Visibility="{Binding IsProcessing,
-                                                          Converter={StaticResource VisibilityConverter}}"
-                                     Value="{Binding Prog}" />
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="{Binding Source={StaticResource ViewModelManager}, Path=MessageViewModel.Info}" />
+            <ListBox Grid.Row="1"
+                     ItemsSource="{Binding ProgressChecks}"
+                     SnapsToDevicePixels="True">
+                <ListBox.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="ListBoxItem">
+                        <Setter Property="Margin" Value="1,2,1,1" />
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        <Setter Property="Focusable" Value="False" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ToolTip>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Last update time: " />
+                                    <TextBlock Text="{Binding Content.LastUpdate, Converter={StaticResource DateTimeConverter}}" />
+                                </StackPanel>
+                            </Grid.ToolTip>
+                            <CheckBox HorizontalAlignment="Stretch"
+                                      Content="{Binding Content.FullName}"
+                                      FontWeight="{Binding IsLocal,
+                                                           Converter={StaticResource FontConverter}}"
+                                      IsChecked="{Binding IsChecked}" />
+                            <ProgressBar HorizontalAlignment="Stretch"
+                                         Maximum="{Binding Max}"
+                                         Opacity="0.5"
+                                         Visibility="{Binding IsProcessing,
+                                                              Converter={StaticResource VisibilityConverter}}"
+                                         Value="{Binding Prog}" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-            <Button Margin="10"
-                    Command="{Binding UpdateSetsCommand}"
-                    Content="Update Set List" />
-            <Button Margin="10"
-                    Command="{Binding UpdateCardsCommand}"
-                    Content="Download Selected" />
-            <CheckBox Margin="10" Content="Download Image"
-                      IsChecked="{Binding DownloadImage}" />
-            <Button Margin="10"
-                    Command="{Binding CancelCommand}"
-                    Content="Cancel" />
+            <GroupBox Margin="5" Header="{DynamicResource DataUpdate}">
+                <StackPanel>
+                    <Button Margin="10,20"
+                            Command="{Binding UpdateCardsCommand}"
+                            Content="{DynamicResource UpdateCards}" />
+                    <Button Margin="10,20"
+                            Command="{Binding UpdateImageCommand}"
+                            Content="{DynamicResource UpdateImages}" />
+                    <CheckBox Margin="10,20" Content="{DynamicResource OverwriteCurrent}"
+                              IsChecked="{Binding IsOverwrite}" />
+                    <Button Margin="10,20"
+                            Command="{Binding UpdateSetsCommand}"
+                            Content="{DynamicResource UpdateSets}" />
+                    <Button Margin="10,20"
+                            Command="{Binding CancelCommand}"
+                            Content="{DynamicResource Cancel}" />
+                </StackPanel>
+            </GroupBox>
         </StackPanel>
     </Grid>
 </Window>
