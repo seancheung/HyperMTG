@@ -57,6 +57,12 @@ namespace HyperKore.Common
 			set;
 		}
 
+		/// <summary>
+		/// Group of set
+		/// </summary>
+		[Column(Name = "Group")]
+		public string Group { get; set; }
+
 		#region Overrides of Object
 
 		/// <summary>

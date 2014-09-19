@@ -14,7 +14,7 @@ namespace HyperPlugin
 			"CREATE TABLE IF NOT EXISTS 'Card'('id' TEXT NOT NULL,'name' TEXT NOT NULL,'set' TEXT NOT NULL,'setcode' TEXT NOT NULL," +
 			"'cost' TEXT,'cmc' TEXT,'type' TEXT NOT NULL,'pow' TEXT,'tgh' TEXT,'loyalty' TEXT,'text' TEXT," +
 			"'flavor' TEXT,'artist' TEXT,'rarity' TEXT NOT NULL,'number' TEXT NOT NULL,PRIMARY KEY('id'));" +
-			"CREATE TABLE IF NOT EXISTS 'Set'('SetName' TEXT NOT NULL,'SetCode' TEXT,'LastUpdate' TEXT,'Local' INTEGER,PRIMARY KEY('SetName'));" +
+			"CREATE TABLE IF NOT EXISTS 'Set'('SetName' TEXT NOT NULL,'SetCode' TEXT,'Group' TEXT,'LastUpdate' TEXT,'Local' INTEGER,PRIMARY KEY('SetName'));" +
 			"CREATE TABLE IF NOT EXISTS 'File'('id' TEXT NOT NULL,'data' BLOB,'length' INTEGER,PRIMARY KEY('id'))";
 
 		//private const string ConnString = "data source=DATA.db;password=5AEB55D5-F169-4EB2-A768-B20EBD20151E";

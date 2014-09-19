@@ -86,14 +86,24 @@ namespace HyperPlugin
 
 			Match matchSC = Regex.Match(select, @"(?<=<option\svalue="")(\w+)(?=/(\w+)"">)");
 			Match matchSN = Regex.Match(select, @"(?<="">)(?!\s|<|>)[\w\s\:\'\""\.\/\-]+(?=<)");
+			Match matchGP = Regex.Match(select, @"(?<=optgroup label="")(?!\s|<|>)[\w\s\:\'\""""\.\/\-]+\(English\)");
 
-			while (matchSC.Success && matchSN.Success)
+			while (matchSC.Success && matchSN.Success && matchGP.Success)
 			{
 				yield return
-					new Set { SetName = matchSN.Value.Trim(), SetCode = matchSC.Value.Trim().ToUpper() };
+					new Set
+					{
+						SetName = matchSN.Value.Trim(),
+						SetCode = matchSC.Value.Trim().ToUpper(),
+						Group = matchGP.Value.Replace("(English)", "").Trim()
+					};
 
 				matchSC = matchSC.NextMatch();
 				matchSN = matchSN.NextMatch();
+				if (matchGP.NextMatch().Success && matchSC.Index > matchGP.NextMatch().Index)
+				{
+					matchGP = matchGP.NextMatch();
+				}
 			}
 		}
 
@@ -118,7 +128,7 @@ namespace HyperPlugin
 
 			foreach (HtmlNode td in tds)
 			{
-				Card card = new Card { Set = set.SetName, SetCode = set.SetCode };
+				Card card = new Card {Set = set.SetName, SetCode = set.SetCode};
 
 				HtmlNode span = td.CssSelect("span").FirstOrDefault();
 				if (span == null)
