@@ -26,7 +26,6 @@ namespace HyperMTGMain.ViewModel
 		private DeckEditorViewModel()
 		{
 			Deck = new Deck();
-			Cards = new List<Card>();
 			SelectedCard = new ImgCard();
 		}
 

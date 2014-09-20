@@ -63,7 +63,10 @@ namespace HyperMTGMain.View
 		private void DeckEditorWindow_OnLoaded(object sender, RoutedEventArgs e)
 		{
 			ViewModelManager.MessageViewModel.Clear();
-			ViewModelManager.DeckEditorViewModel.LoadCards();
+			if (ViewModelManager.DeckEditorViewModel.Cards == null)
+			{
+				ViewModelManager.DeckEditorViewModel.LoadCards();
+			}
 		}
 
 		private void EventSetter_OnHandler_List(object sender, MouseEventArgs e)

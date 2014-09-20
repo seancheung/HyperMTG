@@ -30,4 +30,12 @@
     <sys:String x:Key="Type">Type</sys:String>
     <sys:String x:Key="Color">Color</sys:String>
     <sys:String x:Key="Rarity">Rarity</sys:String>
+    <sys:String x:Key="All">All</sys:String>
+    <sys:String x:Key="None">None</sys:String>
+    <sys:String x:Key="Invert">Invert</sys:String>
+    <sys:String x:Key="IncludeUnselected">Include Unselected</sys:String>
+    <sys:String x:Key="Reset">Reset</sys:String>
+    <sys:String x:Key="Text">Text</sys:String>
+    <sys:String x:Key="Name">Name</sys:String>
+    <sys:String x:Key="Clear">Clear</sys:String>
 </ResourceDictionary>
