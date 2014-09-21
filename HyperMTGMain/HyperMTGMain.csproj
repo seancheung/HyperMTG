@@ -36,6 +36,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Controls.Input.Toolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\net40\System.Windows.Controls.Input.Toolkit.dll</HintPath>
@@ -79,6 +81,11 @@
     <Compile Include="Model\ImgCard.cs" />
     <Compile Include="Model\ProgressCheck.cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Service References\DraftSR\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\AboutViewModel.cs" />
     <Compile Include="ViewModel\AnalyzerViewModel.cs" />
     <Compile Include="Helper\PluginFactory.cs" />
@@ -102,6 +109,9 @@
     </Compile>
     <Compile Include="View\DeckEditorWindow.xaml.cs">
       <DependentUpon>DeckEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DraftLoginWindow.xaml.cs">
+      <DependentUpon>DraftLoginWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\DraftWindow.xaml.cs">
       <DependentUpon>DraftWindow.xaml</DependentUpon>
@@ -175,6 +185,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\DraftLoginWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\DraftWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -224,6 +238,22 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="Service References\DraftSR\Arrays.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DraftSR\HyperServer.Common.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DraftSR\HyperServer.Draft.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DraftSR\service.wsdl" />
+    <None Include="Service References\DraftSR\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DraftSR\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HyperBase\HyperKore.csproj">
@@ -237,6 +267,10 @@
     <ProjectReference Include="..\HyperPlugin\HyperPlugin.csproj">
       <Project>{bef59a5b-5faf-405e-9e47-862da747ab4e}</Project>
       <Name>HyperPlugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HyperServer\HyperServer.csproj">
+      <Project>{633ea5e3-fa3e-45db-8cc8-db218535be4d}</Project>
+      <Name>HyperServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\HyperStyle\HyperStyle.csproj">
       <Project>{b5ed551c-cedd-40c7-a8fc-ac2dd757d16f}</Project>
@@ -279,7 +313,24 @@
       <Name>VirtualPlaytable</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\DraftSR\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DraftSR\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DraftSR\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DraftSR\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

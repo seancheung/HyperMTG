@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="8c53a111-1f9e-4078-bd08-5201a168f075" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>true</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.Generic.List`1" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="net.tcp://localhost:5932/HyperServer/mex" Protocol="mex" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="1ea2bf24-10e5-4ac4-85be-e9f0a2855ce5" SourceId="1" SourceUrl="net.tcp://localhost:5932/HyperServer/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="733a85df-dc78-4138-bf15-cee14b1dc8a4" SourceId="1" SourceUrl="net.tcp://localhost:5932/HyperServer/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="6783b263-79ba-4a38-a696-4c88be797ccb" SourceId="1" SourceUrl="net.tcp://localhost:5932/HyperServer/mex" />
+    <MetadataFile FileName="HyperServer.Draft.xsd" MetadataType="Schema" ID="f9ba70c9-4adb-4b43-9fcc-2e7cbc55c184" SourceId="1" SourceUrl="net.tcp://localhost:5932/HyperServer/mex" />
+    <MetadataFile FileName="HyperServer.Common.xsd" MetadataType="Schema" ID="a4ca95a1-c7e9-4d2c-89ad-9d2b1b42c122" SourceId="1" SourceUrl="net.tcp://localhost:5932/HyperServer/mex" />
+    <MetadataFile FileName="Arrays.xsd" MetadataType="Schema" ID="9b4aacb9-84ca-48b0-8328-6f241e6759d6" SourceId="1" SourceUrl="net.tcp://localhost:5932/HyperServer/mex" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

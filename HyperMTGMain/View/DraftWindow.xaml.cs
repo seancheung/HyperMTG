@@ -1,26 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using HyperMTGMain.ViewModel;
 
 namespace HyperMTGMain.View
 {
-	/// <summary>
-	/// DraftWindow.xaml 的交互逻辑
-	/// </summary>
-	public partial class DraftWindow : Window
+	public partial class DraftWindow
 	{
 		public DraftWindow()
 		{
 			InitializeComponent();
+		}
+
+		private void DraftWindow_OnClosed(object sender, EventArgs e)
+		{
+			ViewModelManager.DraftViewModel.CloseHost();
 		}
 	}
 }

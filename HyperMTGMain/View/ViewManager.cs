@@ -12,6 +12,7 @@
 		private static PreferenceWindow _preferenceWindow;
 		private static MessageWindow _messageWindow;
 		public static Launcher Launcher = new Launcher();
+		private static DraftLoginWindow _draftLoginWindow;
 
 		public static SealedWindow SealedWindow
 		{
@@ -43,7 +44,11 @@
 						_draftWindow = null;
 						Launcher.Show();
 					};
-					_draftWindow.Loaded += delegate { Launcher.Hide(); };
+					_draftWindow.Loaded += delegate
+					{
+						Launcher.Hide();
+						DraftLoginWindow.Close();
+					};
 				}
 				return _draftWindow;
 			}
@@ -157,6 +162,19 @@
 					_messageWindow.Closed += delegate { _messageWindow = null; };
 				}
 				return _messageWindow;
+			}
+		}
+
+		public static DraftLoginWindow DraftLoginWindow
+		{
+			get
+			{
+				if (_draftLoginWindow == null)
+				{
+					_draftLoginWindow = new DraftLoginWindow();
+					_draftLoginWindow.Closed += delegate { _draftLoginWindow = null; };
+				}
+				return _draftLoginWindow;
 			}
 		}
 	}

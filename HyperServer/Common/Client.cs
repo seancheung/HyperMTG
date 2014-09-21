@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace HyperService.Common
+namespace HyperServer.Common
 {
 	[DataContract]
 	public class Client : Entity
@@ -14,27 +14,12 @@ namespace HyperService.Common
 			Name = name;
 		}
 
-		/// <summary>
-		/// Client name
-		/// </summary>
 		[DataMember]
 		public string Name { get; set; }
 
-		/// <summary>
-		/// Client finished current action
-		/// </summary>
-		[DataMember]
-		public bool IsDone { get; set; }
-
-		/// <summary>
-		/// Whether it's a bot
-		/// </summary>
 		[DataMember]
 		public bool IsBot { get; set; }
 
-		/// <summary>
-		/// Whether it's the host
-		/// </summary>
 		[DataMember]
 		public bool IsHost { get; set; }
 	}
