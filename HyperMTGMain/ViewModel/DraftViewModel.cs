@@ -20,17 +20,20 @@ namespace HyperMTGMain.ViewModel
 		private static DraftViewModel _instance;
 		private List<ImgCard> _cards;
 		private int _maxPlayers;
+		private string _messageInput;
 		private string _messages;
 		private List<DraftPlayer> _players;
 		private DraftClient _proxy;
 		private DraftService _service;
 		private string _setList;
-		private int _timeLimit;
 		private List<Set> _setSource;
+		private int _timeLimit;
 
 		private DraftViewModel()
 		{
 			Sets = new Set[3];
+			ZoomSize = new CardSize();
+			MaxPlayers = 2;
 		}
 
 		internal static DraftViewModel Instance
@@ -40,6 +43,26 @@ namespace HyperMTGMain.ViewModel
 
 		public string IP { get; set; }
 		public string Name { get; set; }
+		public Set[] Sets { get; set; }
+		public CardSize ZoomSize { get; set; }
+		public DraftPlayer Player { get; set; }
+
+		public ICommand ConnectCommand
+		{
+			get { return new RelayCommand(Connect, CanConnect); }
+		}
+
+		public ICommand HostCommand
+		{
+			get { return new RelayCommand(Host, CanHost); }
+		}
+
+		public ICommand SendMessageCommand
+		{
+			get { return new RelayCommand(SendMessage); }
+		}
+
+		#region Notifiable Prop
 
 		public int MaxPlayers
 		{
@@ -60,8 +83,6 @@ namespace HyperMTGMain.ViewModel
 				OnPropertyChanged("SetList");
 			}
 		}
-
-		public Set[] Sets { get; set; }
 
 		public List<Set> SetSource
 		{
@@ -93,8 +114,6 @@ namespace HyperMTGMain.ViewModel
 			}
 		}
 
-		public DraftPlayer Player { get; set; }
-
 		public List<DraftPlayer> Players
 		{
 			get { return _players; }
@@ -115,15 +134,17 @@ namespace HyperMTGMain.ViewModel
 			}
 		}
 
-		public ICommand ConnectCommand
+		public string MessageInput
 		{
-			get { return new RelayCommand(Connect, CanConnect); }
+			get { return _messageInput; }
+			set
+			{
+				_messageInput = value;
+				OnPropertyChanged("MessageInput");
+			}
 		}
 
-		public ICommand HostCommand
-		{
-			get { return new RelayCommand(Host, CanHost); }
-		}
+		#endregion
 
 		private void Connect()
 		{
@@ -167,10 +188,28 @@ namespace HyperMTGMain.ViewModel
 
 		private bool CanHost()
 		{
-			return !string.IsNullOrWhiteSpace(Name);
+			return !string.IsNullOrWhiteSpace(Name) && Sets.All(s => s != null);
 		}
 
-		public void CloseHost()
+		private void SendMessage()
+		{
+			if (string.IsNullOrWhiteSpace(MessageInput))
+			{
+				return;
+			}
+
+			var msg = new Message
+			{
+				Sender = Player.ID,
+				Content = MessageInput,
+				Time = DateTime.Now
+			};
+
+			_proxy.SendMessageAsync(msg);
+			MessageInput = string.Empty;
+		}
+
+		public void CloseConnection()
 		{
 			if (_proxy != null)
 			{
@@ -184,10 +223,12 @@ namespace HyperMTGMain.ViewModel
 
 		public void LoadSets()
 		{
-			if (PluginFactory.ComponentsAvailable)
-			{
-				SetSource = PluginFactory.DbReader.LoadSets().ToList();
-			}
+			SetSource = DataManager.Sets.ToList();
+		}
+
+		private void DispMessage(string name, DateTime time, string content)
+		{
+			Messages += string.Format("[{0}]({1}): {2}\r\n", name, time.ToString("hh:mm:ss"), content);
 		}
 
 		#region Implementation of IDraftCallback
@@ -219,6 +260,7 @@ namespace HyperMTGMain.ViewModel
 			MaxPlayers = maxPlayers;
 			TimeLimit = timeLimit;
 			SetList = setCodes.Aggregate((a, b) => string.Format("{0}+{1}", a, b));
+			Cards = new List<ImgCard>();
 		}
 
 		public IAsyncResult BeginRefreshGame(int maxPlayers, int timeLimit, List<string> setCodes, AsyncCallback callback,
@@ -240,7 +282,7 @@ namespace HyperMTGMain.ViewModel
 			}
 			else
 			{
-				Messages += client.Name + " Entered\r\n";
+				DispMessage("System", DateTime.Now, string.Format("{0} Entered", client.Name));
 			}
 		}
 
@@ -256,6 +298,7 @@ namespace HyperMTGMain.ViewModel
 
 		public void OnLeave(DraftPlayer client)
 		{
+			DispMessage("System", DateTime.Now, string.Format("{0} Left", client.Name));
 		}
 
 		public IAsyncResult BeginOnLeave(DraftPlayer client, AsyncCallback callback, object asyncState)
@@ -285,7 +328,6 @@ namespace HyperMTGMain.ViewModel
 
 		public void OnStart()
 		{
-			
 		}
 
 		public IAsyncResult BeginOnStart(AsyncCallback callback, object asyncState)
@@ -300,6 +342,11 @@ namespace HyperMTGMain.ViewModel
 
 		public void OnMessage(Message msg)
 		{
+			Client sender = Players.FirstOrDefault(c => c.ID == msg.Sender);
+			if (sender != null)
+			{
+				DispMessage(sender.Name, msg.Time, msg.Content);
+			}
 		}
 
 		public IAsyncResult BeginOnMessage(Message msg, AsyncCallback callback, object asyncState)
@@ -314,6 +361,7 @@ namespace HyperMTGMain.ViewModel
 
 		public void OnReady(DraftPlayer player)
 		{
+			DispMessage("System", DateTime.Now, string.Format("{0} is ready", player.Name));
 		}
 
 		public IAsyncResult BeginOnReady(DraftPlayer player, AsyncCallback callback, object asyncState)

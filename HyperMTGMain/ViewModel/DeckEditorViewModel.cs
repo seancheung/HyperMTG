@@ -241,7 +241,6 @@ namespace HyperMTGMain.ViewModel
 			string data = Clipboard.GetText(TextDataFormat.Text);
 			if (!string.IsNullOrWhiteSpace(data))
 			{
-				IEnumerable<Card> db = PluginFactory.DbReader.LoadCards();
 				Match side = Regex.Match(data, "sideboard:", RegexOptions.IgnoreCase);
 				var mainCards = new List<Card>();
 				var sideCards = new List<Card>();
@@ -252,7 +251,7 @@ namespace HyperMTGMain.ViewModel
 					{
 						int count = Int32.Parse(Regex.Match(match.Value, @"\d+(?=\s+[^\d\r\n]+)").Value);
 						string name = Regex.Match(match.Value, @"(?<=\d+\s+)[^\d\r\n]+").Value.Trim();
-						Card card = db.FirstOrDefault(c => c.Name == name);
+						Card card = DataManager.Cards.FirstOrDefault(c => c.Name == name);
 						if (card != null)
 						{
 							if (side.Success && match.Index > side.Index)
@@ -386,19 +385,7 @@ namespace HyperMTGMain.ViewModel
 
 		public void LoadCards()
 		{
-			if (!PluginFactory.ComponentsAvailable)
-			{
-				return;
-			}
-			try
-			{
-				Cards = PluginFactory.DbReader.LoadCards().ToList();
-			}
-			catch (Exception ex)
-			{
-				Logger.Log(ex, this);
-				throw;
-			}
+			Cards = DataManager.Cards.ToList();
 		}
 	}
 }

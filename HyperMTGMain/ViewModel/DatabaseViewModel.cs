@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -194,8 +195,6 @@ namespace HyperMTGMain.ViewModel
 				MaxDegreeOfParallelism = Environment.ProcessorCount
 			};
 
-			IEnumerable<Card> db = PluginFactory.DbReader.LoadCards();
-
 			foreach (ProgressCheck check in ProgressChecks.Where(p => p.IsChecked))
 			{
 				#region Image Task
@@ -203,7 +202,7 @@ namespace HyperMTGMain.ViewModel
 				Task task = new Task(() =>
 				{
 					TaskManager.Count++;
-					IEnumerable<Card> allCards = db.Where(c => c.SetCode == check.Content.SetCode);
+					IEnumerable<Card> allCards = DataManager.Cards.Where(c => c.SetCode == check.Content.SetCode);
 					IEnumerable<Card> prcCards = PluginFactory.DbReader.CheckFiles(allCards);
 					check.IsProcessing = true;
 					check.Max = allCards.Count();
@@ -276,20 +275,7 @@ namespace HyperMTGMain.ViewModel
 
 		public void LoadSets()
 		{
-			if (!PluginFactory.ComponentsAvailable)
-			{
-				return;
-			}
-			try
-			{
-				IEnumerable<Set> sets = PluginFactory.DbReader.LoadSets();
-				ProgressChecks = new List<ProgressCheck>(sets.Select(p => new ProgressCheck(false, p)));
-			}
-			catch (Exception ex)
-			{
-				Logger.Log(ex, this);
-				throw;
-			}
+			ProgressChecks = new List<ProgressCheck>(DataManager.Sets.Select(p => new ProgressCheck(false, p)));
 		}
 	}
 }

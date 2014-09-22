@@ -14,7 +14,7 @@
                 <TextBox Text="{Binding IP}" />
             </GroupBox>
             <GroupBox Margin="5" Header="Name">
-                <TextBox Text="{Binding Name}" />
+                <TextBox Text="{Binding Name}" MaxLength="12"/>
             </GroupBox>
             <Button MinHeight="30" MaxWidth="100"
                     Margin="5"

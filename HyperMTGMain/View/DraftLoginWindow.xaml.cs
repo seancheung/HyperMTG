@@ -3,7 +3,7 @@ using HyperMTGMain.ViewModel;
 
 namespace HyperMTGMain.View
 {
-	public partial class DraftLoginWindow : Window
+	public partial class DraftLoginWindow
 	{
 		public DraftLoginWindow()
 		{

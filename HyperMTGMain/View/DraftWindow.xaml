@@ -1,11 +1,12 @@
 ﻿<Window x:Class="HyperMTGMain.View.DraftWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
         Title="{DynamicResource Draft}"
         Width="1120" Height="720"
         Closed="DraftWindow_OnClosed"
-        DataContext="{Binding Source={StaticResource ViewModelManager},
-                              Path=DraftViewModel}"
+        DataContext="{Binding DraftViewModel,
+                              Source={StaticResource ViewModelManager}}"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -17,11 +18,36 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <ProgressBar Width="5"
                              Maximum="{Binding TimeLimit}"
                              Orientation="Vertical" />
-                <WrapPanel Grid.Column="1" />
+                <ScrollViewer Grid.Column="1">
+                    <ItemsControl ItemsSource="{Binding Cards}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Image Width="{Binding DataContext.ZoomSize.Width,
+                                                       RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                       Height="{Binding DataContext.ZoomSize.Height,
+                                                        RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                       Margin="5"
+                                       Source="{Binding Image,
+                                                        IsAsync=True}"
+                                       ToolTip="{Binding Card.Name}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+                <Slider Grid.Column="2" AutoToolTipPrecision="2"
+                        LargeChange="0.1" Maximum="1.0"
+                        Minimum="0.2" Orientation="Vertical"
+                        Value="{Binding ZoomSize.Ratio}" />
             </Grid>
         </GroupBox>
         <Grid Grid.Column="1" Margin="5">
@@ -35,10 +61,10 @@
                     <StackPanel Margin="5" Orientation="Horizontal">
                         <TextBlock Text="Online Players: " />
                         <TextBlock Text="{Binding Players.Count}" />
-                        <TextBlock Text="{Binding MaxPlayers, StringFormat=' / {0}'}" />
+                        <TextBlock Text="{Binding MaxPlayers, StringFormat=' / \{0\}'}" />
                     </StackPanel>
-                    <TextBlock Margin="5" Text="{Binding TimeLimit, StringFormat='Time Limit: {0}s'}" />
-                    <TextBlock Margin="5" Text="{Binding SetList, StringFormat='Sets: {0}'}" />
+                    <TextBlock Margin="5" Text="{Binding TimeLimit, StringFormat=Time Limit: \{0\}s}" />
+                    <TextBlock Margin="5" Text="{Binding SetList, StringFormat=Sets: \{0\}}" />
                 </StackPanel>
             </GroupBox>
             <GroupBox Grid.Row="1" Margin="5"
@@ -55,13 +81,42 @@
             </GroupBox>
             <GroupBox Grid.Row="2" Margin="5"
                       Header="Message">
-                <RichTextBox IsReadOnly="True">
-                    <FlowDocument>
-                        <Paragraph>
-                            <Run Text="{Binding Messages}" />
-                        </Paragraph>
-                    </FlowDocument>
-                </RichTextBox>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <RichTextBox IsReadOnly="True">
+                        <FlowDocument>
+                            <Paragraph>
+                                <Run Text="{Binding Messages}" />
+                            </Paragraph>
+                        </FlowDocument>
+                    </RichTextBox>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <ComboBox Margin="0,2" IsEditable="True"
+                                  Text="{Binding MessageInput}">
+                            <system:String>:)</system:String>
+                            <system:String>:D</system:String>
+                            <system:String>o.O</system:String>
+                            <system:String>:(</system:String>
+                            <system:String>:P</system:String>
+                            <system:String>:S</system:String>
+                            <system:String>:&lt;</system:String>
+                            <system:String>LOL</system:String>
+                            <system:String>:L</system:String>
+                            <system:String>:O</system:String>
+                            <system:String>..zzZZ</system:String>
+                        </ComboBox>
+                        <Button Grid.Column="1" Margin="2"
+                                Command="{Binding SendMessageCommand}"
+                                Content="↑" />
+                    </Grid>
+                </Grid>
             </GroupBox>
         </Grid>
     </Grid>

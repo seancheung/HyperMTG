@@ -12,7 +12,7 @@ namespace HyperMTGMain.View
 
 		private void DraftWindow_OnClosed(object sender, EventArgs e)
 		{
-			ViewModelManager.DraftViewModel.CloseHost();
+			ViewModelManager.DraftViewModel.CloseConnection();
 		}
 	}
 }

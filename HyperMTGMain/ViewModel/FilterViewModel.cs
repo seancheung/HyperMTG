@@ -195,12 +195,9 @@ namespace HyperMTGMain.ViewModel
 
 		private IEnumerable<CheckItem<Set>> LoadSets()
 		{
-			if (PluginFactory.ComponentsAvailable)
+			foreach (Set set in DataManager.Sets.Where(s => s.Local))
 			{
-				foreach (Set set in PluginFactory.DbReader.LoadSets().Where(s => s.Local))
-				{
-					yield return new CheckItem<Set>(set, true);
-				}
+				yield return new CheckItem<Set>(set, true);
 			}
 		}
 
@@ -236,7 +233,7 @@ namespace HyperMTGMain.ViewModel
 
 		private IEnumerable<Card> FilterCards()
 		{
-			IQueryable<Card> result = PluginFactory.DbReader.LoadCards()
+			IQueryable<Card> result = DataManager.Cards
 				.AsQueryable()
 				.WhereIn(c => c.SetCode, Sets.Where(s => s.IsChecked).Select(p => p.Content.SetCode));
 			result = result.WhereIn(c => c.GetRarity(), Rarities.Where(r => r.IsChecked).Select(p => p.Content));

@@ -67,9 +67,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helper\CardSize.cs" />
     <Compile Include="Helper\CommandReference.cs" />
     <Compile Include="Helper\Converter\FontConverter.cs" />
     <Compile Include="Helper\Converter\DateTimeConverter.cs" />
+    <Compile Include="Helper\DataManager.cs" />
     <Compile Include="Helper\ImageHelper.cs" />
     <Compile Include="Helper\LanguageManager.cs" />
     <Compile Include="Helper\ObservableClass.cs" />
