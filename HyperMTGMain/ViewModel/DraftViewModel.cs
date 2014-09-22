@@ -32,7 +32,7 @@ namespace HyperMTGMain.ViewModel
 		private DraftViewModel()
 		{
 			Sets = new Set[3];
-			ZoomSize = new CardSize();
+			ZoomSize = new CardSize {Ratio = 0.62};
 			MaxPlayers = 2;
 		}
 
@@ -106,7 +106,7 @@ namespace HyperMTGMain.ViewModel
 
 		public string Messages
 		{
-			get { return _messages; }
+			get { return string.Format("<Section>{0}</Section>", _messages); }
 			set
 			{
 				_messages = value;
@@ -228,7 +228,8 @@ namespace HyperMTGMain.ViewModel
 
 		private void DispMessage(string name, DateTime time, string content)
 		{
-			Messages += string.Format("[{0}]({1}): {2}\r\n", name, time.ToString("hh:mm:ss"), content);
+			Messages = _messages +
+			           BBCodeHelper.ToXaml(string.Format("[b]{0}[/b]([i]{1}[/i]) : {2}", name, time.ToString("hh:mm:ss"), content));
 		}
 
 		#region Implementation of IDraftCallback
@@ -260,7 +261,8 @@ namespace HyperMTGMain.ViewModel
 			MaxPlayers = maxPlayers;
 			TimeLimit = timeLimit;
 			SetList = setCodes.Aggregate((a, b) => string.Format("{0}+{1}", a, b));
-			Cards = new List<ImgCard>();
+			//Cards = new List<ImgCard>();
+			Cards = DataManager.Cards.Take(20).Select(s => new ImgCard(s)).ToList();
 		}
 
 		public IAsyncResult BeginRefreshGame(int maxPlayers, int timeLimit, List<string> setCodes, AsyncCallback callback,

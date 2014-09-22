@@ -1,6 +1,7 @@
 ﻿<Window x:Class="HyperMTGMain.View.DraftWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:hp="clr-namespace:HyperMTGMain.Helper"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         Title="{DynamicResource Draft}"
         Width="1120" Height="720"
@@ -44,9 +45,10 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </ScrollViewer>
-                <Slider Grid.Column="2" AutoToolTipPrecision="2"
-                        LargeChange="0.1" Maximum="1.0"
-                        Minimum="0.2" Orientation="Vertical"
+                <Slider Grid.Column="2" AutoToolTipPlacement="TopLeft"
+                        AutoToolTipPrecision="2" LargeChange="0.1"
+                        Maximum="1.0" Minimum="0.2"
+                        Orientation="Vertical"
                         Value="{Binding ZoomSize.Ratio}" />
             </Grid>
         </GroupBox>
@@ -86,13 +88,7 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <RichTextBox IsReadOnly="True">
-                        <FlowDocument>
-                            <Paragraph>
-                                <Run Text="{Binding Messages}" />
-                            </Paragraph>
-                        </FlowDocument>
-                    </RichTextBox>
+                    <RichTextBox IsReadOnly="True" hp:RichTextboxAssistant.BoundDocument="{Binding Messages}" />
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />

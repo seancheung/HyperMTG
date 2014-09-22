@@ -67,6 +67,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helper\BBCodeHelper.cs" />
     <Compile Include="Helper\CardSize.cs" />
     <Compile Include="Helper\CommandReference.cs" />
     <Compile Include="Helper\Converter\FontConverter.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Helper\ObservableClass.cs" />
     <Compile Include="Helper\RelayCommand.cs" />
     <Compile Include="Helper\Converter\VisibilityConverter.cs" />
+    <Compile Include="Helper\RichTextboxAssistant.cs" />
     <Compile Include="Helper\TaskManager.cs" />
     <Compile Include="Helper\Converter\TriggerConverter.cs" />
     <Compile Include="Model\CheckItem.cs" />
