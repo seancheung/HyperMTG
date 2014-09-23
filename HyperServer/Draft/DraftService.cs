@@ -17,6 +17,7 @@ namespace HyperServer.Draft
 		private int _maxPlayers;
 		private List<string> _setCodes;
 		private int _timeLimit;
+		private int _packNum;
 
 		public DraftService()
 		{
@@ -64,6 +65,7 @@ namespace HyperServer.Draft
 		public void Start()
 		{
 			_isStarted = true;
+			_packNum = 0;
 			lock (SyncObj)
 			{
 				foreach (DraftPlayer player in Players)
@@ -74,6 +76,7 @@ namespace HyperServer.Draft
 				{
 					callback.OnStart();
 					callback.RefreshClients(Players);
+					callback.OnOpenBooster(_setCodes[_packNum]);
 				}
 			}
 		}
@@ -100,6 +103,63 @@ namespace HyperServer.Draft
 				foreach (IDraftCallback callback in Callbacks)
 				{
 					callback.OnReady(player);
+					callback.RefreshClients(Players);
+				}
+			}
+		}
+
+		public void SendPack(DraftPlayer player)
+		{
+			lock (SyncObj)
+			{
+				foreach (DraftPlayer key in Players.Where(k => k.ID == player.ID))
+				{
+					key.HandList = player.HandList;
+					key.PoolList = player.PoolList;
+					key.IsReady = true;
+				}
+
+				if (Players.All(p=>p.IsReady))
+				{
+					if (Players.All(p=>p.PoolList.Any()))
+					{
+						if (Players.All(p=>p.HandList.Any()))
+						{
+							//switch
+						}
+						else
+						{
+							foreach (KeyValuePair<DraftPlayer, IDraftCallback> clientCallback in _clientCallbacks)
+							{
+								clientCallback.Value.OnReceivePack(clientCallback.Key.PoolList);
+							}
+						}
+					}
+					else
+					{
+						_packNum++;
+						if (_packNum < _setCodes.Count)
+						{
+							foreach (IDraftCallback callback in Callbacks)
+							{
+								callback.OnOpenBooster(_setCodes[_packNum]);
+							}
+						}
+						else
+						{
+							End();
+						}
+					}
+
+					foreach (DraftPlayer draftPlayer in Players)
+					{
+						draftPlayer.IsReady = false;
+					}
+				}
+
+				foreach (IDraftCallback callback in Callbacks)
+				{
+					callback.RefreshClients(Players);
 				}
 			}
 		}

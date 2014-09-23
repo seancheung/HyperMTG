@@ -97,17 +97,31 @@
       <xs:sequence />
     </xs:complexType>
   </xs:element>
+  <xs:element name="OnOpenBooster">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="setCode" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OnChooseCard">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q11="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="cardIDs" nillable="true" type="q11:ArrayOfstring" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="OnMessage">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/HyperServer.Common" minOccurs="0" name="msg" nillable="true" type="q11:Message" />
+        <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/HyperServer.Common" minOccurs="0" name="msg" nillable="true" type="q12:Message" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="OnReady">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/HyperServer.Draft" minOccurs="0" name="player" nillable="true" type="q12:DraftPlayer" />
+        <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/HyperServer.Draft" minOccurs="0" name="player" nillable="true" type="q13:DraftPlayer" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

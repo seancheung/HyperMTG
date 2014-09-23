@@ -67,6 +67,12 @@
   <wsdl:message name="IDraft_OnStart_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:OnStart" />
   </wsdl:message>
+  <wsdl:message name="IDraft_OnOpenBooster_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnOpenBooster" />
+  </wsdl:message>
+  <wsdl:message name="IDraft_OnChooseCard_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnChooseCard" />
+  </wsdl:message>
   <wsdl:message name="IDraft_OnMessage_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:OnMessage" />
   </wsdl:message>
@@ -116,6 +122,12 @@
     </wsdl:operation>
     <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnStart">
       <wsdl:output wsaw:Action="http://tempuri.org/IDraft/OnStart" message="tns:IDraft_OnStart_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnOpenBooster">
+      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/OnOpenBooster" message="tns:IDraft_OnOpenBooster_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnChooseCard">
+      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/OnChooseCard" message="tns:IDraft_OnChooseCard_OutputCallbackMessage" />
     </wsdl:operation>
     <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnMessage">
       <wsdl:output wsaw:Action="http://tempuri.org/IDraft/OnMessage" message="tns:IDraft_OnMessage_OutputCallbackMessage" />
@@ -208,6 +220,18 @@
     </wsdl:operation>
     <wsdl:operation name="OnStart">
       <soap12:operation soapAction="http://tempuri.org/IDraft/OnStart" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OnOpenBooster">
+      <soap12:operation soapAction="http://tempuri.org/IDraft/OnOpenBooster" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OnChooseCard">
+      <soap12:operation soapAction="http://tempuri.org/IDraft/OnChooseCard" style="document" />
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>

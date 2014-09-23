@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.Windows.Input;
+using System.Windows.Threading;
 using HyperKore.Common;
 using HyperKore.Utilities;
 using HyperMTGMain.DraftSR;
@@ -28,12 +29,16 @@ namespace HyperMTGMain.ViewModel
 		private string _setList;
 		private List<Set> _setSource;
 		private int _timeLimit;
+		private int _timeTick;
+		private DispatcherTimer _timer;
 
 		private DraftViewModel()
 		{
 			Sets = new Set[3];
 			ZoomSize = new CardSize {Ratio = 0.62};
 			MaxPlayers = 2;
+			_timer = new DispatcherTimer {Interval = new TimeSpan(0, 0, 1)};
+			_timer.Tick += delegate { TimeTick--; };
 		}
 
 		internal static DraftViewModel Instance
@@ -46,6 +51,21 @@ namespace HyperMTGMain.ViewModel
 		public Set[] Sets { get; set; }
 		public CardSize ZoomSize { get; set; }
 		public DraftPlayer Player { get; set; }
+		public bool Started { get; set; }
+
+		public int TimeTick
+		{
+			get { return _timeTick; }
+			set
+			{
+				_timeTick = value;
+				OnPropertyChanged("TimeTick");
+				if (TimeTick <= 0)
+				{
+					OnTimeUp();
+				}
+			}
+		}
 
 		public ICommand ConnectCommand
 		{
@@ -60,6 +80,16 @@ namespace HyperMTGMain.ViewModel
 		public ICommand SendMessageCommand
 		{
 			get { return new RelayCommand(SendMessage); }
+		}
+
+		public ICommand ReadyCommand
+		{
+			get { return new RelayCommand(Ready, CanReady); }
+		}
+
+		public ICommand StartCommand
+		{
+			get { return new RelayCommand(Start, CanStart); }
 		}
 
 		#region Notifiable Prop
@@ -232,6 +262,30 @@ namespace HyperMTGMain.ViewModel
 			           BBCodeHelper.ToXaml(string.Format("[b]{0}[/b]([i]{1}[/i]) : {2}", name, time.ToString("hh:mm:ss"), content));
 		}
 
+		private void OnTimeUp()
+		{
+		}
+
+		private void Ready()
+		{
+			_proxy.ReadyAsync(Player);
+		}
+
+		private bool CanReady()
+		{
+			return !Started;
+		}
+
+		private void Start()
+		{
+			Started = true;
+		}
+
+		private bool CanStart()
+		{
+			return Player.IsHost && Players.All(p => p.IsReady);
+		}
+
 		#region Implementation of IDraftCallback
 
 		public void OnConnect(ConnectionResult result)
@@ -261,8 +315,8 @@ namespace HyperMTGMain.ViewModel
 			MaxPlayers = maxPlayers;
 			TimeLimit = timeLimit;
 			SetList = setCodes.Aggregate((a, b) => string.Format("{0}+{1}", a, b));
-			//Cards = new List<ImgCard>();
-			Cards = DataManager.Cards.Take(20).Select(s => new ImgCard(s)).ToList();
+			Cards = new List<ImgCard>();
+			//Cards = DataManager.Cards.Take(20).Select(s => new ImgCard(s)).ToList();
 		}
 
 		public IAsyncResult BeginRefreshGame(int maxPlayers, int timeLimit, List<string> setCodes, AsyncCallback callback,
@@ -330,6 +384,8 @@ namespace HyperMTGMain.ViewModel
 
 		public void OnStart()
 		{
+			Player.HandList.Clear();
+			Player.PoolList.Clear();
 		}
 
 		public IAsyncResult BeginOnStart(AsyncCallback callback, object asyncState)
@@ -338,6 +394,38 @@ namespace HyperMTGMain.ViewModel
 		}
 
 		public void EndOnStart(IAsyncResult result)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void OnOpenBooster(string setCode)
+		{
+			IEnumerable<Card> cards = DataManager.Cards.Where(c => c.SetCode == setCode);
+			Player.PoolList.AddRange(BoosterTool.Generate(cards).Select(c => c.ID));
+			_proxy.ReadyAsync(Player);
+		}
+
+		public IAsyncResult BeginOnOpenBooster(string setCode, AsyncCallback callback, object asyncState)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void EndOnOpenBooster(IAsyncResult result)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void OnChooseCard(List<string> cardIDs)
+		{
+			
+		}
+
+		public IAsyncResult BeginOnChooseCard(List<string> cardIDs, AsyncCallback callback, object asyncState)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void EndOnChooseCard(IAsyncResult result)
 		{
 			throw new NotImplementedException();
 		}
@@ -378,6 +466,7 @@ namespace HyperMTGMain.ViewModel
 
 		public void OnEnd()
 		{
+			Started = false;
 		}
 
 		public IAsyncResult BeginOnEnd(AsyncCallback callback, object asyncState)

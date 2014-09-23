@@ -25,6 +25,12 @@ namespace HyperServer.Draft
 		void OnStart();
 
 		[OperationContract(IsOneWay = true)]
+		void OnOpenBooster(string setCode);
+
+		[OperationContract(IsOneWay = true)]
+		void OnReceivePack(List<string> cardIDs);
+
+		[OperationContract(IsOneWay = true)]
 		void OnMessage(Message msg);
 
 		[OperationContract(IsOneWay = true)]

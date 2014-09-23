@@ -40,7 +40,7 @@
                                        Margin="5"
                                        Source="{Binding Image,
                                                         IsAsync=True}"
-                                       ToolTip="{Binding Card.Name}" />
+                                       ToolTip="{Binding Card.Name}"/>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
