@@ -13,6 +13,8 @@
 		private static MessageWindow _messageWindow;
 		public static Launcher Launcher = new Launcher();
 		private static DraftLoginWindow _draftLoginWindow;
+		private static RoomListWindow _roomListWindow;
+		private static LoginWindow _loginWindow;
 
 		public static SealedWindow SealedWindow
 		{
@@ -175,6 +177,41 @@
 					_draftLoginWindow.Closed += delegate { _draftLoginWindow = null; };
 				}
 				return _draftLoginWindow;
+			}
+		}
+
+		public static RoomListWindow RoomListWindow
+		{
+			get
+			{
+				if (_roomListWindow == null)
+				{
+					_roomListWindow = new RoomListWindow();
+					_roomListWindow.Closed += delegate
+					{
+						_roomListWindow = null; 
+						Launcher.Show();
+					};
+					_roomListWindow.Loaded += delegate
+					{
+						Launcher.Hide();
+						LoginWindow.Close();
+					};
+				}
+				return _roomListWindow;
+			}
+		}
+
+		public static LoginWindow LoginWindow
+		{
+			get
+			{
+				if (_loginWindow == null)
+				{
+					_loginWindow = new LoginWindow();
+					_loginWindow.Closed += delegate { _loginWindow = null; };
+				}
+				return _loginWindow;
 			}
 		}
 	}

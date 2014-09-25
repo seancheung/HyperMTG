@@ -27,6 +27,9 @@ namespace HyperServer.Draft
 		void Ready(DraftPlayer player);
 
 		[OperationContract(IsOneWay = true)]
+		void SendPack(DraftPlayer player);
+
+		[OperationContract(IsOneWay = true)]
 		void End();
 	}
 }

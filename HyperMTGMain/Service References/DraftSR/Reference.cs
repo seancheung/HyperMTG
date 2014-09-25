@@ -63,6 +63,14 @@ namespace HyperMTGMain.DraftSR {
         
         void EndReady(System.IAsyncResult result);
         
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IDraft/SendPack")]
+        void SendPack(HyperServer.Draft.DraftPlayer player);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, AsyncPattern=true, Action="http://tempuri.org/IDraft/SendPack")]
+        System.IAsyncResult BeginSendPack(HyperServer.Draft.DraftPlayer player, System.AsyncCallback callback, object asyncState);
+        
+        void EndSendPack(System.IAsyncResult result);
+        
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IDraft/End")]
         void End();
         
@@ -131,13 +139,13 @@ namespace HyperMTGMain.DraftSR {
         
         void EndOnOpenBooster(System.IAsyncResult result);
         
-        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IDraft/OnChooseCard")]
-        void OnChooseCard(System.Collections.Generic.List<string> cardIDs);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IDraft/OnReceivePack")]
+        void OnReceivePack(System.Collections.Generic.List<string> cardIDs);
         
-        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, AsyncPattern=true, Action="http://tempuri.org/IDraft/OnChooseCard")]
-        System.IAsyncResult BeginOnChooseCard(System.Collections.Generic.List<string> cardIDs, System.AsyncCallback callback, object asyncState);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, AsyncPattern=true, Action="http://tempuri.org/IDraft/OnReceivePack")]
+        System.IAsyncResult BeginOnReceivePack(System.Collections.Generic.List<string> cardIDs, System.AsyncCallback callback, object asyncState);
         
-        void EndOnChooseCard(System.IAsyncResult result);
+        void EndOnReceivePack(System.IAsyncResult result);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IDraft/OnMessage")]
         void OnMessage(HyperServer.Common.Message msg);
@@ -208,6 +216,12 @@ namespace HyperMTGMain.DraftSR {
         
         private System.Threading.SendOrPostCallback onReadyCompletedDelegate;
         
+        private BeginOperationDelegate onBeginSendPackDelegate;
+        
+        private EndOperationDelegate onEndSendPackDelegate;
+        
+        private System.Threading.SendOrPostCallback onSendPackCompletedDelegate;
+        
         private BeginOperationDelegate onBeginEndDelegate;
         
         private EndOperationDelegate onEndEndDelegate;
@@ -245,6 +259,8 @@ namespace HyperMTGMain.DraftSR {
         public event System.EventHandler<System.ComponentModel.AsyncCompletedEventArgs> SendMessageCompleted;
         
         public event System.EventHandler<System.ComponentModel.AsyncCompletedEventArgs> ReadyCompleted;
+        
+        public event System.EventHandler<System.ComponentModel.AsyncCompletedEventArgs> SendPackCompleted;
         
         public event System.EventHandler<System.ComponentModel.AsyncCompletedEventArgs> EndCompleted;
         
@@ -542,6 +558,55 @@ namespace HyperMTGMain.DraftSR {
             }
             base.InvokeAsync(this.onBeginReadyDelegate, new object[] {
                         player}, this.onEndReadyDelegate, this.onReadyCompletedDelegate, userState);
+        }
+        
+        public void SendPack(HyperServer.Draft.DraftPlayer player) {
+            base.Channel.SendPack(player);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        public System.IAsyncResult BeginSendPack(HyperServer.Draft.DraftPlayer player, System.AsyncCallback callback, object asyncState) {
+            return base.Channel.BeginSendPack(player, callback, asyncState);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        public void EndSendPack(System.IAsyncResult result) {
+            base.Channel.EndSendPack(result);
+        }
+        
+        private System.IAsyncResult OnBeginSendPack(object[] inValues, System.AsyncCallback callback, object asyncState) {
+            HyperServer.Draft.DraftPlayer player = ((HyperServer.Draft.DraftPlayer)(inValues[0]));
+            return this.BeginSendPack(player, callback, asyncState);
+        }
+        
+        private object[] OnEndSendPack(System.IAsyncResult result) {
+            this.EndSendPack(result);
+            return null;
+        }
+        
+        private void OnSendPackCompleted(object state) {
+            if ((this.SendPackCompleted != null)) {
+                InvokeAsyncCompletedEventArgs e = ((InvokeAsyncCompletedEventArgs)(state));
+                this.SendPackCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(e.Error, e.Cancelled, e.UserState));
+            }
+        }
+        
+        public void SendPackAsync(HyperServer.Draft.DraftPlayer player) {
+            this.SendPackAsync(player, null);
+        }
+        
+        public void SendPackAsync(HyperServer.Draft.DraftPlayer player, object userState) {
+            if ((this.onBeginSendPackDelegate == null)) {
+                this.onBeginSendPackDelegate = new BeginOperationDelegate(this.OnBeginSendPack);
+            }
+            if ((this.onEndSendPackDelegate == null)) {
+                this.onEndSendPackDelegate = new EndOperationDelegate(this.OnEndSendPack);
+            }
+            if ((this.onSendPackCompletedDelegate == null)) {
+                this.onSendPackCompletedDelegate = new System.Threading.SendOrPostCallback(this.OnSendPackCompleted);
+            }
+            base.InvokeAsync(this.onBeginSendPackDelegate, new object[] {
+                        player}, this.onEndSendPackDelegate, this.onSendPackCompletedDelegate, userState);
         }
         
         public void End() {

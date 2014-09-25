@@ -51,5 +51,10 @@
 		{
 			get { return MessageViewModel.Instance; }
 		}
+
+		public static OnlineViewModel OnlineViewModel
+		{
+			get { return OnlineViewModel.Instance; }
+		}
 	}
 }

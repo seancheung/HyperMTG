@@ -35,7 +35,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Controls.Input.Toolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -47,10 +46,7 @@
       <HintPath>..\net40\System.Windows.Controls.Layout.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
@@ -90,6 +86,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Service References\HallSR\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\AboutViewModel.cs" />
     <Compile Include="ViewModel\AnalyzerViewModel.cs" />
     <Compile Include="Helper\PluginFactory.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="ViewModel\FilterViewModel.cs" />
     <Compile Include="ViewModel\LauncherViewModel.cs" />
     <Compile Include="ViewModel\MessageViewModel.cs" />
+    <Compile Include="ViewModel\OnlineViewModel.cs" />
     <Compile Include="ViewModel\PreferenceViewModel.cs" />
     <Compile Include="ViewModel\SealedViewModel.cs" />
     <Compile Include="ViewModel\ViewModelManager.cs" />
@@ -126,11 +128,17 @@
     <Compile Include="View\Launcher.xaml.cs">
       <DependentUpon>Launcher.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\LoginWindow.xaml.cs">
+      <DependentUpon>LoginWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\MessageWindow.xaml.cs">
       <DependentUpon>MessageWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\PreferenceWindow.xaml.cs">
       <DependentUpon>PreferenceWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RoomListWindow.xaml.cs">
+      <DependentUpon>RoomListWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SealedWindow.xaml.cs">
       <DependentUpon>SealedWindow.xaml</DependentUpon>
@@ -205,11 +213,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\LoginWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MessageWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\PreferenceWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RoomListWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -256,6 +272,19 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\DraftSR\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\HallSR\Arrays.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\HallSR\HyperServer.Common.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\HallSR\service.wsdl" />
+    <None Include="Service References\HallSR\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\HallSR\service1.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
@@ -322,6 +351,7 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\DraftSR\" />
+    <WCFMetadataStorage Include="Service References\HallSR\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\DraftSR\configuration91.svcinfo" />
@@ -331,6 +361,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\DraftSR\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\HallSR\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\HallSR\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\HallSR\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

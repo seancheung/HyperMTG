@@ -15,14 +15,14 @@
         <Menu Grid.Row="0" VerticalAlignment="Top"
               Background="Transparent" FontSize="14">
             <MenuItem Command="{Binding OpenDeckEditorCommand}" Header="Deck Editr" />
-            <MenuItem Header="Online Game">
-                <MenuItem Command="{Binding OpenSealedCommand}" Header="Sealed" />
+            <MenuItem Command="{Binding OpenLoginCommand}" Header="Online Game">
+                <!--<MenuItem Command="{Binding OpenSealedCommand}" Header="Sealed" />
                 <MenuItem Command="{Binding OpenDraftCommand}" Header="Draft" />
                 <MenuItem Header="Free For All" />
                 <MenuItem Header="Commander(EDH)" />
                 <MenuItem Header="Two-Headed Giant" />
                 <MenuItem Header="Planechase" />
-                <MenuItem Header="Archenemy" />
+                <MenuItem Header="Archenemy" />-->
             </MenuItem>
             <MenuItem Command="{Binding OpenDatabaseCommand}" Header="Database" />
             <MenuItem Command="{Binding OpenPreferenceCommand}" Header="Preference" />

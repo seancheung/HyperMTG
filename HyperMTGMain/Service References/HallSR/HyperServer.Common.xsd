@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/HyperServer.Common" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/HyperServer.Common" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:complexType name="Client">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Entity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="IsBot" type="xs:boolean" />
+          <xs:element minOccurs="0" name="IsHost" type="xs:boolean" />
+          <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Client" nillable="true" type="tns:Client" />
+  <xs:complexType name="Entity">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ID" type="ser:guid" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Entity" nillable="true" type="tns:Entity" />
+  <xs:simpleType name="GameMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="FreeForAll" />
+      <xs:enumeration value="Draft" />
+      <xs:enumeration value="Sealed" />
+      <xs:enumeration value="Commander" />
+      <xs:enumeration value="Planechase" />
+      <xs:enumeration value="TwoHeadedGiant" />
+      <xs:enumeration value="Archenemy" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="GameMode" nillable="true" type="tns:GameMode" />
+  <xs:simpleType name="GameFormat">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Standard" />
+      <xs:enumeration value="Modern" />
+      <xs:enumeration value="Classic" />
+      <xs:enumeration value="Vintage" />
+      <xs:enumeration value="Legacy" />
+      <xs:enumeration value="Free" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="GameFormat" nillable="true" type="tns:GameFormat" />
+  <xs:simpleType name="ConnectionResult">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Success" />
+      <xs:enumeration value="RoomFull" />
+      <xs:enumeration value="AlreadyStarted" />
+      <xs:enumeration value="UserExist" />
+      <xs:enumeration value="Banned" />
+      <xs:enumeration value="Unkown" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ConnectionResult" nillable="true" type="tns:ConnectionResult" />
+  <xs:complexType name="ArrayOfRoom">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Room" nillable="true" type="tns:Room" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfRoom" nillable="true" type="tns:ArrayOfRoom" />
+  <xs:complexType name="Room">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Entity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Desc" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="GameFormat" type="tns:GameFormat" />
+          <xs:element minOccurs="0" name="GameMode" type="tns:GameMode" />
+          <xs:element minOccurs="0" name="Password" nillable="true" type="xs:string" />
+          <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Players" nillable="true" type="q1:ArrayOfguid" />
+          <xs:element minOccurs="0" name="RoomSize" type="xs:int" />
+          <xs:element minOccurs="0" name="Started" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Room" nillable="true" type="tns:Room" />
+  <xs:simpleType name="JoinRoomResult">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Success" />
+      <xs:enumeration value="RoomFull" />
+      <xs:enumeration value="IncorrectPassword" />
+      <xs:enumeration value="Unkown" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="JoinRoomResult" nillable="true" type="tns:JoinRoomResult" />
+  <xs:complexType name="ArrayOfClient">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Client" nillable="true" type="tns:Client" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfClient" nillable="true" type="tns:ArrayOfClient" />
+</xs:schema>

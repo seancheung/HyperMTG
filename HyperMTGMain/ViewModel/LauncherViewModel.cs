@@ -39,7 +39,7 @@ namespace HyperMTGMain.ViewModel
 
 		public ICommand OpenDraftCommand
 		{
-			get { return new RelayCommand(() => ViewManager.DraftLoginWindow.ShowDialog()); }
+			get { return new RelayCommand(() => ViewManager.RoomListWindow.ShowDialog()); }
 		}
 
 		public ICommand OpenFilterCommand
@@ -55,6 +55,11 @@ namespace HyperMTGMain.ViewModel
 		public ICommand OpenSealedCommand
 		{
 			get { return new RelayCommand(() => ViewManager.SealedWindow.ShowDialog()); }
+		}
+
+		public ICommand OpenLoginCommand
+		{
+			get { return new RelayCommand(() => ViewManager.LoginWindow.ShowDialog()); }
 		}
 	}
 }

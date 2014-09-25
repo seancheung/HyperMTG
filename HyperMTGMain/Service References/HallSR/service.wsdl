@@ -1,0 +1,181 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="HallService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="NetTcpBinding_IHall_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <wsrm:RMAssertion xmlns:wsrm="http://schemas.xmlsoap.org/ws/2005/02/rm/policy">
+          <wsrm:InactivityTimeout Milliseconds="72010000">
+          </wsrm:InactivityTimeout>
+          <wsrm:AcknowledgementInterval Milliseconds="200">
+          </wsrm:AcknowledgementInterval>
+        </wsrm:RMAssertion>
+        <msb:BinaryEncoding xmlns:msb="http://schemas.microsoft.com/ws/06/2004/mspolicy/netbinary1">
+        </msb:BinaryEncoding>
+        <wsaw:UsingAddressing>
+        </wsaw:UsingAddressing>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import namespace="http://tempuri.org/" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/HyperServer.Common" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IHall_Connect_InputMessage">
+    <wsdl:part name="parameters" element="tns:Connect" />
+  </wsdl:message>
+  <wsdl:message name="IHall_Connect_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ConnectResponse" />
+  </wsdl:message>
+  <wsdl:message name="IHall_Disconnect_InputMessage">
+    <wsdl:part name="parameters" element="tns:Disconnect" />
+  </wsdl:message>
+  <wsdl:message name="IHall_CreateRoom_InputMessage">
+    <wsdl:part name="parameters" element="tns:CreateRoom" />
+  </wsdl:message>
+  <wsdl:message name="IHall_JoinRoom_InputMessage">
+    <wsdl:part name="parameters" element="tns:JoinRoom" />
+  </wsdl:message>
+  <wsdl:message name="IHall_OnConnect_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnConnect" />
+  </wsdl:message>
+  <wsdl:message name="IHall_OnEnterHall_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnEnterHall" />
+  </wsdl:message>
+  <wsdl:message name="IHall_OnLeaveHall_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnLeaveHall" />
+  </wsdl:message>
+  <wsdl:message name="IHall_OnRefreshRooms_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnRefreshRooms" />
+  </wsdl:message>
+  <wsdl:message name="IHall_OnCreateRoom_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnCreateRoom" />
+  </wsdl:message>
+  <wsdl:message name="IHall_OnJoinRoom_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnJoinRoom" />
+  </wsdl:message>
+  <wsdl:message name="IHall_OnRefreshPlayers_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnRefreshPlayers" />
+  </wsdl:message>
+  <wsdl:portType msc:usingSession="true" name="IHall">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Connect">
+      <wsdl:input wsaw:Action="http://tempuri.org/IHall/Connect" message="tns:IHall_Connect_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IHall/ConnectResponse" message="tns:IHall_Connect_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="true" name="Disconnect">
+      <wsdl:input wsaw:Action="http://tempuri.org/IHall/Disconnect" message="tns:IHall_Disconnect_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="CreateRoom">
+      <wsdl:input wsaw:Action="http://tempuri.org/IHall/CreateRoom" message="tns:IHall_CreateRoom_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="JoinRoom">
+      <wsdl:input wsaw:Action="http://tempuri.org/IHall/JoinRoom" message="tns:IHall_JoinRoom_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnConnect">
+      <wsdl:output wsaw:Action="http://tempuri.org/IHall/OnConnect" message="tns:IHall_OnConnect_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnEnterHall">
+      <wsdl:output wsaw:Action="http://tempuri.org/IHall/OnEnterHall" message="tns:IHall_OnEnterHall_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnLeaveHall">
+      <wsdl:output wsaw:Action="http://tempuri.org/IHall/OnLeaveHall" message="tns:IHall_OnLeaveHall_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnRefreshRooms">
+      <wsdl:output wsaw:Action="http://tempuri.org/IHall/OnRefreshRooms" message="tns:IHall_OnRefreshRooms_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnCreateRoom">
+      <wsdl:output wsaw:Action="http://tempuri.org/IHall/OnCreateRoom" message="tns:IHall_OnCreateRoom_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnJoinRoom">
+      <wsdl:output wsaw:Action="http://tempuri.org/IHall/OnJoinRoom" message="tns:IHall_OnJoinRoom_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnRefreshPlayers">
+      <wsdl:output wsaw:Action="http://tempuri.org/IHall/OnRefreshPlayers" message="tns:IHall_OnRefreshPlayers_OutputCallbackMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="NetTcpBinding_IHall" type="tns:IHall">
+    <wsp:PolicyReference URI="#NetTcpBinding_IHall_policy">
+    </wsp:PolicyReference>
+    <soap12:binding transport="http://schemas.microsoft.com/soap/tcp" />
+    <wsdl:operation name="Connect">
+      <soap12:operation soapAction="http://tempuri.org/IHall/Connect" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Disconnect">
+      <soap12:operation soapAction="http://tempuri.org/IHall/Disconnect" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="CreateRoom">
+      <soap12:operation soapAction="http://tempuri.org/IHall/CreateRoom" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="JoinRoom">
+      <soap12:operation soapAction="http://tempuri.org/IHall/JoinRoom" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="OnConnect">
+      <soap12:operation soapAction="http://tempuri.org/IHall/OnConnect" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OnEnterHall">
+      <soap12:operation soapAction="http://tempuri.org/IHall/OnEnterHall" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OnLeaveHall">
+      <soap12:operation soapAction="http://tempuri.org/IHall/OnLeaveHall" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OnRefreshRooms">
+      <soap12:operation soapAction="http://tempuri.org/IHall/OnRefreshRooms" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OnCreateRoom">
+      <soap12:operation soapAction="http://tempuri.org/IHall/OnCreateRoom" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OnJoinRoom">
+      <soap12:operation soapAction="http://tempuri.org/IHall/OnJoinRoom" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OnRefreshPlayers">
+      <soap12:operation soapAction="http://tempuri.org/IHall/OnRefreshPlayers" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="HallService">
+    <wsdl:port name="NetTcpBinding_IHall" binding="tns:NetTcpBinding_IHall">
+      <soap12:address location="net.tcp://localhost:5953/HyperServer/tcp" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>net.tcp://localhost:5953/HyperServer/tcp</wsa10:Address>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

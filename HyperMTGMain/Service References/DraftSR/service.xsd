@@ -50,6 +50,13 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="SendPack">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/HyperServer.Draft" minOccurs="0" name="player" nillable="true" type="q6:DraftPlayer" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="End">
     <xs:complexType>
       <xs:sequence />
@@ -58,7 +65,7 @@
   <xs:element name="OnConnect">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/HyperServer.Common" minOccurs="0" name="result" type="q6:ConnectionResult" />
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/HyperServer.Common" minOccurs="0" name="result" type="q7:ConnectionResult" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -67,28 +74,28 @@
       <xs:sequence>
         <xs:element minOccurs="0" name="maxPlayers" type="xs:int" />
         <xs:element minOccurs="0" name="timeLimit" type="xs:int" />
-        <xs:element xmlns:q7="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="setCodes" nillable="true" type="q7:ArrayOfstring" />
+        <xs:element xmlns:q8="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="setCodes" nillable="true" type="q8:ArrayOfstring" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="OnJoin">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/HyperServer.Draft" minOccurs="0" name="client" nillable="true" type="q8:DraftPlayer" />
+        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/HyperServer.Draft" minOccurs="0" name="client" nillable="true" type="q9:DraftPlayer" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="OnLeave">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/HyperServer.Draft" minOccurs="0" name="client" nillable="true" type="q9:DraftPlayer" />
+        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/HyperServer.Draft" minOccurs="0" name="client" nillable="true" type="q10:DraftPlayer" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="RefreshClients">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/HyperServer.Draft" minOccurs="0" name="clients" nillable="true" type="q10:ArrayOfDraftPlayer" />
+        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/HyperServer.Draft" minOccurs="0" name="clients" nillable="true" type="q11:ArrayOfDraftPlayer" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -104,24 +111,24 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="OnChooseCard">
+  <xs:element name="OnReceivePack">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q11="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="cardIDs" nillable="true" type="q11:ArrayOfstring" />
+        <xs:element xmlns:q12="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="cardIDs" nillable="true" type="q12:ArrayOfstring" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="OnMessage">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/HyperServer.Common" minOccurs="0" name="msg" nillable="true" type="q12:Message" />
+        <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/HyperServer.Common" minOccurs="0" name="msg" nillable="true" type="q13:Message" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="OnReady">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/HyperServer.Draft" minOccurs="0" name="player" nillable="true" type="q13:DraftPlayer" />
+        <xs:element xmlns:q14="http://schemas.datacontract.org/2004/07/HyperServer.Draft" minOccurs="0" name="player" nillable="true" type="q14:DraftPlayer" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

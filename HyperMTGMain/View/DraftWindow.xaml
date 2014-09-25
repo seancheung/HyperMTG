@@ -40,7 +40,7 @@
                                        Margin="5"
                                        Source="{Binding Image,
                                                         IsAsync=True}"
-                                       ToolTip="{Binding Card.Name}"/>
+                                       ToolTip="{Binding Card.Name}" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
@@ -67,6 +67,12 @@
                     </StackPanel>
                     <TextBlock Margin="5" Text="{Binding TimeLimit, StringFormat=Time Limit: \{0\}s}" />
                     <TextBlock Margin="5" Text="{Binding SetList, StringFormat=Sets: \{0\}}" />
+                    <Button Margin="5"
+                            Command="{Binding ReadyCommand}"
+                            Content="Ready" />
+                    <Button Margin="5"
+                            Command="{Binding StartCommand}"
+                            Content="Start" />
                 </StackPanel>
             </GroupBox>
             <GroupBox Grid.Row="1" Margin="5"

@@ -53,20 +53,6 @@ namespace HyperMTGMain.ViewModel
 		public DraftPlayer Player { get; set; }
 		public bool Started { get; set; }
 
-		public int TimeTick
-		{
-			get { return _timeTick; }
-			set
-			{
-				_timeTick = value;
-				OnPropertyChanged("TimeTick");
-				if (TimeTick <= 0)
-				{
-					OnTimeUp();
-				}
-			}
-		}
-
 		public ICommand ConnectCommand
 		{
 			get { return new RelayCommand(Connect, CanConnect); }
@@ -131,6 +117,20 @@ namespace HyperMTGMain.ViewModel
 			{
 				_timeLimit = value;
 				OnPropertyChanged("TimeLimit");
+			}
+		}
+
+		public int TimeTick
+		{
+			get { return _timeTick; }
+			set
+			{
+				_timeTick = value;
+				OnPropertyChanged("TimeTick");
+				if (TimeTick == 0)
+				{
+					OnTimeUp();
+				}
 			}
 		}
 
@@ -264,6 +264,10 @@ namespace HyperMTGMain.ViewModel
 
 		private void OnTimeUp()
 		{
+			Player.HandList.Add(Player.PoolList[0]);
+			Player.PoolList.RemoveAt(0);
+			_proxy.SendPackAsync(Player);
+			_proxy.ReadyAsync(Player);
 		}
 
 		private void Ready()
@@ -279,11 +283,12 @@ namespace HyperMTGMain.ViewModel
 		private void Start()
 		{
 			Started = true;
+			_proxy.StartAsync();
 		}
 
 		private bool CanStart()
 		{
-			return Player.IsHost && Players.All(p => p.IsReady);
+			return Player != null && Player.IsHost && Players != null && Players.All(p => p.IsReady);
 		}
 
 		#region Implementation of IDraftCallback
@@ -316,7 +321,6 @@ namespace HyperMTGMain.ViewModel
 			TimeLimit = timeLimit;
 			SetList = setCodes.Aggregate((a, b) => string.Format("{0}+{1}", a, b));
 			Cards = new List<ImgCard>();
-			//Cards = DataManager.Cards.Take(20).Select(s => new ImgCard(s)).ToList();
 		}
 
 		public IAsyncResult BeginRefreshGame(int maxPlayers, int timeLimit, List<string> setCodes, AsyncCallback callback,
@@ -370,6 +374,7 @@ namespace HyperMTGMain.ViewModel
 		public void RefreshClients(List<DraftPlayer> clients)
 		{
 			Players = clients;
+			Player = Players.First(c => c.ID == Player.ID);
 		}
 
 		public IAsyncResult BeginRefreshClients(List<DraftPlayer> clients, AsyncCallback callback, object asyncState)
@@ -401,8 +406,9 @@ namespace HyperMTGMain.ViewModel
 		public void OnOpenBooster(string setCode)
 		{
 			IEnumerable<Card> cards = DataManager.Cards.Where(c => c.SetCode == setCode);
-			Player.PoolList.AddRange(BoosterTool.Generate(cards).Select(c => c.ID));
+			Player.PoolList = BoosterTool.Generate(cards).Select(c => c.ID).ToList();
 			_proxy.ReadyAsync(Player);
+			_proxy.SendPackAsync(Player);
 		}
 
 		public IAsyncResult BeginOnOpenBooster(string setCode, AsyncCallback callback, object asyncState)
@@ -415,17 +421,21 @@ namespace HyperMTGMain.ViewModel
 			throw new NotImplementedException();
 		}
 
-		public void OnChooseCard(List<string> cardIDs)
+		public void OnReceivePack(List<string> cardIDs)
 		{
-			
+			Player.PoolList = cardIDs;
+			var cards = DataManager.Cards.AsQueryable().WhereIn(c => c.ID, cardIDs);
+			Cards = cards.Select(c => new ImgCard(c)).ToList();
+			TimeTick = TimeLimit;
+			_timer.Start();
 		}
 
-		public IAsyncResult BeginOnChooseCard(List<string> cardIDs, AsyncCallback callback, object asyncState)
+		public IAsyncResult BeginOnReceivePack(List<string> cardIDs, AsyncCallback callback, object asyncState)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void EndOnChooseCard(IAsyncResult result)
+		public void EndOnReceivePack(IAsyncResult result)
 		{
 			throw new NotImplementedException();
 		}

@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{633EA5E3-FA3E-45DB-8CC8-DB218535BE4D}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{98BD48ED-37A0-4900-99C6-1D7A9195028B}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HyperServer</RootNamespace>
-    <AssemblyName>HyperServer</AssemblyName>
+    <RootNamespace>HyperServerMain</RootNamespace>
+    <AssemblyName>HyperServerMain</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -32,45 +34,15 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\Client.cs" />
-    <Compile Include="Common\ConnectionResult.cs" />
-    <Compile Include="Common\Entity.cs" />
-    <Compile Include="Common\GameFormat.cs" />
-    <Compile Include="Common\GameMode.cs" />
-    <Compile Include="Common\HallService.cs" />
-    <Compile Include="Common\IHall.cs" />
-    <Compile Include="Common\IHallCallback.cs" />
-    <Compile Include="Common\JoinRoomResult.cs" />
-    <Compile Include="Common\Message.cs" />
-    <Compile Include="Common\Room.cs" />
-    <Compile Include="Common\Service.cs" />
-    <Compile Include="Draft\DraftPlayer.cs" />
-    <Compile Include="Draft\DraftService.cs" />
-    <Compile Include="Draft\IDraft.cs" />
-    <Compile Include="Draft\IDraftCallback.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Archenemy\" />
-    <Folder Include="Commander\" />
-    <Folder Include="FreeForAll\" />
-    <Folder Include="Planechase\" />
-    <Folder Include="Sealed\" />
-    <Folder Include="TwoHeadedGiant\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\HyperLogger\HyperLogger.csproj">
-      <Project>{ea84d043-5a33-4ca4-bc1d-78302d45a73e}</Project>
-      <Name>HyperLogger</Name>
+    <ProjectReference Include="..\HyperServer\HyperServer.csproj">
+      <Project>{633ea5e3-fa3e-45db-8cc8-db218535be4d}</Project>
+      <Name>HyperServer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

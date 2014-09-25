@@ -46,6 +46,9 @@
   <wsdl:message name="IDraft_Ready_InputMessage">
     <wsdl:part name="parameters" element="tns:Ready" />
   </wsdl:message>
+  <wsdl:message name="IDraft_SendPack_InputMessage">
+    <wsdl:part name="parameters" element="tns:SendPack" />
+  </wsdl:message>
   <wsdl:message name="IDraft_End_InputMessage">
     <wsdl:part name="parameters" element="tns:End" />
   </wsdl:message>
@@ -70,8 +73,8 @@
   <wsdl:message name="IDraft_OnOpenBooster_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:OnOpenBooster" />
   </wsdl:message>
-  <wsdl:message name="IDraft_OnChooseCard_OutputCallbackMessage">
-    <wsdl:part name="parameters" element="tns:OnChooseCard" />
+  <wsdl:message name="IDraft_OnReceivePack_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnReceivePack" />
   </wsdl:message>
   <wsdl:message name="IDraft_OnMessage_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:OnMessage" />
@@ -102,6 +105,9 @@
     <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Ready">
       <wsdl:input wsaw:Action="http://tempuri.org/IDraft/Ready" message="tns:IDraft_Ready_InputMessage" />
     </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="SendPack">
+      <wsdl:input wsaw:Action="http://tempuri.org/IDraft/SendPack" message="tns:IDraft_SendPack_InputMessage" />
+    </wsdl:operation>
     <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="End">
       <wsdl:input wsaw:Action="http://tempuri.org/IDraft/End" message="tns:IDraft_End_InputMessage" />
     </wsdl:operation>
@@ -126,8 +132,8 @@
     <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnOpenBooster">
       <wsdl:output wsaw:Action="http://tempuri.org/IDraft/OnOpenBooster" message="tns:IDraft_OnOpenBooster_OutputCallbackMessage" />
     </wsdl:operation>
-    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnChooseCard">
-      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/OnChooseCard" message="tns:IDraft_OnChooseCard_OutputCallbackMessage" />
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnReceivePack">
+      <wsdl:output wsaw:Action="http://tempuri.org/IDraft/OnReceivePack" message="tns:IDraft_OnReceivePack_OutputCallbackMessage" />
     </wsdl:operation>
     <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="OnMessage">
       <wsdl:output wsaw:Action="http://tempuri.org/IDraft/OnMessage" message="tns:IDraft_OnMessage_OutputCallbackMessage" />
@@ -182,6 +188,12 @@
         <soap12:body use="literal" />
       </wsdl:input>
     </wsdl:operation>
+    <wsdl:operation name="SendPack">
+      <soap12:operation soapAction="http://tempuri.org/IDraft/SendPack" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
     <wsdl:operation name="End">
       <soap12:operation soapAction="http://tempuri.org/IDraft/End" style="document" />
       <wsdl:input>
@@ -230,8 +242,8 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="OnChooseCard">
-      <soap12:operation soapAction="http://tempuri.org/IDraft/OnChooseCard" style="document" />
+    <wsdl:operation name="OnReceivePack">
+      <soap12:operation soapAction="http://tempuri.org/IDraft/OnReceivePack" style="document" />
       <wsdl:output>
         <soap12:body use="literal" />
       </wsdl:output>
