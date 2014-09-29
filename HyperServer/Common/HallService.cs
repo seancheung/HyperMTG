@@ -10,30 +10,24 @@ namespace HyperServer.Common
 		UseSynchronizationContext = false)]
 	public class HallService : Service<IHall, IHallCallback>, IHall
 	{
+		private readonly List<Client> _clients = new List<Client>(); 
+		private readonly Dictionary<Guid, IHallCallback> _clientCallbacks = new Dictionary<Guid, IHallCallback>();
+		private readonly List<Room> _rooms = new List<Room>();
+
 		public HallService()
 		{
 			IP = "localhost";
 			Port = 5953;
-			ClientCallbacks = new Dictionary<Client, IHallCallback>();
-			Rooms = new List<Room>();
 		}
 
-		private Dictionary<Client, IHallCallback> ClientCallbacks { get; set; }
-		private List<Room> Rooms { get; set; }
-
-		private List<Client> Players
+		private IEnumerable<IHallCallback> Callbacks
 		{
-			get { return ClientCallbacks.Keys.ToList(); }
-		}
-
-		private List<IHallCallback> Callbacks
-		{
-			get { return ClientCallbacks.Values.ToList(); }
+			get { return _clientCallbacks.Values; }
 		}
 
 		public void Connect(Client client)
 		{
-			if (Players.Any(c => c.ID == client.ID))
+			if (_clients.Any(c => c.ID == client.ID))
 			{
 				lock (SyncObj)
 				{
@@ -42,60 +36,60 @@ namespace HyperServer.Common
 			}
 			else
 			{
-				ClientCallbacks.Add(client, CurrentCallback);
+				_clients.Add(client);
+				_clientCallbacks.Add(client.ID, CurrentCallback);
 				lock (SyncObj)
 				{
 					CurrentCallback.OnConnect(ConnectionResult.Success);
-					Callbacks.ForEach(b =>
+					foreach (IHallCallback callback in Callbacks)
 					{
-						b.OnRefreshPlayers(Players);
-						b.OnRefreshRooms(Rooms);
-						b.OnEnterHall(client.ID);
-					});
+						callback.OnRefreshPlayers(_clients);
+						callback.OnRefreshRooms(_rooms);
+						callback.OnEnterHall(client.ID);
+					}
 				}
 			}
 		}
 
 		public void Disconnect(Guid client)
 		{
-			Client player = Players.Find(c => c.ID == client);
-			ClientCallbacks.Remove(player);
+			_clients.RemoveAll(c => c.ID == client);
+			_clientCallbacks.Remove(client);
 			lock (SyncObj)
 			{
-				Callbacks.ForEach(b =>
+				foreach (IHallCallback callback in Callbacks)
 				{
-					b.OnRefreshPlayers(Players);
-					b.OnRefreshRooms(Rooms);
-					b.OnLeaveHall(client);
-				});
+					callback.OnLeaveHall(client);
+					callback.OnRefreshPlayers(_clients);
+					callback.OnRefreshRooms(_rooms);
+				}
 			}
 		}
 
 		public void CreateRoom(Guid client, GameMode mode, GameFormat format, int size, string desc, string password)
 		{
-			Client player = Players.Find(c => c.ID == client);
+			Client player = _clients.First(c => c.ID == client);
 			player.IsHost = true;
 			var room = new Room {GameMode = mode, GameFormat = format, RoomSize = size, Desc = desc, Password = password};
 			room.Players.Add(client);
 
-			Rooms.Add(room);
+			_rooms.Add(room);
 
 			lock (SyncObj)
 			{
-				Callbacks.ForEach(b =>
+				foreach (IHallCallback callback in Callbacks)
 				{
-					b.OnRefreshPlayers(Players);
-					b.OnRefreshRooms(Rooms);
-				});
+					callback.OnRefreshPlayers(_clients);
+					callback.OnRefreshRooms(_rooms);
+				}
 				CurrentCallback.OnCreateRoom(room.ID);
 			}
 		}
 
 		public void JoinRoom(Guid client, Guid room, string password)
 		{
-			Client player = Players.Find(c => c.ID == client);
-			Room rm = Rooms.Find(r => r.ID == room);
-			if (rm.IsFull)
+			Room rm = _rooms.Find(r => r.ID == room);
+			if (rm.Players.Count >= rm.RoomSize)
 			{
 				lock (SyncObj)
 				{
@@ -114,11 +108,11 @@ namespace HyperServer.Common
 				rm.Players.Add(client);
 				lock (SyncObj)
 				{
-					Callbacks.ForEach(b =>
+					foreach (IHallCallback callback in Callbacks)
 					{
-						b.OnRefreshPlayers(Players);
-						b.OnRefreshRooms(Rooms);
-					});
+						callback.OnRefreshPlayers(_clients);
+						callback.OnRefreshRooms(_rooms);
+					}
 					CurrentCallback.OnJoinRoom(JoinRoomResult.Success, room);
 				}
 			}

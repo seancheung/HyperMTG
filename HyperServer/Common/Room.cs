@@ -33,9 +33,5 @@ namespace HyperServer.Common
 		[DataMember]
 		public bool Started { get; set; }
 
-		public bool IsFull
-		{
-			get { return Players.Count >= RoomSize; }
-		}
 	}
 }

@@ -38,9 +38,7 @@ namespace HyperServer.Common
 
 			tcpBinding.MaxConnections = 100;
 
-			ServiceThrottlingBehavior throttle;
-			throttle =
-				Host.Description.Behaviors.Find<ServiceThrottlingBehavior>();
+			ServiceThrottlingBehavior throttle = Host.Description.Behaviors.Find<ServiceThrottlingBehavior>();
 			if (throttle == null)
 			{
 				throttle = new ServiceThrottlingBehavior();

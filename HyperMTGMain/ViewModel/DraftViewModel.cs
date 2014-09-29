@@ -191,7 +191,7 @@ namespace HyperMTGMain.ViewModel
 			try
 			{
 				_proxy.Open();
-				_proxy.ConnectAsync((Player));
+				_proxy.ConnectAsync(Player);
 			}
 			catch (EndpointNotFoundException)
 			{

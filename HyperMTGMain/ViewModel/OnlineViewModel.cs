@@ -38,6 +38,8 @@ namespace HyperMTGMain.ViewModel
 			}
 		}
 
+		public bool IsConnected { get; set; }
+
 		public List<Client> Clients
 		{
 			get { return _clients; }
@@ -98,6 +100,7 @@ namespace HyperMTGMain.ViewModel
 		{
 			if (result == ConnectionResult.Success)
 			{
+				IsConnected = true;
 				ViewManager.RoomListWindow.Show();
 			}
 			else
@@ -252,6 +255,7 @@ namespace HyperMTGMain.ViewModel
 			}
 
 			_proxy = null;
+			IsConnected = false;
 		}
 
 		private void CreateRoom()
@@ -261,7 +265,7 @@ namespace HyperMTGMain.ViewModel
 
 		private bool CanCreateRoom()
 		{
-			return Room == null && _proxy != null && _proxy.State == CommunicationState.Opened && RoomSize > 1;
+			return IsConnected && Room == null && RoomSize > 1;
 		}
 
 		private void JoinRoom()
@@ -271,7 +275,7 @@ namespace HyperMTGMain.ViewModel
 
 		private bool CanJoinRoom()
 		{
-			return Room == null && _proxy != null && _proxy.State == CommunicationState.Opened && SelectedRoom != null;
+			return IsConnected && Room == null && SelectedRoom != null;
 		}
 	}
 }
