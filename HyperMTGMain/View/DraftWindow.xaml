@@ -5,7 +5,6 @@
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         Title="{DynamicResource Draft}"
         Width="1120" Height="720"
-        Closed="DraftWindow_OnClosed"
         DataContext="{Binding DraftViewModel,
                               Source={StaticResource ViewModelManager}}"
         WindowStartupLocation="CenterScreen">

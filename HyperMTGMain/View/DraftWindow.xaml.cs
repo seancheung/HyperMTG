@@ -9,10 +9,5 @@ namespace HyperMTGMain.View
 		{
 			InitializeComponent();
 		}
-
-		private void DraftWindow_OnClosed(object sender, EventArgs e)
-		{
-			ViewModelManager.DraftViewModel.CloseConnection();
-		}
 	}
 }

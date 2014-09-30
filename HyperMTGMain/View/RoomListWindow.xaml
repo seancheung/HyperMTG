@@ -4,7 +4,7 @@
         xmlns:common="clr-namespace:HyperServer.Common;assembly=HyperServer"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         Title="RoomListWindow" Width="720"
-        Height="400" Closed="RoomListWindow_OnClosed"
+        Height="480" Closed="RoomListWindow_OnClosed"
         DataContext="{Binding OnlineViewModel,
                               Source={StaticResource ViewModelManager}}">
     <Grid>

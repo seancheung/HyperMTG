@@ -81,11 +81,6 @@
     <Compile Include="Model\ImgCard.cs" />
     <Compile Include="Model\ProgressCheck.cs" />
     <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="Service References\DraftSR\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
     <Compile Include="Service References\HallSR\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -115,9 +110,6 @@
     </Compile>
     <Compile Include="View\DeckEditorWindow.xaml.cs">
       <DependentUpon>DeckEditorWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\DraftLoginWindow.xaml.cs">
-      <DependentUpon>DraftLoginWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\DraftWindow.xaml.cs">
       <DependentUpon>DraftWindow.xaml</DependentUpon>
@@ -197,10 +189,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\DraftLoginWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\DraftWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -258,22 +246,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="Service References\DraftSR\Arrays.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\DraftSR\HyperServer.Common.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\DraftSR\HyperServer.Draft.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\DraftSR\service.wsdl" />
-    <None Include="Service References\DraftSR\service.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\DraftSR\service1.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Service References\HallSR\Arrays.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -350,20 +322,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadataStorage Include="Service References\DraftSR\" />
     <WCFMetadataStorage Include="Service References\HallSR\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\DraftSR\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\DraftSR\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\DraftSR\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\HallSR\configuration91.svcinfo" />
